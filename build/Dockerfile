@@ -1,18 +1,25 @@
-FROM golang:1.20-alpine
+FROM golang:1.21-alpine as base
 
-# Set destination for COPY
-WORKDIR /app
+WORKDIR /hamburgueria
 
 # Download Go modules
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy the source code. Note the slash at the end, as explained in
-# https://docs.docker.com/engine/reference/builder/#copy
-COPY *.go ./
+# BUILDER
+FROM base as builder
 
-# Build
-RUN CGO_ENABLED=0 GOOS=linux go build -o /docker-gs-ping
+COPY . /hamburgueria
+
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "${LDFLAGS} -s -w" -a -o hamburgueria-app /hamburgueria
+
+FROM alpine:latest
+
+RUN apk update && apk add --no-cache ca-certificates
+
+WORKDIR /hamburgueria
+
+COPY --from=builder /hamburgueria/hamburgueria-app /hamburgueria
 
 # Optional:
 # To bind to a TCP port, runtime parameters must be supplied to the docker command.
@@ -21,5 +28,5 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o /docker-gs-ping
 # https://docs.docker.com/engine/reference/builder/#expose
 EXPOSE 8080
 
-# Run
-CMD ["/docker-gs-ping"]
+
+CMD ["./hamburgueria-app"]
