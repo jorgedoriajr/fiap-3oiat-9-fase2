@@ -1,12 +1,13 @@
-package cmd
+package main
 
 import (
 	"hamburgueria/config"
-	"hamburgueria/internal/util/httpserver"
-	"hamburgueria/internal/util/starter"
+	"hamburgueria/pkg/httpserver"
+	"hamburgueria/pkg/starter"
 )
 
 func main() {
+
 	starter.Initialize()
 
 	var serviceConfig config.ApplicationConfig
