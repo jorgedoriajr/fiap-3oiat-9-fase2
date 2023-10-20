@@ -231,6 +231,7 @@ func TestUnmarshalKey(t *testing.T) {
 		var inner SimpleInnerConfig
 
 		c, err := Load(
+			WithConfigPath("./test_files"),
 			WithConfigType("yaml"),
 		)
 		assert.NoError(t, err)
