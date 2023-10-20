@@ -1,7 +1,7 @@
 package httpserver
 
 import (
-	"context"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -16,9 +16,8 @@ func (s *server) startManagementServer() {
 	go func() {
 		managementPort := fmt.Sprintf(":%d", s.builder.serverConfig.Management.Port)
 
-		if err := s.managementInstance.Start(managementPort); err != http.ErrServerClosed {
-			logging.GetLogger().Fatal(context.Background(), "[Server] Error while starting the management server", err)
-			panic(err)
+		if err := s.managementInstance.Start(managementPort); !errors.Is(err, http.ErrServerClosed) {
+			panic("[Server] Error while starting the management server")
 		}
 	}()
 }
@@ -42,22 +41,6 @@ func (s *server) configureManagementServer() {
 			s.builder.serverConfig.Management.HealthCheck.ReadinessPath,
 			readinessCheck(s.builder.healthCheckers...),
 		)
-	}
-
-	if s.builder.serverConfig.Management.Metrics.Enabled {
-		c := metrics.MetricsMiddlewareConfig{
-			SkippedPaths: []string{
-				s.builder.serverConfig.Management.HealthCheck.LivenessPath,
-				s.builder.serverConfig.Management.HealthCheck.ReadinessPath,
-				s.builder.serverConfig.Management.Metrics.Path,
-			},
-			MetricsPath: s.builder.serverConfig.Management.Metrics.Path,
-			Subsystem:   s.builder.serverConfig.Management.Metrics.Subsystem,
-		}
-
-		metricsMd := metrics.GetMetricsMiddleware(c)
-		s.echoInstance.Use(metricsMd.HandlerFunc)
-		metricsMd.SetMetricsPath(s.managementInstance)
 	}
 }
 

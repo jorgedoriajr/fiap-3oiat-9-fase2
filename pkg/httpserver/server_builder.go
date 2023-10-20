@@ -3,7 +3,7 @@ package httpserver
 import (
 	"github.com/labstack/echo/v4"
 	"hamburgueria/config"
-	"hamburgueria/internal/util/healthcheck"
+	"hamburgueria/pkg/healthcheck"
 )
 
 type ServerBuilder interface {

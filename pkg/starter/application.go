@@ -2,7 +2,7 @@ package starter
 
 import (
 	"hamburgueria/config"
-	"hamburgueria/internal/util/configloader"
+	"hamburgueria/pkg/configloader"
 	"sync"
 )
 

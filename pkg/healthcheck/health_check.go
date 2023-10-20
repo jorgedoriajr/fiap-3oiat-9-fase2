@@ -2,7 +2,7 @@ package healthcheck
 
 import (
 	"context"
-	"hamburgueria/internal/util/slice"
+	slice "hamburgueria/pkg/slice"
 )
 
 // HealthStatus represents a resource health status

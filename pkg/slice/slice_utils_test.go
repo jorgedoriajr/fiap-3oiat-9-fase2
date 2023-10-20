@@ -1,7 +1,6 @@
-package slice_test
+package slice
 
 import (
-	"hamburgueria/internal/util/slice"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -16,7 +15,7 @@ func TestToMap(t *testing.T) {
 	t.Run("ToMap with primitive input", func(t *testing.T) {
 		input := []string{"value", "another value"}
 
-		m := slice.ToMap(
+		m := ToMap(
 			input,
 			func(s string) string { return s },
 			func(s string) int { return len(s) },
@@ -39,7 +38,7 @@ func TestToMap(t *testing.T) {
 			},
 		}
 
-		m := slice.ToMap(
+		m := ToMap(
 			input,
 			func(kv KeyValue) string { return kv.Key },
 			func(kv KeyValue) string { return kv.Value },

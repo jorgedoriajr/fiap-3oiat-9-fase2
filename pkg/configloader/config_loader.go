@@ -15,7 +15,7 @@ type Config interface {
 	UnmarshalKey(key string, output interface{}) error
 	// WriteConfigAs writes current configuration to a given filename.
 	WriteConfigAs(filename string) error
-	// Set sets the value for the key in the override register.
+	// SetKeyValue Set sets the value for the key in the override register.
 	SetKeyValue(key string, value interface{})
 }
 

@@ -1,0 +1,7 @@
+value: value
+inner-config:
+  value: ${ENV_INNER_CONFIG_VALUE:value_str}
+  another-value: ${ENV_ANOTHER_INNER_CONFIG_VALUE:another_value_str}
+  inner-config: 
+    value: ${ENV_INNER_INNER_CONFIG_VALUE}
+    another-value: ${PRIORITY}

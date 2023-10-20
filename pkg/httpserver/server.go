@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-playground/validator"
-	"hamburgueria/internal/util/validation"
+	"hamburgueria/pkg/validation"
 	"net/http"
 	"time"
 

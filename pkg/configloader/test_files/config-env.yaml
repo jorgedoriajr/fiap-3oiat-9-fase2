@@ -1,0 +1,4 @@
+StringValue: string1
+IntValue: ${INT_ENV_VAR:2}
+InnerConfig:
+  InnerStringValue: ${STRING_ENV_VAR:defaultValue} plus the rest of string
