@@ -2,8 +2,8 @@ package starter
 
 import (
 	"fmt"
-	"hamburgueria/internal/util/configloader"
-	"hamburgueria/internal/util/slice"
+	"hamburgueria/pkg/configloader"
+	"hamburgueria/pkg/slice"
 	"os"
 )
 

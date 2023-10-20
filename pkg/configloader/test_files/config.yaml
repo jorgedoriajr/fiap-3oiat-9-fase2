@@ -1,0 +1,6 @@
+StringValue: string1
+IntValue: 2
+InnerConfig:
+  InnerStringValue: string2
+
+AnotherString: another string

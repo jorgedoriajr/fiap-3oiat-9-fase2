@@ -8,7 +8,7 @@ Responsável por gerenciar um sistema de totem para pedidos
 
 ## Requirements
 
-- Golang 1.20+
+- Golang 1.21+
 - Docker
 
 ## Folders Structure

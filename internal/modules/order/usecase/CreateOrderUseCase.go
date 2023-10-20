@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"hamburgueria/internal/core/order/port/output"
+	"hamburgueria/internal/modules/order/port/output"
 	"hamburgueria/internal/modules/payment/port/input"
 )
 

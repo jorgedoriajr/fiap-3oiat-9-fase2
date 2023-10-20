@@ -1,4 +1,4 @@
-package configloader_test
+package configloader
 
 import (
 	_ "embed"
@@ -52,9 +52,9 @@ func TestUnmarshal(t *testing.T) {
 	t.Run("Config load", func(t *testing.T) {
 		var simpleConfig SimpleConfig
 
-		c, err := config.Load(
-			config.WithConfigPath("./test_files"),
-			config.WithConfigType("yaml"),
+		c, err := Load(
+			WithConfigPath("./test_files"),
+			WithConfigType("yaml"),
 		)
 		assert.NoError(t, err)
 
@@ -78,9 +78,9 @@ func TestUnmarshal(t *testing.T) {
 	t.Run("Config load with profile overriding", func(t *testing.T) {
 		var simpleConfig SimpleConfig
 
-		c, err := config.Load(
-			config.WithConfigName("config", "config-profile"),
-			config.WithConfigPath("./test_files"),
+		c, err := Load(
+			WithConfigName("config", "config-profile"),
+			WithConfigPath("./test_files"),
 		)
 		assert.NoError(t, err)
 
@@ -100,10 +100,10 @@ func TestUnmarshal(t *testing.T) {
 
 		var simpleConfig SimpleConfig
 
-		c, err := config.Load(
-			config.WithConfigName("config-env"),
-			config.WithConfigName("config-env-profile"),
-			config.WithConfigPath("./test_files"),
+		c, err := Load(
+			WithConfigName("config-env"),
+			WithConfigName("config-env-profile"),
+			WithConfigPath("./test_files"),
 		)
 		assert.NoError(t, err)
 
@@ -120,11 +120,11 @@ func TestUnmarshal(t *testing.T) {
 
 		var simpleConfig ConfigWithTaggedDefault
 
-		c, err := config.Load(
-			config.WithConfigName("config-env"),
-			config.WithConfigName("config-env-profile"),
-			config.WithConfigPath("./test_files"),
-			config.WithDefaultFromStruct(),
+		c, err := Load(
+			WithConfigName("config-env"),
+			WithConfigName("config-env-profile"),
+			WithConfigPath("./test_files"),
+			WithDefaultFromStruct(),
 		)
 		assert.NoError(t, err)
 
@@ -148,11 +148,11 @@ func TestUnmarshal(t *testing.T) {
 		os.Setenv("PRIORITY", "lessPriority")
 		os.Setenv("INNER_CONFIG_INNER_CONFIG_VALUE", "fromEnvAuto")
 
-		c, err := config.Load(
-			config.WithConfigName("config-values"),
-			config.WithConfigName("config-env-profile"),
-			config.WithConfigPath("./test_files"),
-			config.WithDefaultFromStruct(),
+		c, err := Load(
+			WithConfigName("config-values"),
+			WithConfigName("config-env-profile"),
+			WithConfigPath("./test_files"),
+			WithDefaultFromStruct(),
 		)
 		assert.NoError(t, err)
 
@@ -174,10 +174,10 @@ func TestUnmarshal(t *testing.T) {
 		os.Setenv("INTVALUE", "99")
 		os.Setenv("INNERCONFIG_INNERSTRINGVALUE", "another-env-var")
 
-		c, err := config.Load(
-			config.WithConfigName("config"),
-			config.WithConfigPath("./test_files"),
-			config.WithAutomaticEnv(),
+		c, err := Load(
+			WithConfigName("config"),
+			WithConfigPath("./test_files"),
+			WithAutomaticEnv(),
 		)
 		assert.NoError(t, err)
 
@@ -193,8 +193,8 @@ func TestUnmarshal(t *testing.T) {
 	t.Run("Config load with config readers", func(t *testing.T) {
 		var simpleConfig SimpleConfig
 
-		c, err := config.Load(
-			config.WithConfigReaders(strings.NewReader(testConfig), strings.NewReader(profileConfig)),
+		c, err := Load(
+			WithConfigReaders(strings.NewReader(testConfig), strings.NewReader(profileConfig)),
 		)
 		assert.NoError(t, err)
 
@@ -209,10 +209,10 @@ func TestUnmarshal(t *testing.T) {
 	t.Run("Config load with config readers and regular config files and defaults", func(t *testing.T) {
 		var simpleConfig SimpleConfig
 
-		c, err := config.Load(
-			config.WithConfigPath("./test_files"),
-			config.WithConfigType("yaml"),
-			config.WithConfigReaders(strings.NewReader(testConfig), strings.NewReader(profileConfig)),
+		c, err := Load(
+			WithConfigPath("./test_files"),
+			WithConfigType("yaml"),
+			WithConfigReaders(strings.NewReader(testConfig), strings.NewReader(profileConfig)),
 		)
 		assert.NoError(t, err)
 
@@ -230,9 +230,9 @@ func TestUnmarshalKey(t *testing.T) {
 	t.Run("UnmarshalKey should unmarshal the given key", func(t *testing.T) {
 		var inner SimpleInnerConfig
 
-		c, err := config.Load(
-			config.WithConfigPath("./test_files"),
-			config.WithConfigType("yaml"),
+		c, err := Load(
+			WithConfigPath("./test_files"),
+			WithConfigType("yaml"),
 		)
 		assert.NoError(t, err)
 

@@ -2,7 +2,7 @@ package httpserver
 
 import (
 	"github.com/labstack/echo/v4"
-	"hamburgueria/internal/util/healthcheck"
+	"hamburgueria/pkg/healthcheck"
 	"net/http"
 )
 
