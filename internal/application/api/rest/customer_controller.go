@@ -7,6 +7,7 @@ import (
 	"hamburgueria/internal/application/api/middleware"
 	"hamburgueria/internal/modules/customer/domain/request"
 	"hamburgueria/internal/modules/customer/port/input"
+	"hamburgueria/pkg/validation"
 	"net/http"
 )
 
@@ -83,6 +84,14 @@ func (c *CustomerController) AddCustomer(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
 			"code":    400,
 			"message": "UNMARSHAL_ERROR",
+		})
+	}
+
+	isValid := validation.ValidateCPF(command.Document)
+	if !isValid {
+		return ctx.JSON(http.StatusBadRequest, map[string]any{
+			"code":    400,
+			"message": "INVALID_DATA",
 		})
 	}
 

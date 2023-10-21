@@ -19,8 +19,8 @@ func (c GetCustomerUseCase) GetCustomer(ctx context.Context, document string) (*
 		return nil, err
 	}
 	return &response.CustomerResponse{
-		Cpf:   customer.Cpf,
-		Name:  customer.Name,
-		Phone: customer.Phone,
+		Document: customer.Document,
+		Name:     customer.Name,
+		Phone:    customer.Phone,
 	}, err
 }

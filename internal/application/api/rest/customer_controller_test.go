@@ -27,9 +27,9 @@ func TestCustomerController(t *testing.T) {
 
 		document := "98932673667"
 		customer := response.CustomerResponse{
-			Cpf:   document,
-			Name:  "Name",
-			Phone: "11999999999",
+			Document: document,
+			Name:     "Name",
+			Phone:    "11999999999",
 		}
 
 		echoServer := echo.New()
@@ -51,7 +51,7 @@ func TestCustomerController(t *testing.T) {
 		responseStatusCode := rec.Result().StatusCode
 
 		responseBodyAsString, _ := io.ReadAll(responseBody)
-		expectedResponse := "{\"cpf\":\"98932673667\",\"name\":\"Name\",\"phone\":\"11999999999\"}\n"
+		expectedResponse := "{\"document\":\"98932673667\",\"name\":\"Name\",\"phone\":\"11999999999\"}\n"
 
 		assert.Nil(t, err)
 		assert.Equal(t, responseStatusCode, http.StatusOK)
@@ -145,7 +145,46 @@ func TestCustomerController(t *testing.T) {
 
 	})
 
-	t.Run(`should return error when trying to save customer allow list`, func(t *testing.T) {
+	t.Run(`should return error when document is invalid`, func(t *testing.T) {
+
+		createCustomerPortMock := mocks.NewCreateCustomerPort(t)
+		getCustomerPortMock := mocks.NewGetCustomerPort(t)
+		controller := CustomerController{
+			CreateCustomerUseCase: createCustomerPortMock,
+			GetCustomerUseCase:    getCustomerPortMock,
+		}
+
+		echoServer := echo.New()
+		testUrl := fmt.Sprintf("http://localhost:8080/v1/customers")
+
+		req, _ := http.NewRequest(http.MethodPost, testUrl, strings.NewReader(`
+			{
+				"name": "Name",
+				"phone": "11999999999",
+				"document": "12345678910"
+			}
+		`))
+		req.Header.Add("X-B3-Traceid", "a818dadb-948a-4b58-80d2-d8afed7078bc")
+		rec := httptest.NewRecorder()
+
+		echoContext := echoServer.NewContext(req, rec)
+		err := controller.AddCustomer(echoContext)
+
+		responseBody := rec.Result().Body
+		responseStatusCode := rec.Result().StatusCode
+
+		responseBodyAsString, _ := io.ReadAll(responseBody)
+		expectedResponse := "{\"code\":400,\"message\":\"INVALID_DATA\"}\n"
+
+		assert.Nil(t, err)
+		assert.Equal(t, responseStatusCode, http.StatusBadRequest)
+		assert.Equal(t, string(responseBodyAsString), expectedResponse)
+
+		createCustomerPortMock.AssertNotCalled(t, "AddCustomer", mock.Anything, mock.Anything)
+
+	})
+
+	t.Run(`should return error when trying to save customer`, func(t *testing.T) {
 
 		createCustomerPortMock := mocks.NewCreateCustomerPort(t)
 		getCustomerPortMock := mocks.NewGetCustomerPort(t)

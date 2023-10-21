@@ -16,7 +16,7 @@ func (c CreateCustomerUseCase) AddCustomer(ctx context.Context, customer request
 	return c.customerPersistence.Create(
 		ctx,
 		entity.Customer{
-			Cpf:       customer.Cpf,
+			Document:  customer.Document,
 			Name:      customer.Name,
 			Phone:     customer.Phone,
 			CreatedAt: time.Now(),

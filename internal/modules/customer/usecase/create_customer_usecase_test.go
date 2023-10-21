@@ -20,13 +20,13 @@ func TestCreateCustomerUseCase(t *testing.T) {
 		}
 
 		customer := request.CreateCustomerCommand{
-			Cpf:   "58642725826",
-			Name:  "Name",
-			Phone: "11999999999",
+			Document: "58642725826",
+			Name:     "Name",
+			Phone:    "11999999999",
 		}
 
 		repositoryMock.On("Create", mock.Anything, mock.MatchedBy(func(c entity.Customer) bool {
-			return c.Cpf == "58642725826" &&
+			return c.Document == "58642725826" &&
 				c.Name == "Name" &&
 				c.Phone == "11999999999"
 		})).Return(nil)
@@ -45,9 +45,9 @@ func TestCreateCustomerUseCase(t *testing.T) {
 		}
 
 		customer := request.CreateCustomerCommand{
-			Cpf:   "58642725826",
-			Name:  "Name",
-			Phone: "11999999999",
+			Document: "58642725826",
+			Name:     "Name",
+			Phone:    "11999999999",
 		}
 
 		repositoryMock.On("Create", mock.Anything, mock.Anything).Return(errors.New("SOME_ERROR"))

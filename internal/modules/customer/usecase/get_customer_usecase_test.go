@@ -22,7 +22,7 @@ func TestGetCustomerUseCase(t *testing.T) {
 		document := "58642725826"
 
 		response := entity.Customer{
-			Cpf:       "58642725826",
+			Document:  "58642725826",
 			Name:      "Name",
 			Phone:     "11999999999",
 			CreatedAt: time.Now(),
@@ -34,7 +34,7 @@ func TestGetCustomerUseCase(t *testing.T) {
 		customer, err := allowListService.GetCustomer(context.TODO(), document)
 
 		assert.Nil(t, err)
-		assert.Equal(t, customer.Cpf, response.Cpf)
+		assert.Equal(t, customer.Document, response.Document)
 		assert.Equal(t, customer.Phone, response.Phone)
 		assert.Equal(t, customer.Name, response.Name)
 		repositoryMock.AssertExpectations(t)
