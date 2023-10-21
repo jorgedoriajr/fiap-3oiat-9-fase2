@@ -22,7 +22,7 @@ func TestTraceCallsMiddleware(t *testing.T) {
 		traceCallsMiddlewareHandlerFunction := traceCallsMiddlewareFunction(mockHandlerFunction)
 
 		echoServer := echo.New()
-		testUrl := "http://localhost:8080/customers/275b428e-663b-4268-96e8-74f1dcb1d98b/claim"
+		testUrl := "http://localhost:8080/customers/10609328220"
 		bodyContent := `{"token": "NjIxMTUwMTIzNDU2Nzg5MTAxMTU1MTMzMg=="}`
 		body := strings.NewReader(bodyContent)
 		req, _ := http.NewRequest(http.MethodPost, testUrl, body)
@@ -30,8 +30,8 @@ func TestTraceCallsMiddleware(t *testing.T) {
 		echoContext := echoServer.NewContext(req, rec)
 		_ = traceCallsMiddlewareHandlerFunction(echoContext)
 
-		traceHeader := echoContext.Request().Header.Get("X-B3-Traceid")
-		spanHeader := echoContext.Request().Header.Get("X-B3-Spanid")
+		traceHeader := echoContext.Request().Header.Get("X-B3-TraceId")
+		spanHeader := echoContext.Request().Header.Get("X-B3-SpanId")
 
 		assert.NotNil(t, traceHeader)
 		assert.NotNil(t, spanHeader)
