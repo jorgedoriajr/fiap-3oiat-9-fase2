@@ -1,5 +1,10 @@
 package input
 
+import (
+	"context"
+	"hamburgueria/internal/modules/customer/domain/response"
+)
+
 type GetCustomerPort interface {
-	GetCustomer(document string) (customerResult any, error error)
+	GetCustomer(ctx context.Context, document string) (*response.CustomerResponse, error)
 }
