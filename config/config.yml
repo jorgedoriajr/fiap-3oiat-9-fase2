@@ -1,0 +1,12 @@
+application:
+  name: hamburgueria
+  logLevel: info
+
+httpServer:
+  port: 8080
+  management:
+    port: 8081
+    healthCheck:
+      enabled: true
+      livenessPath: /liveness
+      readinessPath: /readiness
