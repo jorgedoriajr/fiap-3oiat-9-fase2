@@ -1,14 +1,19 @@
 package injection
 
 import (
-	"hamburgueria/config"
-	"hamburgueria/internal/application/rest"
+	"hamburgueria/internal/application/api/rest"
+	"hamburgueria/internal/modules/customer/usecase"
 )
 
 type DependencyInjection struct {
 	CustomerController *rest.CustomerController
 }
 
-func NewDependencyInjection(config config.ApplicationConfig) DependencyInjection {
-	return DependencyInjection{}
+func NewDependencyInjection() DependencyInjection {
+	return DependencyInjection{
+		CustomerController: &rest.CustomerController{
+			CreateCustomerUseCase: usecase.CreateCustomerUseCase{},
+			GetCustomerUseCase:    usecase.GetCustomerUseCase{},
+		},
+	}
 }

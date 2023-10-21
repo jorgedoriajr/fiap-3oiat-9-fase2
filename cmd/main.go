@@ -3,7 +3,6 @@ package main
 import (
 	"hamburgueria/config"
 	"hamburgueria/internal/application/injection"
-	"hamburgueria/internal/application/rest"
 	"hamburgueria/pkg/httpserver"
 	"hamburgueria/pkg/starter"
 )
@@ -19,11 +18,11 @@ func main() {
 	}
 	config.SetConfig(serviceConfig)
 
-	dependencyInjection := injection.NewDependencyInjection(serviceConfig)
+	dependencyInjection := injection.NewDependencyInjection()
 
 	server := httpserver.Builder().
 		WithConfig(starter.GetHttpServerConfig()).
-		WithControllers(rest.GetAllControllers(dependencyInjection)).
+		WithControllers(injection.GetAllControllers(dependencyInjection)...).
 		Build()
 
 	server.Listen()

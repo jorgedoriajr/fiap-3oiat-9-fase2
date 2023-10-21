@@ -4,18 +4,21 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/labstack/echo/v4"
+	"hamburgueria/internal/application/api/middleware"
 	"hamburgueria/internal/modules/customer/domain/request"
 	"hamburgueria/internal/modules/customer/port/input"
 	"net/http"
 )
 
 type CustomerController struct {
-	createCustomerUseCase input.CreateCustomerPort
-	getCustomerUseCase    input.GetCustomerPort
+	CreateCustomerUseCase input.CreateCustomerPort
+	GetCustomerUseCase    input.GetCustomerPort
 }
 
 func (c *CustomerController) RegisterEchoRoutes(e *echo.Echo) {
-	group := e.Group("/v1/customers")
+	group := e.Group("/v1/customers",
+		middleware.GetTraceCallsMiddlewareFunc(),
+	)
 	group.Add(http.MethodGet, "/:document", c.GetCustomer)
 	group.Add(http.MethodPost, "", c.AddCustomer)
 }
@@ -34,7 +37,7 @@ func (c *CustomerController) RegisterEchoRoutes(e *echo.Echo) {
 func (c *CustomerController) GetCustomer(ctx echo.Context) error {
 	document := ctx.Param("document")
 
-	response, err := c.getCustomerUseCase.GetCustomer(ctx.Request().Context(), document)
+	response, err := c.GetCustomerUseCase.GetCustomer(ctx.Request().Context(), document)
 
 	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
@@ -83,7 +86,7 @@ func (c *CustomerController) AddCustomer(ctx echo.Context) error {
 		})
 	}
 
-	err = c.createCustomerUseCase.AddCustomer(ctx.Request().Context(), command)
+	err = c.CreateCustomerUseCase.AddCustomer(ctx.Request().Context(), command)
 	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
 			"code":    400,
