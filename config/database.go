@@ -1,6 +1,6 @@
 package config
 
-// Config represents sql database configuration
+// DatabaseConfig represents sql database configuration
 // QueryMode should be passed with value simple_protocol if you are considering use pgBouncer.
 type DatabaseConfig struct {
 	Host         string
