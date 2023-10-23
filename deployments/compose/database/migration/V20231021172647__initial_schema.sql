@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS "product" (
     description             text,
     category                varchar(50) references "product_category"(name) not null ,
     menu                    boolean not null ,
-    ingredients             UUID[] references "ingredient"(id) ARRAY not null,
+    ingredients             UUID[] not null,
     created_at              timestamp not null,
     updated_at              timestamp
 );
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS "order" (
     payment_id      UUID references "payment"(id),
     takeAway        boolean not null,
     amount          bigint not null,
-    products        JSONB[] not null,
+    products        UUID[] not null,
     status          varchar(50) not null ,
     created_at      timestamp not null,
     updated_at      timestamp
