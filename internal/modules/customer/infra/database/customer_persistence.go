@@ -2,9 +2,11 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"github.com/rs/zerolog"
 	"hamburgueria/internal/modules/customer/domain/entity"
+	"hamburgueria/internal/modules/customer/infra/database/postgres/sql/read"
+	"hamburgueria/internal/modules/customer/infra/database/postgres/sql/write"
+	queryhelper "hamburgueria/pkg/querymapper"
 	"hamburgueria/pkg/sql"
 )
 
@@ -15,30 +17,19 @@ type CustomerRepository struct {
 }
 
 func (c CustomerRepository) Create(ctx context.Context, customer entity.Customer) error {
-	insertStatement := fmt.Sprintf(`
-		INSERT INTO customer (
-		  cpf, 
-		  phone,            
-		  name,             
-		  email,            
-		  opt_in_promotion,       
-		  created_at,
-		  updated_at)
-		VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-	)
 
-	insertCommand := sql.NewCommand(
-		ctx,
-		c.ReadWriteClient,
-		insertStatement,
-		customer.Document,
-		customer.Phone,
-		customer.Name,
-		customer.Email,
-		customer.OptInPromotion,
-		customer.CreatedAt,
-		customer.UpdatedAt,
-	)
+	mapper := write.InsertCustomerRWQueryMapper{
+		Document:       customer.Document,
+		Name:           customer.Name,
+		Phone:          customer.Phone,
+		Email:          customer.Email,
+		OptInPromotion: customer.OptInPromotion,
+		CreatedAt:      customer.CreatedAt,
+		UpdatedAt:      customer.UpdatedAt,
+	}
+	args := queryhelper.GetArrayOfPropertiesFrom(mapper)
+
+	insertCommand := sql.NewCommand(ctx, c.ReadWriteClient, write.InsertCustomerRW, args...)
 
 	err := insertCommand.Exec()
 
@@ -53,22 +44,9 @@ func (c CustomerRepository) Create(ctx context.Context, customer entity.Customer
 	return nil
 }
 
-func (c CustomerRepository) Get(ctx context.Context, document string) (customerResult *entity.Customer, err error) {
-	query := fmt.Sprintf(`
-		SELECT
-			cpf,              
-			phone,            
-			name,             
-			email,            
-			opt_in_promotion,       
-			created_at,
-			updated_at
-		FROM customer
-		WHERE cpf = $1
-		LIMIT 1`,
-	)
+func (c CustomerRepository) Get(ctx context.Context, document string) (customerResult *read.FindCustomerQueryResult, err error) {
 
-	row, err := sql.NewQuery[*entity.Customer](ctx, c.ReadOnlyClient, query, document).One()
+	row, err := sql.NewQuery[*read.FindCustomerQueryResult](ctx, c.ReadOnlyClient, read.FindCustomerByCpf, document).One()
 
 	if err != nil {
 		c.Logger.Error().
