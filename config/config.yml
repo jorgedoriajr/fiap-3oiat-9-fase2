@@ -10,3 +10,21 @@ httpServer:
       enabled: true
       livenessPath: /liveness
       readinessPath: /readiness
+
+databases:
+  readOnly:
+    host: localhost
+    port: 5432
+    databaseName: hamburgueria
+    user: hamburgueria-app-read
+    password: hamburgueria-app-read
+    maxPoolSize: 5
+
+  readWrite:
+    host: localhost
+    port: 5432
+    databaseName: hamburgueria
+    user: hamburgueria-app-write
+    password: hamburgueria-app-write
+    maxPoolSize: 5
+

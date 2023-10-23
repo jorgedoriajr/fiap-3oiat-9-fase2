@@ -1,6 +1,8 @@
 package starter
 
-import "hamburgueria/config"
+import (
+	"hamburgueria/config"
+)
 
 // GetAppConfig return the loaded application config
 func GetAppConfig() config.Application {
