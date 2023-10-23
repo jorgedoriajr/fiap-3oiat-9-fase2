@@ -18,8 +18,8 @@ type CustomerController struct {
 
 func (c *CustomerController) RegisterEchoRoutes(e *echo.Echo) {
 	group := e.Group("/v1/customers",
-		middleware.GetLogCallsMiddlewareFunc(),
 		middleware.GetTraceCallsMiddlewareFunc(),
+		middleware.GetLogCallsMiddlewareFunc(),
 	)
 	group.Add(http.MethodGet, "/:document", c.GetCustomer)
 	group.Add(http.MethodPost, "", c.AddCustomer)
