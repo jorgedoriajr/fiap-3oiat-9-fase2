@@ -7,11 +7,11 @@ import (
 )
 
 type GetCustomerUseCase struct {
-	customerPersistence output.CustomerPersistencePort
+	CustomerPersistence output.CustomerPersistencePort
 }
 
 func (c GetCustomerUseCase) GetCustomer(ctx context.Context, document string) (*response.CustomerResponse, error) {
-	customer, err := c.customerPersistence.Get(ctx, document)
+	customer, err := c.CustomerPersistence.Get(ctx, document)
 	if err != nil {
 		return nil, err
 	}
@@ -22,5 +22,6 @@ func (c GetCustomerUseCase) GetCustomer(ctx context.Context, document string) (*
 		Document: customer.Document,
 		Name:     customer.Name,
 		Phone:    customer.Phone,
+		Email:    customer.Email,
 	}, err
 }

@@ -9,18 +9,20 @@ import (
 )
 
 type CreateCustomerUseCase struct {
-	customerPersistence output.CustomerPersistencePort
+	CustomerPersistence output.CustomerPersistencePort
 }
 
 func (c CreateCustomerUseCase) AddCustomer(ctx context.Context, customer request.CreateCustomerCommand) error {
-	return c.customerPersistence.Create(
+	return c.CustomerPersistence.Create(
 		ctx,
 		entity.Customer{
-			Document:  customer.Document,
-			Name:      customer.Name,
-			Phone:     customer.Phone,
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
+			Document:       customer.Document,
+			Name:           customer.Name,
+			Phone:          customer.Phone,
+			Email:          customer.Email,
+			OptInPromotion: customer.OptInPromotion,
+			CreatedAt:      time.Now(),
+			UpdatedAt:      time.Now(),
 		},
 	)
 }
