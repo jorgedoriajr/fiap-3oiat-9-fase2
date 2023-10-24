@@ -6,7 +6,7 @@ import (
 	"hamburgueria/internal/modules/customer/domain/entity"
 	"hamburgueria/internal/modules/customer/infra/database/postgres/sql/read"
 	"hamburgueria/internal/modules/customer/infra/database/postgres/sql/write"
-	queryhelper "hamburgueria/pkg/querymapper"
+	"hamburgueria/pkg/querymapper"
 	"hamburgueria/pkg/sql"
 )
 
@@ -18,19 +18,10 @@ type CustomerRepository struct {
 
 func (c CustomerRepository) Create(ctx context.Context, customer entity.Customer) error {
 
-	mapper := write.InsertCustomerRWQueryMapper{
-		Document:       customer.Document,
-		Name:           customer.Name,
-		Phone:          customer.Phone,
-		Email:          customer.Email,
-		OptInPromotion: customer.OptInPromotion,
-		CreatedAt:      customer.CreatedAt,
-		UpdatedAt:      customer.UpdatedAt,
-	}
-	args := queryhelper.GetArrayOfPropertiesFrom(mapper)
+	mapper := write.EntityToInsertCustomerQueryMapper(customer)
+	args := querymapper.GetArrayOfPropertiesFrom(mapper)
 
 	insertCommand := sql.NewCommand(ctx, c.ReadWriteClient, write.InsertCustomerRW, args...)
-
 	err := insertCommand.Exec()
 
 	if err != nil {
@@ -44,9 +35,9 @@ func (c CustomerRepository) Create(ctx context.Context, customer entity.Customer
 	return nil
 }
 
-func (c CustomerRepository) Get(ctx context.Context, document string) (customerResult *read.FindCustomerQueryResult, err error) {
+func (c CustomerRepository) Get(ctx context.Context, document string) (customerResult *entity.Customer, err error) {
 
-	row, err := sql.NewQuery[*read.FindCustomerQueryResult](ctx, c.ReadOnlyClient, read.FindCustomerByCpf, document).One()
+	result, err := sql.NewQuery[*read.FindCustomerQueryResult](ctx, c.ReadOnlyClient, read.FindCustomerByCpf, document).One()
 
 	if err != nil {
 		c.Logger.Error().
@@ -56,5 +47,5 @@ func (c CustomerRepository) Get(ctx context.Context, document string) (customerR
 		return nil, err
 	}
 
-	return row, nil
+	return result.ToEntity(), nil
 }
