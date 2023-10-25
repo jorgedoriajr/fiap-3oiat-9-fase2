@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/labstack/echo/v4"
-	middleware2 "hamburgueria/internal/api/middleware"
+	"hamburgueria/internal/application/api/middleware"
 	"hamburgueria/internal/modules/customer/domain/request"
 	"hamburgueria/internal/modules/customer/port/input"
 	"hamburgueria/pkg/validation"
@@ -18,8 +18,8 @@ type CustomerController struct {
 
 func (c *CustomerController) RegisterEchoRoutes(e *echo.Echo) {
 	group := e.Group("/v1/customers",
-		middleware2.GetTraceCallsMiddlewareFunc(),
-		middleware2.GetLogCallsMiddlewareFunc(),
+		middleware.GetTraceCallsMiddlewareFunc(),
+		middleware.GetLogCallsMiddlewareFunc(),
 	)
 	group.Add(http.MethodGet, "/:document", c.GetCustomer)
 	group.Add(http.MethodPost, "", c.AddCustomer)

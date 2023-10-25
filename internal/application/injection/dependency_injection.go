@@ -1,8 +1,8 @@
 package injection
 
 import (
-	"hamburgueria/internal/api/rest"
-	"hamburgueria/internal/api/swagger"
+	"hamburgueria/internal/application/api/rest"
+	"hamburgueria/internal/application/api/swagger"
 	"hamburgueria/internal/modules/customer/infra/database"
 	"hamburgueria/internal/modules/customer/usecase"
 	"hamburgueria/pkg/logger"
