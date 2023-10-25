@@ -4,7 +4,8 @@ import (
 	"hamburgueria/internal/application/api/rest"
 	"hamburgueria/internal/application/api/swagger"
 	"hamburgueria/internal/modules/customer/infra/database"
-	"hamburgueria/internal/modules/customer/usecase"
+	"hamburgueria/internal/modules/customer/usecase/create"
+	"hamburgueria/internal/modules/customer/usecase/get"
 	"hamburgueria/pkg/logger"
 	"hamburgueria/pkg/sql"
 )
@@ -24,8 +25,8 @@ func NewDependencyInjection() DependencyInjection {
 
 	return DependencyInjection{
 		CustomerController: &rest.CustomerController{
-			CreateCustomerUseCase: usecase.CreateCustomerUseCase{CustomerPersistence: customerPersistence},
-			GetCustomerUseCase:    usecase.GetCustomerUseCase{CustomerPersistence: customerPersistence},
+			CreateCustomerUseCase: create.CreateCustomerUseCase{CustomerPersistence: customerPersistence},
+			GetCustomerUseCase:    get.GetCustomerUseCase{CustomerPersistence: customerPersistence},
 		},
 		Swagger: &swagger.Swagger{},
 	}
