@@ -38,9 +38,16 @@ CREATE TABLE IF NOT EXISTS "product" (
     description             text,
     category                varchar(50) references "product_category"(name) not null ,
     menu                    boolean not null ,
-    ingredients             UUID[] not null,
     created_at              timestamp not null,
     updated_at              timestamp
+);
+
+CREATE TABLE IF NOT EXISTS "product_ingredient" (
+    id                      UUID not null primary key default public.uuid_generate_v4(),
+    product_id              UUID references "product"(id) not null,
+    ingredient_id           UUID references "ingredient"(id) not null,
+    quantity                int not null,
+    amount                  bigint not null
 );
 
 CREATE TABLE IF NOT EXISTS "payment" (
@@ -59,17 +66,22 @@ CREATE TABLE IF NOT EXISTS "order" (
     payment_id      UUID references "payment"(id),
     takeAway        boolean not null,
     amount          bigint not null,
-    products        UUID[] not null,
     status          varchar(50) not null ,
     created_at      timestamp not null,
     updated_at      timestamp
 );
 
+CREATE TABLE IF NOT EXISTS "order_product" (
+    id                      UUID not null primary key default public.uuid_generate_v4(),
+    product_id              UUID references "product"(id) not null,
+    order_id                UUID references "order"(id) not null,
+    quantity                int not null,
+    amount                  bigint not null
+);
 
 CREATE TABLE IF NOT EXISTS "order_history" (
     id          UUID not null primary key default public.uuid_generate_v4(),
     order_id    UUID references "order"(id) not null,
-    command     JSONB,
     status      varchar(50) not null,
     change_by   varchar(50) not null,
     created_at  timestamp not null
