@@ -1,6 +1,6 @@
 package response
 
-type CustomerResponse struct {
+type Customer struct {
 	Document string `json:"document"`
 	Name     string `json:"name"`
 	Phone    string `json:"phone"`

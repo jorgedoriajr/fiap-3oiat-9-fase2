@@ -16,11 +16,11 @@ type CreateCustomerPort struct {
 }
 
 // AddCustomer provides a mock function with given fields: ctx, createCustomerCommand
-func (_m *CreateCustomerPort) AddCustomer(ctx context.Context, createCustomerCommand request.CreateCustomerCommand) error {
+func (_m *CreateCustomerPort) AddCustomer(ctx context.Context, createCustomerCommand request.CreateCustomer) error {
 	ret := _m.Called(ctx, createCustomerCommand)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, request.CreateCustomerCommand) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, request.CreateCustomer) error); ok {
 		r0 = rf(ctx, createCustomerCommand)
 	} else {
 		r0 = ret.Error(0)

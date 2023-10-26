@@ -1,4 +1,4 @@
-package get
+package usecase
 
 import (
 	"context"
@@ -10,7 +10,7 @@ type GetCustomerUseCase struct {
 	CustomerPersistence output.CustomerPersistencePort
 }
 
-func (c GetCustomerUseCase) GetCustomer(ctx context.Context, document string) (*response.CustomerResponse, error) {
+func (c GetCustomerUseCase) GetCustomer(ctx context.Context, document string) (*response.Customer, error) {
 	customer, err := c.CustomerPersistence.Get(ctx, document)
 	if err != nil {
 		return nil, err
@@ -18,7 +18,7 @@ func (c GetCustomerUseCase) GetCustomer(ctx context.Context, document string) (*
 	if customer == nil {
 		return nil, err
 	}
-	return &response.CustomerResponse{
+	return &response.Customer{
 		Document: customer.Document,
 		Name:     customer.Name,
 		Phone:    customer.Phone,

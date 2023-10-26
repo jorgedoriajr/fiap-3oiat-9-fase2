@@ -1,4 +1,4 @@
-package create
+package usecase
 
 import (
 	"context"
@@ -15,11 +15,11 @@ func TestCreateCustomerUseCase(t *testing.T) {
 
 	t.Run(`should add customer`, func(t *testing.T) {
 		repositoryMock := mocks.NewCustomerPersistencePort(t)
-		allowListService := CreateCustomerUseCase{
-			CustomerPersistence: repositoryMock,
+		allowListService := CreateOrderUseCase{
+			OrderPersistence: repositoryMock,
 		}
 
-		customer := request.CreateCustomerCommand{
+		customer := request.CreateCustomer{
 			Document: "58642725826",
 			Name:     "Name",
 			Phone:    "11999999999",
@@ -40,11 +40,11 @@ func TestCreateCustomerUseCase(t *testing.T) {
 
 	t.Run(`should not add customer if error`, func(t *testing.T) {
 		repositoryMock := mocks.NewCustomerPersistencePort(t)
-		allowListService := CreateCustomerUseCase{
-			CustomerPersistence: repositoryMock,
+		allowListService := CreateOrderUseCase{
+			OrderPersistence: repositoryMock,
 		}
 
-		customer := request.CreateCustomerCommand{
+		customer := request.CreateCustomer{
 			Document: "58642725826",
 			Name:     "Name",
 			Phone:    "11999999999",

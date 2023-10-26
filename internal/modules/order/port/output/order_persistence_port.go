@@ -1,5 +1,10 @@
 package output
 
+import (
+	"context"
+	"hamburgueria/internal/modules/order/domain/entity"
+)
+
 type OrderPersistencePort interface {
-	Create(createOrderPersistenceCommand any) (createOrderPersistenceResult any, err error)
+	Create(ctx context.Context, order entity.Order) error
 }
