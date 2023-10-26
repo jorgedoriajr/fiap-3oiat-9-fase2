@@ -7,8 +7,8 @@ import (
 )
 
 type Ingridients struct {
-	Id     uuid.UUID           `json:"id"`
-	Name   valueobjects.Name   `json:"name"`
-	Amount valueobjects.Amount `json:"amount"`
-	Type   valueobjects.Type   `json:"type"`
+	Id     uuid.UUID
+	Name   valueobjects.Name
+	Amount valueobjects.Amount
+	Type   valueobjects.Type
 }
