@@ -1,12 +1,12 @@
 package entity
 
 import (
-	"hamburgueria/internal/modules/ingridient/domain/valueobjects"
+	"hamburgueria/internal/modules/ingredient/domain/valueobjects"
 
 	"github.com/google/uuid"
 )
 
-type IngridientType struct {
+type IngredientType struct {
 	Id              uuid.UUID
 	Name            valueobjects.Name
 	Optional        valueobjects.Optional

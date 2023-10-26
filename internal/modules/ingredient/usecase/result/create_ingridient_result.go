@@ -1,12 +1,12 @@
-package entity
+package result
 
 import (
-	"hamburgueria/internal/modules/ingridient/domain/valueobjects"
+	"hamburgueria/internal/modules/ingredient/domain/valueobjects"
 
 	"github.com/google/uuid"
 )
 
-type Ingridients struct {
+type CreateingredientResult struct {
 	Id     uuid.UUID
 	Name   valueobjects.Name
 	Amount valueobjects.Amount
