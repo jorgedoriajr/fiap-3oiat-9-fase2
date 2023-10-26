@@ -4,9 +4,9 @@ import (
 	"context"
 	"github.com/google/uuid"
 	"hamburgueria/internal/modules/order/domain/entity"
-	"hamburgueria/internal/modules/order/domain/response"
 	"hamburgueria/internal/modules/order/port/output"
 	"hamburgueria/internal/modules/order/usecase/command"
+	"hamburgueria/internal/modules/order/usecase/result"
 	productEntity "hamburgueria/internal/modules/product/domain/entity"
 	productPort "hamburgueria/internal/modules/product/ports/output"
 	productCommand "hamburgueria/internal/modules/product/usecase/command"
@@ -22,7 +22,7 @@ type CreateOrderUseCase struct {
 func (c CreateOrderUseCase) AddOrder(
 	ctx context.Context,
 	createOrderCommand command.CreateOrderCommand,
-) (*response.OrderResponse, error) {
+) (*result.CreateOrderResult, error) {
 
 	var amount int64
 
@@ -66,7 +66,7 @@ func (c CreateOrderUseCase) AddOrder(
 		return nil, err
 	}
 
-	return &response.OrderResponse{
+	return &result.CreateOrderResult{
 		Amount:      amount,
 		PaymentData: "",
 	}, err

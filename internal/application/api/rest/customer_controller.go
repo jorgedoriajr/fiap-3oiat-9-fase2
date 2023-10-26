@@ -43,7 +43,7 @@ func (c *CustomerController) GetCustomer(ctx echo.Context) error {
 
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, map[string]any{
-			"code":    400,
+			"code":    http.StatusInternalServerError,
 			"message": err.Error(),
 		})
 	}
@@ -83,7 +83,7 @@ func (c *CustomerController) AddCustomer(ctx echo.Context) error {
 
 	if errJson != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
-			"code":    400,
+			"code":    http.StatusBadRequest,
 			"message": "UNMARSHAL_ERROR",
 		})
 	}
@@ -91,7 +91,7 @@ func (c *CustomerController) AddCustomer(ctx echo.Context) error {
 	isValid := validation.ValidateCPF(createCustomerRequest.Document)
 	if !isValid {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
-			"code":    400,
+			"code":    http.StatusBadRequest,
 			"message": "INVALID_DATA",
 		})
 	}
@@ -99,7 +99,7 @@ func (c *CustomerController) AddCustomer(ctx echo.Context) error {
 	err = c.CreateCustomerUseCase.AddCustomer(ctx.Request().Context(), createCustomerRequest.ToCommand())
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, map[string]any{
-			"code":    400,
+			"code":    http.StatusInternalServerError,
 			"message": err.Error(),
 		})
 	}

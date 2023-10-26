@@ -3,18 +3,18 @@ package command
 import "github.com/google/uuid"
 
 type CreateOrderCommand struct {
-	CustomerDocument string                       `json:"document"`
-	Products         []CreateOrderProductsCommand `json:"products"`
+	CustomerDocument string
+	Products         []CreateOrderProductsCommand
 }
 
 type CreateOrderProductsCommand struct {
-	Id          uuid.UUID                      `json:"id"`
-	Quantity    int                            `json:"quantity"`
-	Ingredients []CreateOrderIngredientCommand `json:"ingredients"`
-	Type        string                         `json:"type"`
+	Id          uuid.UUID
+	Quantity    int
+	Ingredients []CreateOrderIngredientCommand
+	Type        string
 }
 
 type CreateOrderIngredientCommand struct {
-	Id       uuid.UUID `json:"id"`
-	Quantity int       `json:"quantity"`
+	Id       uuid.UUID
+	Quantity int
 }

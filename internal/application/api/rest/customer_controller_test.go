@@ -20,9 +20,9 @@ func TestCustomerController(t *testing.T) {
 
 		createCustomerPortMock := mocks.NewCreateCustomerPort(t)
 		getCustomerPortMock := mocks.NewGetCustomerPort(t)
-		controller := OrderController{
-			CreateOrderUseCase: createCustomerPortMock,
-			GetCustomerUseCase: getCustomerPortMock,
+		controller := CustomerController{
+			CreateCustomerUseCase: createCustomerPortMock,
+			GetCustomerUseCase:    getCustomerPortMock,
 		}
 
 		document := "98932673667"
@@ -66,9 +66,9 @@ func TestCustomerController(t *testing.T) {
 
 		createCustomerPortMock := mocks.NewCreateCustomerPort(t)
 		getCustomerPortMock := mocks.NewGetCustomerPort(t)
-		controller := OrderController{
-			CreateOrderUseCase: createCustomerPortMock,
-			GetCustomerUseCase: getCustomerPortMock,
+		controller := CustomerController{
+			CreateCustomerUseCase: createCustomerPortMock,
+			GetCustomerUseCase:    getCustomerPortMock,
 		}
 
 		document := "98932673667"
@@ -107,9 +107,9 @@ func TestCustomerController(t *testing.T) {
 
 		createCustomerPortMock := mocks.NewCreateCustomerPort(t)
 		getCustomerPortMock := mocks.NewGetCustomerPort(t)
-		controller := OrderController{
-			CreateOrderUseCase: createCustomerPortMock,
-			GetCustomerUseCase: getCustomerPortMock,
+		controller := CustomerController{
+			CreateCustomerUseCase: createCustomerPortMock,
+			GetCustomerUseCase:    getCustomerPortMock,
 		}
 
 		echoServer := echo.New()
@@ -149,9 +149,9 @@ func TestCustomerController(t *testing.T) {
 
 		createCustomerPortMock := mocks.NewCreateCustomerPort(t)
 		getCustomerPortMock := mocks.NewGetCustomerPort(t)
-		controller := OrderController{
-			CreateOrderUseCase: createCustomerPortMock,
-			GetCustomerUseCase: getCustomerPortMock,
+		controller := CustomerController{
+			CreateCustomerUseCase: createCustomerPortMock,
+			GetCustomerUseCase:    getCustomerPortMock,
 		}
 
 		echoServer := echo.New()
@@ -188,9 +188,9 @@ func TestCustomerController(t *testing.T) {
 
 		createCustomerPortMock := mocks.NewCreateCustomerPort(t)
 		getCustomerPortMock := mocks.NewGetCustomerPort(t)
-		controller := OrderController{
-			CreateOrderUseCase: createCustomerPortMock,
-			GetCustomerUseCase: getCustomerPortMock,
+		controller := CustomerController{
+			CreateCustomerUseCase: createCustomerPortMock,
+			GetCustomerUseCase:    getCustomerPortMock,
 		}
 
 		echoServer := echo.New()

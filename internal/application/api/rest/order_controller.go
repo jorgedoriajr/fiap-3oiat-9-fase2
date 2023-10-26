@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"hamburgueria/internal/application/api/middleware"
 	"hamburgueria/internal/modules/order/domain/request"
+	"hamburgueria/internal/modules/order/domain/response"
 	"hamburgueria/internal/modules/order/port/input"
 	"net/http"
 )
@@ -50,17 +51,20 @@ func (c *OrderController) AddOrder(ctx echo.Context) error {
 
 	if errJson != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
-			"code":    400,
+			"code":    http.StatusBadRequest,
 			"message": "UNMARSHAL_ERROR",
 		})
 	}
 
-	err = c.CreateOrderUseCase.AddOrder(ctx.Request().Context(), createOrderRequest.ToCommand())
+	result, err := c.CreateOrderUseCase.AddOrder(ctx.Request().Context(), createOrderRequest.ToCommand())
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, map[string]any{
-			"code":    400,
+			"code":    http.StatusInternalServerError,
 			"message": err.Error(),
 		})
 	}
-	return ctx.JSON(http.StatusOK, nil)
+	return ctx.JSON(http.StatusOK, response.OrderResponse{
+		Amount:      result.Amount,
+		PaymentData: result.PaymentData,
+	})
 }
