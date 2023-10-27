@@ -7,13 +7,13 @@ import (
 	"github.com/google/uuid"
 )
 
-type CreateingredientCommand struct {
+type CreateIngredientCommand struct {
 	Name   valueobjects.Name
 	Amount valueobjects.Amount
 	Type   valueobjects.Type
 }
 
-func (cmd CreateingredientCommand) ToingredientEntity() entity.Ingredient {
+func (cmd CreateIngredientCommand) ToIngredientEntity() entity.Ingredient {
 	return entity.Ingredient{
 		Id:     uuid.New(),
 		Name:   cmd.Name,

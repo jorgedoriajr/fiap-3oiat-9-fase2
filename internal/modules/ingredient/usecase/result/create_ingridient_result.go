@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type CreateingredientResult struct {
+type CreateIngredientResult struct {
 	Id     uuid.UUID
 	Name   valueobjects.Name
 	Amount valueobjects.Amount
