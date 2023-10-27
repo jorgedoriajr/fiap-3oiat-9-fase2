@@ -10,6 +10,7 @@ import (
 	productEntity "hamburgueria/internal/modules/product/domain/entity"
 	productPort "hamburgueria/internal/modules/product/ports/output"
 	productCommand "hamburgueria/internal/modules/product/usecase/command"
+	productResult "hamburgueria/internal/modules/product/usecase/result"
 	"time"
 )
 
@@ -25,37 +26,51 @@ func (c CreateOrderUseCase) AddOrder(
 ) (*result.CreateOrderResult, error) {
 
 	var amount int64
+	var products []entity.OrderProduct
+	orderId := uuid.New()
 
 	for _, createProductCommand := range createOrderCommand.Products {
-
-		product, err := c.findProductByType(ctx, createProductCommand)
-		if err != nil {
-			return nil, err
-		}
-
-		if product == nil {
-			_, err := c.ProductUseCase.AddProduct(ctx, productCommand.CreateProductCommand{
-				Name:        "Personalized Product",
-				Description: "Produto personalidado pelo cliente",
-				Category:    "Dish",
-				Menu:        false,
-				Ingredients: nil,
-			})
+		var productAmount int
+		if createProductCommand.Type == "default" {
+			product, err := c.ProductPersistence.GetByID(ctx, createProductCommand.Id.String())
 			if err != nil {
 				return nil, err
 			}
+
+			products = append(products, entity.OrderProduct{
+				Id:        uuid.New(),
+				ProductId: product.ID,
+				OrderId:   orderId,
+				Quantity:  createProductCommand.Quantity,
+				Amount:    int64(product.Amount),
+			})
+			productAmount = product.Amount
+
+		} else {
+			productCreated, err := c.createProduct(ctx)
+			if err != nil {
+				return nil, err
+			}
+			products = append(products, entity.OrderProduct{
+				Id:        uuid.New(),
+				ProductId: productCreated.ID,
+				OrderId:   orderId,
+				Quantity:  createProductCommand.Quantity,
+				Amount:    int64(productCreated.Amount),
+			})
+			productAmount = productCreated.Amount
 		}
 
-		amount = amount + int64(product.Amount*createProductCommand.Quantity)
+		amount = amount + int64(productAmount*createProductCommand.Quantity)
 
 	}
 
 	err := c.OrderPersistence.Create(
 		ctx,
 		entity.Order{
-			Id:         uuid.UUID{},
+			Id:         uuid.New(),
 			CustomerId: createOrderCommand.CustomerDocument,
-			Products:   nil,
+			Products:   products,
 			CreatedAt:  time.Now(),
 			UpdatedAt:  time.Now(),
 			Status:     "CREATED",
@@ -68,20 +83,23 @@ func (c CreateOrderUseCase) AddOrder(
 
 	return &result.CreateOrderResult{
 		Amount:      amount,
-		PaymentData: "",
+		PaymentData: "not implemented",
 	}, err
+}
+
+func (c CreateOrderUseCase) createProduct(ctx context.Context) (productResult.CreateProductResult, error) {
+	return c.ProductUseCase.AddProduct(ctx, productCommand.CreateProductCommand{
+		Name:        "Personalized Product",
+		Description: "Produto personalidado pelo cliente",
+		Category:    "Dish",
+		Menu:        false,
+		Ingredients: nil, //TODO fix
+	})
 }
 
 func (c CreateOrderUseCase) findProductByType(ctx context.Context, createProductCommand command.CreateOrderProductsCommand) (*productEntity.ProductEntity, error) {
 	var product productEntity.ProductEntity
 	var err error
-
-	if createProductCommand.Type == "default" {
-		product, err = c.ProductPersistence.GetByID(ctx, createProductCommand.Id.String())
-		/*if product == nil { //TODO vai voltar nulo?
-			return errors.New("product not found")
-		}*/
-	}
 
 	if createProductCommand.Type == "personalized" {
 		product, err = c.ProductPersistence.GetByID(ctx, createProductCommand.Id.String()) // TODO findByIngredients
