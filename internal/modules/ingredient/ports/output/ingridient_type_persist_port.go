@@ -7,5 +7,6 @@ import (
 
 type IngredientTypePersistencePort interface {
 	Create(context.Context, entity.IngredientType) error
-	GetByName(id string) (context.Context, entity.IngredientType, error)
+	GetByName(name string) (context.Context, entity.IngredientType, error)
+	GetAll() (context.Context, []entity.IngredientType, error)
 }
