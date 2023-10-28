@@ -7,6 +7,7 @@ import (
 func GetAllControllers(injection DependencyInjection) []httpserver.Controller {
 	return []httpserver.Controller{
 		injection.CustomerController,
+		injection.ProductController,
 		injection.Swagger,
 	}
 }

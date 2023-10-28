@@ -1,19 +1,91 @@
 package command
 
 import (
-	"github.com/google/uuid"
 	"hamburgueria/internal/modules/product/domain/entity"
+	"hamburgueria/internal/modules/product/domain/valueobject"
+	"sync/atomic"
+	"time"
 )
 
 type CreateProductCommand struct {
 	Name        string
 	Amount      int
 	Description string
-	Category    string
+	Category    valueobject.ProductCategory
 	Menu        bool
-	Ingredients []uuid.UUID
+	Ingredients []Ingredient
 }
 
+type Ingredient struct {
+	ID       string
+	Name     string
+	Quantity int
+	Amount   int
+	Type     IngredientType
+}
+
+func NewCreateProductCommand(
+	Name string,
+	Description string,
+	Category valueobject.ProductCategory,
+	Menu bool,
+	Ingredients []Ingredient,
+) *CreateProductCommand {
+
+	cmd := &CreateProductCommand{
+		Name:        Name,
+		Description: Description,
+		Category:    Category,
+		Menu:        Menu,
+		Ingredients: Ingredients,
+	}
+	cmd.calculateAmountFromIngredients()
+	return cmd
+}
+
+func (c CreateProductCommand) calculateAmountFromIngredients() {
+	var total int64
+	for _, ingredient := range c.Ingredients {
+		atomic.AddInt64(&total, int64(ingredient.Amount))
+	}
+	c.Amount = int(total)
+}
+
+type IngredientType string
+
+func GetIngredientTypeByName(name string) IngredientType {
+	if t, ok := types[name]; ok {
+		return t
+	}
+	return ""
+}
+
+var types = map[string]IngredientType{
+	"Protein":           Protein,
+	"VegetableAndSalad": VegetableAndSalad,
+	"Sauce":             Sauces,
+	"Cheese":            Cheeses,
+}
+
+const (
+	Protein           IngredientType = "Protein"
+	VegetableAndSalad IngredientType = "VegetableAndSalad"
+	Sauces            IngredientType = "Sauce"
+	Cheeses           IngredientType = "Cheese"
+)
+
 func (cmd CreateProductCommand) ToProductEntity() entity.ProductEntity {
-	return entity.ProductEntity{}
+	return entity.ProductEntity{
+		Name:        cmd.Name,
+		Amount:      cmd.Amount,
+		Description: cmd.Description,
+		Category:    cmd.Category,
+		Menu:        cmd.Menu,
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
+	}
+}
+
+func ToIngredientEntity() {
+
 }

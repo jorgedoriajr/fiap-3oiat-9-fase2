@@ -4,7 +4,7 @@ build-run: fmt vet lint tests compile
 	./${APP}
 
 compose-up:
-	chmod +x ./deployments/compose/database/setup-postgresql-databases.sh
+	#chmod +x ./deployments/compose/database/setup-postgresql-databases.sh
 	docker compose -f ./deployments/compose/docker-compose.yml up -d
 
 compile:

@@ -16,6 +16,41 @@ type ProductRepository struct {
 	logger          zerolog.Logger
 }
 
+func (c ProductRepository) GetAll(ctx context.Context) ([]entity.ProductEntity, error) {
+	allProduct, allProductErr := sql.NewQuery[entity.ProductEntity](
+		ctx,
+		c.readOnlyClient,
+		read.FindAllProducts,
+	).Many()
+
+	if allProductErr != nil {
+		c.logger.Error().
+			Err(allProductErr).
+			Msg("Failed to get products")
+		return []entity.ProductEntity{}, allProductErr
+	}
+
+	return allProduct, nil
+}
+
+func (c ProductRepository) GetByCategory(ctx context.Context, category string) ([]entity.ProductEntity, error) {
+	productByCategory, productByCategoryErr := sql.NewQuery[entity.ProductEntity](
+		ctx,
+		c.readOnlyClient,
+		read.FindProductByCategory,
+		category,
+	).Many()
+
+	if productByCategoryErr != nil {
+		c.logger.Error().
+			Err(productByCategoryErr).
+			Str("category", category).
+			Msg("Failed to get products by category")
+		return nil, productByCategoryErr
+	}
+	return productByCategory, nil
+}
+
 func (c ProductRepository) Create(ctx context.Context, product entity.ProductEntity) error {
 
 	mapper := write.ToInsertProductQueryMapper(product)
@@ -35,17 +70,25 @@ func (c ProductRepository) Create(ctx context.Context, product entity.ProductEnt
 	return nil
 }
 
-func (c ProductRepository) GetByID(ctx context.Context, productID string) (*entity.ProductEntity, error) {
+func (c ProductRepository) GetByID(ctx context.Context, productID int) (*entity.ProductEntity, error) {
 
 	result, err := sql.NewQuery[read.FindProductQueryResult](ctx, c.readOnlyClient, read.FindProductByID, productID).One()
 
 	if err != nil {
 		c.logger.Error().
 			Err(err).
-			Str("productID", productID).
-			Msg("Failed to get product")
+			Int("productID", productID).
+			Msg("Failed to get product by id")
 		return nil, err
 	}
 
 	return result.ToEntity(), nil
+}
+
+func NewProductRepository(
+	readWriteClient sql.Client,
+	readOnlyClient sql.Client,
+	logger zerolog.Logger,
+) *ProductRepository {
+	return &ProductRepository{readWriteClient: readWriteClient, readOnlyClient: readOnlyClient, logger: logger}
 }
