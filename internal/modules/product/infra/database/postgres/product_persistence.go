@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"hamburgueria/internal/modules/product/domain/entity"
 	"hamburgueria/internal/modules/product/infra/database/postgres/sql/read"
@@ -70,15 +71,29 @@ func (c ProductRepository) Create(ctx context.Context, product entity.ProductEnt
 	return nil
 }
 
-func (c ProductRepository) GetByID(ctx context.Context, productID int) (*entity.ProductEntity, error) {
+func (c ProductRepository) GetByID(ctx context.Context, productID uuid.UUID) (*entity.ProductEntity, error) {
 
 	result, err := sql.NewQuery[read.FindProductQueryResult](ctx, c.readOnlyClient, read.FindProductByID, productID).One()
 
 	if err != nil {
 		c.logger.Error().
 			Err(err).
-			Int("productID", productID).
+			Str("productID", productID.String()).
 			Msg("Failed to get product by id")
+		return nil, err
+	}
+
+	return result.ToEntity(), nil
+}
+
+func (c ProductRepository) GetByNumber(ctx context.Context, productNumber int) (*entity.ProductEntity, error) {
+	result, err := sql.NewQuery[read.FindProductQueryResult](ctx, c.readOnlyClient, read.FindProductByID, productNumber).One()
+
+	if err != nil {
+		c.logger.Error().
+			Err(err).
+			Int("productNumber", productNumber).
+			Msg("Failed to get product by number")
 		return nil, err
 	}
 

@@ -25,14 +25,15 @@ CREATE TABLE IF NOT EXISTS "ingredient_type" (
 
 CREATE TABLE IF NOT EXISTS "ingredient" (
     id          UUID not null primary key default public.uuid_generate_v4(),
-    name        varchar(255) not null,
+    name        varchar(255) unique not null,
     amount      bigint not null,
     type        varchar(50) references "ingredient_type"(name)
 );
 
 
 CREATE TABLE IF NOT EXISTS "product" (
-    id                      serial PRIMARY KEY,
+    id                      UUID not null primary key default public.uuid_generate_v4(),
+    number                  serial,
     name                    varchar(255) not null,
     amount                  bigint not null,
     description             text,
@@ -44,7 +45,7 @@ CREATE TABLE IF NOT EXISTS "product" (
 
 CREATE TABLE IF NOT EXISTS "product_ingredient" (
     id                      UUID not null primary key default public.uuid_generate_v4(),
-    product_id              int references "product"(id) not null,
+    product_id              UUID references "product"(id) not null,
     ingredient_id           UUID references "ingredient"(id) not null,
     quantity                int not null,
     amount                  bigint not null
@@ -73,7 +74,7 @@ CREATE TABLE IF NOT EXISTS "order" (
 
 CREATE TABLE IF NOT EXISTS "order_product" (
     id                      UUID not null primary key default public.uuid_generate_v4(),
-    product_id              int references "product"(id) not null,
+    product_id              UUID references "product"(id) not null,
     order_id                UUID references "order"(id) not null,
     quantity                int not null,
     amount                  bigint not null

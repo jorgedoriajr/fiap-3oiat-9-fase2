@@ -3,7 +3,6 @@ package command
 import (
 	"hamburgueria/internal/modules/product/domain/entity"
 	"hamburgueria/internal/modules/product/domain/valueobject"
-	"sync/atomic"
 	"time"
 )
 
@@ -20,8 +19,6 @@ type Ingredient struct {
 	ID       string
 	Name     string
 	Quantity int
-	Amount   int
-	Type     IngredientType
 }
 
 func NewCreateProductCommand(
@@ -39,17 +36,17 @@ func NewCreateProductCommand(
 		Menu:        Menu,
 		Ingredients: Ingredients,
 	}
-	cmd.calculateAmountFromIngredients()
+	//cmd.calculateAmountFromIngredients()
 	return cmd
 }
 
-func (c CreateProductCommand) calculateAmountFromIngredients() {
-	var total int64
-	for _, ingredient := range c.Ingredients {
-		atomic.AddInt64(&total, int64(ingredient.Amount))
-	}
-	c.Amount = int(total)
-}
+//func (c CreateProductCommand) calculateAmountFromIngredients() {
+//	var total int64
+//	for _, ingredient := range c.Ingredients {
+//		atomic.AddInt64(&total, int64(ingredient.Amount))
+//	}
+//	c.Amount = int(total)
+//}
 
 type IngredientType string
 

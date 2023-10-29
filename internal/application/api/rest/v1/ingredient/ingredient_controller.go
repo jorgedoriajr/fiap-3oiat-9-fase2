@@ -1,44 +1,45 @@
-package product
+package ingredient
 
 import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"hamburgueria/internal/application/api/middleware"
-	"hamburgueria/internal/application/api/rest/v1/product/request"
-	"hamburgueria/internal/modules/product/domain/entity"
-	"hamburgueria/internal/modules/product/ports/input"
-	"hamburgueria/pkg/validation"
+	"hamburgueria/internal/application/api/rest/v1/ingredient/request"
+	"hamburgueria/internal/modules/ingredient/domain/entity"
+	"hamburgueria/internal/modules/ingredient/domain/valueobject"
+	"hamburgueria/internal/modules/ingredient/ports/input"
+
 	"net/http"
 )
 
 type Controller struct {
-	CreateProductUseCase input.CreateProductUseCasePort
-	ProductFinderService input.ProductFinderServicePort
+	CreateIngredientUseCase input.CreateIngredientUseCasePort
+	IngredientFinderService input.IngredientFinderServicePort
 }
 
 func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
-	group := e.Group("/v1/products",
+	group := e.Group("/v1/ingredients",
 		middleware.GetTraceCallsMiddlewareFunc(),
 		middleware.GetLogCallsMiddlewareFunc(),
 	)
-	group.Add(http.MethodPost, "", c.AddProduct)
-	group.Add(http.MethodGet, "", c.GetProducts)
-	group.Add(http.MethodGet, "/:productId", c.GetProductById)
+	group.Add(http.MethodPost, "", c.AddIngredient)
+	group.Add(http.MethodGet, "", c.GetIngredients)
+	group.Add(http.MethodGet, "/:ingredientID", c.GetIngredientByID)
 }
 
-// AddProduct
-// @Summary     Add Product
-// @Description Add Product
+// AddIngredient
+// @Summary     Add Ingredient
+// @Description Add Ingredient
 // @Produce      json
-// @Param 		 request 	   body   request.CreateCustomerCommand true "Request Body"
+// @Param 		 request 	   body   request.CreateIngredientRequest true "Request Body"
 // @Failure      400 {object} model.ErrorResponse
 // @Failure      401 {object} model.ErrorResponse
 // @Failure      404 {object} model.ErrorResponse
 // @Failure      503 {object} model.ErrorResponse
 // @Success      201
-// @Router       /v1/products [post]
-func (c *Controller) AddProduct(e echo.Context) error {
-	req := new(request.CreateProductRequest)
+// @Router       /v1/ingredients [post]
+func (c *Controller) AddIngredient(e echo.Context) error {
+	req := new(request.CreateIngredientRequest)
 
 	if err := e.Validate(req); err != nil {
 		return e.JSON(http.StatusBadRequest, map[string]any{
@@ -54,16 +55,16 @@ func (c *Controller) AddProduct(e echo.Context) error {
 		})
 	}
 
-	result, err := c.CreateProductUseCase.AddProduct(e.Request().Context(), req.ToCommand())
+	result, err := c.CreateIngredientUseCase.AddIngredient(e.Request().Context(), req.ToCommand())
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return e.JSON(http.StatusOK, result)
 }
 
-// GetProductById
-// @Summary     Get Product by id
-// @Description Get Product by id
+// GetIngredientByID
+// @Summary     Get Ingredient by id
+// @Description Get Ingredient by id
 // @Produce      json
 // @Param        id    path      string  true  "id"
 // @Failure      400 {object} model.ErrorResponse
@@ -71,17 +72,17 @@ func (c *Controller) AddProduct(e echo.Context) error {
 // @Failure      404 {object} model.ErrorResponse
 // @Failure      503 {object} model.ErrorResponse
 // @Success      200
-// @Router       /v1/products/{productID} [get]
-func (c *Controller) GetProductById(ctx echo.Context) error {
-	id := ctx.Param("productId")
+// @Router       /v1/ingredients/{ingredientID} [get]
+func (c *Controller) GetIngredientByID(ctx echo.Context) error {
+	id := ctx.Param("ingredientID")
 	if id == "" {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
 			"code":    400,
 			"message": "id cannot be empty",
 		})
 	}
-	productID := uuid.MustParse(id)
-	response, err := c.ProductFinderService.FindByID(ctx.Request().Context(), productID)
+	ingredientID := uuid.MustParse(id)
+	response, err := c.IngredientFinderService.FindIngredientByID(ctx.Request().Context(), ingredientID)
 	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
 			"code":    400,
@@ -96,33 +97,27 @@ func (c *Controller) GetProductById(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, response)
 }
 
-// GetProducts
-// @Summary     Get Products
-// @Description Get Products
+// GetIngredients
+// @Summary     Get Ingredients
+// @Description Get Ingredients
 // @Produce      json
-// @Param 		category query string false "Filter products by category"
+// @Param 		type query string false "Filter Ingredients by type"
 // @Failure      400 {object} model.ErrorResponse
 // @Failure      401 {object} model.ErrorResponse
 // @Failure      404 {object} model.ErrorResponse
 // @Failure      503 {object} model.ErrorResponse
-// @Success      200 {object} []entity.ProductEntity
-// @Router       /v1/products [get]
-func (c *Controller) GetProducts(ctx echo.Context) error {
-	category := ctx.QueryParam("category")
+// @Success      200 {object} []entity.IngredientType
+// @Router       /v1/ingredients [get]
+func (c *Controller) GetIngredients(ctx echo.Context) error {
+	ingredientType := ctx.QueryParam("type")
 
-	var response []entity.ProductEntity
+	var response []entity.IngredientEntity
 	var err error
 
-	if category != "" {
-		if !validation.ValidateProductCategory(category) {
-			return ctx.JSON(http.StatusBadRequest, map[string]any{
-				"code":    400,
-				"message": "Invalid category",
-			})
-		}
-		response, err = c.ProductFinderService.FindByCategory(ctx.Request().Context(), category)
+	if ingredientType != "" {
+		response, err = c.IngredientFinderService.FindIngredientByType(ctx.Request().Context(), valueobject.IngredientType(ingredientType))
 	} else {
-		response, err = c.ProductFinderService.FindAllProducts(ctx.Request().Context())
+		response, err = c.IngredientFinderService.FindAllIngredients(ctx.Request().Context())
 	}
 
 	if err != nil {

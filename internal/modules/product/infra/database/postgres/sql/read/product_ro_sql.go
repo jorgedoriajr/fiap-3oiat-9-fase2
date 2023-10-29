@@ -3,6 +3,7 @@ package read
 const tableColumns = `
 		  id,
 		  name,
+		  number,
 		  amount,
 		  description,
 		  category,

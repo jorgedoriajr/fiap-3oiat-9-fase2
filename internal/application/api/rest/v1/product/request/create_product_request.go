@@ -21,8 +21,8 @@ type IngredientRequest struct {
 	Type     string `json:"type" validator:"required,ingredientType"`
 }
 
-func (cp CreateProductRequest) ToCommand() *command.CreateProductCommand {
-	return command.NewCreateProductCommand(
+func (cp CreateProductRequest) ToCommand() command.CreateProductCommand {
+	return *command.NewCreateProductCommand(
 		cp.Name, cp.Description, cp.Category, cp.Menu, toIngredients(cp.Ingredients),
 	)
 }
@@ -34,8 +34,8 @@ func toIngredients(ingredients []IngredientRequest) []command.Ingredient {
 			ID:       ingredient.ID,
 			Name:     ingredient.Name,
 			Quantity: ingredient.Quantity,
-			Amount:   ingredient.Amount,
-			Type:     command.GetIngredientTypeByName(ingredient.Type),
+			//Amount:   ingredient.Amount,
+			//Type:     command.GetIngredientTypeByName(ingredient.Type),
 		})
 	}
 	return ingredientsCmd
