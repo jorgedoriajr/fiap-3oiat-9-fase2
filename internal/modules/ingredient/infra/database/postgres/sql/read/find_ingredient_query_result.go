@@ -40,3 +40,13 @@ func (fc FindIngredientQueryResult) ToCommandResult() *entity.IngredientEntity {
 		Type:   valueobject.IngredientType(fc.Type),
 	}
 }
+
+func ToIngredientEntityList(results []FindIngredientQueryResult) []*entity.Ingredient {
+	entities := make([]*entity.Ingredient, len(results))
+
+	for i, result := range results {
+		entities[i] = result.ToEntity()
+	}
+
+	return entities
+}

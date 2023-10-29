@@ -28,7 +28,7 @@ func (c IngredientTypeRepository) Create(ctx context.Context, ingredientType ent
 	if err != nil {
 		c.logger.Error().
 			Err(err).
-			Str("name", string(ingredientType.Name)).
+			Str("name", ingredientType.Name).
 			Msg("Failed to insert ingredient")
 		return err
 	}
@@ -49,4 +49,32 @@ func (c IngredientTypeRepository) GetByName(ctx context.Context, ingredientTypeN
 	}
 
 	return result.ToEntity(), nil
+}
+
+func (c IngredientTypeRepository) GetByProductCategory(ctx context.Context, productCategoryName string) ([]*entity.IngredientType, error) {
+
+	result, err := sql.NewQuery[read.FindIngredientTypeQueryResult](ctx, c.readOnlyClient, read.FindIngredientTypeByProductCategory, productCategoryName).Many()
+
+	if err != nil {
+		c.logger.Error().
+			Err(err).
+			Msg("Failed to get all ingredient")
+		return nil, err
+	}
+
+	return read.ToIngredientTypeEntityList(result), nil
+}
+
+func (c IngredientTypeRepository) GetAll(ctx context.Context) ([]*entity.IngredientType, error) {
+
+	result, err := sql.NewQuery[read.FindIngredientTypeQueryResult](ctx, c.readOnlyClient, read.FindIngredientTypeAll).Many()
+
+	if err != nil {
+		c.logger.Error().
+			Err(err).
+			Msg("Failed to get all ingredient")
+		return nil, err
+	}
+
+	return read.ToIngredientTypeEntityList(result), nil
 }

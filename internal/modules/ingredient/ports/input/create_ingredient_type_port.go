@@ -5,6 +5,6 @@ import (
 	"hamburgueria/internal/modules/ingredient/domain/entity"
 )
 
-type IngredientTypeUseCase interface {
+type IngredientTypePort interface {
 	AddIngredientType(ctx context.Context, ingredientType entity.IngredientType) error
 }

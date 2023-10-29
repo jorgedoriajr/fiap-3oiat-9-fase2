@@ -19,3 +19,13 @@ func (fc FindIngredientTypeQueryResult) ToEntity() *entity.IngredientType {
 		ProductCategory: fc.ProductCategory,
 	}
 }
+
+func ToIngredientTypeEntityList(results []FindIngredientTypeQueryResult) []*entity.IngredientType {
+	entities := make([]*entity.IngredientType, len(results))
+
+	for i, result := range results {
+		entities[i] = result.ToEntity()
+	}
+
+	return entities
+}
