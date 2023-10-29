@@ -2,15 +2,14 @@ package command
 
 import (
 	"hamburgueria/internal/modules/ingredient/domain/entity"
-	"hamburgueria/internal/modules/ingredient/domain/valueobjects"
 
 	"github.com/google/uuid"
 )
 
 type CreateIngredientCommand struct {
-	Name   valueobjects.Name
-	Amount valueobjects.Amount
-	Type   valueobjects.Type
+	Name   string
+	Amount string
+	Type   string
 }
 
 func (cmd CreateIngredientCommand) ToIngredientEntity() entity.Ingredient {

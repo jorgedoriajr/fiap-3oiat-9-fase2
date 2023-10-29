@@ -2,14 +2,13 @@ package write
 
 import (
 	"hamburgueria/internal/modules/ingredient/domain/entity"
-	"hamburgueria/internal/modules/ingredient/domain/valueobjects"
 )
 
 type InsertIngredientTypeRWQueryMapper struct {
-	Name            valueobjects.Name            `position:"0"`
-	Optional        valueobjects.Optional        `position:"1"`
-	Max_QTD         valueobjects.Max_QTD         `position:"2"`
-	ProductCategory valueobjects.ProductCategory `position:"3"`
+	Name            string `position:"0"`
+	Optional        string `position:"1"`
+	Max_QTD         string `position:"2"`
+	ProductCategory string `position:"3"`
 }
 
 func ToInsertIngredientTypeQueryMapper(ingredientType entity.IngredientType) InsertIngredientTypeRWQueryMapper {
