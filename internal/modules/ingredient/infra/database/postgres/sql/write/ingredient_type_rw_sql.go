@@ -10,3 +10,11 @@ const InsertIngredientTypeRW = `
 		produtct_category,
 		) VALUES ($1, $2, $3, $4)
 `
+const UpdateIngredientTypwRW = `
+	UPDATE ` + tableNameIngredientType + `
+	SET name = $1,
+		optional = $2,
+		max_qtd = $3,
+		product_category = $5
+	WHERE name = $1
+`
