@@ -9,28 +9,62 @@ INSERT INTO product_category(name, accept_custom)
 VALUES ('Lanche', true);
 
 -- ingredient_type
-INSERT INTO ingredient_type(name, optional, max_qtd, product_category)
+INSERT INTO ingredient_type(name)
+VALUES('Pão');
+
+INSERT INTO ingredient_type(name)
+VALUES('Hamburger');
+
+INSERT INTO ingredient_type(name)
+VALUES('Queijo');
+
+INSERT INTO ingredient_type(name)
+VALUES('Molho');
+
+INSERT INTO ingredient_type(name)
+VALUES('Adicionais');
+
+INSERT INTO ingredient_type(name)
+VALUES('Acompanhamento');
+
+INSERT INTO ingredient_type(name)
+VALUES('Bebidas Alcoólicas');
+
+INSERT INTO ingredient_type(name)
+VALUES('Bebidas Não Alcoólicas');
+
+-- ingredient_type_product_category
+INSERT INTO ingredient_type_product_category(ingredient_type, optional, max_qtd, product_category)
 VALUES ('Pão', false, 1, 'Lanche');
 
-INSERT INTO ingredient_type(name, optional, max_qtd, product_category)
+INSERT INTO ingredient_type_product_category(ingredient_type, optional, max_qtd, product_category)
 VALUES ('Hamburger', false, 2, 'Lanche');
 
-INSERT INTO ingredient_type(name, optional, max_qtd, product_category)
+INSERT INTO ingredient_type_product_category(ingredient_type, optional, max_qtd, product_category)
 VALUES ('Queijo', true, 2, 'Lanche');
 
-INSERT INTO ingredient_type(name, optional, max_qtd, product_category)
+INSERT INTO ingredient_type_product_category(ingredient_type, optional, max_qtd, product_category)
+VALUES ('Queijo', true, 1, 'Acompanhamento');
+
+INSERT INTO ingredient_type_product_category(ingredient_type, optional, max_qtd, product_category)
 VALUES ('Molho', true, null, 'Lanche');
 
-INSERT INTO ingredient_type(name, optional, max_qtd, product_category)
+INSERT INTO ingredient_type_product_category(ingredient_type, optional, max_qtd, product_category)
+VALUES ('Molho', true, null, 'Acompanhamento');
+
+INSERT INTO ingredient_type_product_category(ingredient_type, optional, max_qtd, product_category)
 VALUES ('Adicionais', true, null, 'Lanche');
 
-INSERT INTO ingredient_type(name, optional, max_qtd, product_category)
+INSERT INTO ingredient_type_product_category(ingredient_type, optional, max_qtd, product_category)
+VALUES ('Adicionais', true, null, 'Acompanhamento');
+
+INSERT INTO ingredient_type_product_category(ingredient_type, optional, max_qtd, product_category)
 VALUES ('Acompanhamento', true, null, 'Acompanhamento');
 
-INSERT INTO ingredient_type(name, optional, max_qtd, product_category)
+INSERT INTO ingredient_type_product_category(ingredient_type, optional, max_qtd, product_category)
 VALUES ('Bebidas Alcoólicas', false, null, 'Bebida');
 
-INSERT INTO ingredient_type(name, optional, max_qtd, product_category)
+INSERT INTO ingredient_type_product_category(ingredient_type, optional, max_qtd, product_category)
 VALUES ('Bebidas Não Alcoólicas', false, null, 'Bebida');
 
 -- Ingredient
@@ -112,6 +146,7 @@ VALUES (
 
 -- product_ingredient
 
+-- 'Batata com cheddar e bacon'
 INSERT INTO product_ingredient(product_id, ingredient_id, quantity, amount)
 VALUES ('343ffe88-8d87-41f0-9433-a212d48a7c0b', '85f0288e-f692-458e-ab0f-93c31adb5579', 1, 2000)
 
@@ -121,15 +156,15 @@ VALUES ('343ffe88-8d87-41f0-9433-a212d48a7c0b', 'b9cae298-e74a-4bc7-985d-d268f2b
 INSERT INTO product_ingredient(product_id, ingredient_id, quantity, amount)
 VALUES ('343ffe88-8d87-41f0-9433-a212d48a7c0b', 'd4d14983-d431-48aa-9e2c-8a14e704101d', 1, 600)
 
-
+-- 'Coca-Cola Lata'
 INSERT INTO product_ingredient(product_id, ingredient_id, quantity, amount)
 VALUES ('9724f90f-c557-4a31-a69c-57c7ddb91e69', '6c51f438-a55e-426e-98f2-c1bd03e70b3e', 1, 700);
 
-
+-- 'Heineken Long Neck'
 INSERT INTO product_ingredient(product_id, ingredient_id, quantity, amount)
 VALUES ('ee491b9b-36d4-4b57-9aa6-21df5885c21e', '501d1ad7-f002-446c-81ce-59b75f6599ec', 1, 1000);
 
-
+-- 'Burger Cheddar Bacon'
 INSERT INTO product_ingredient(product_id, ingredient_id, quantity, amount)
 VALUES ('787b1e5d-c5d8-4ed4-9554-ec0e6555c8f1', 'ba97de21-2721-40cc-a326-f3bfebedf862', 1, 500);
 
@@ -142,7 +177,7 @@ VALUES ('787b1e5d-c5d8-4ed4-9554-ec0e6555c8f1', 'b9cae298-e74a-4bc7-985d-d268f2b
 INSERT INTO product_ingredient(product_id, ingredient_id, quantity, amount)
 VALUES ('787b1e5d-c5d8-4ed4-9554-ec0e6555c8f1', 'd4d14983-d431-48aa-9e2c-8a14e704101d', 1, 600);
 
-
+-- 'Double Cheddar Burger'
 INSERT INTO product_ingredient(product_id, ingredient_id, quantity, amount)
 VALUES ('ec2e5922-f616-48b4-9e46-97f086db3e7f', 'ba97de21-2721-40cc-a326-f3bfebedf862', 1, 500);
 
@@ -152,7 +187,7 @@ VALUES ('ec2e5922-f616-48b4-9e46-97f086db3e7f', 'ef045802-2937-4b0d-a2c5-938b140
 INSERT INTO product_ingredient(product_id, ingredient_id, quantity, amount)
 VALUES ('ec2e5922-f616-48b4-9e46-97f086db3e7f', 'b9cae298-e74a-4bc7-985d-d268f2bc76a6', 2, 1000);
 
-
+-- 'Burger Vegano'
 INSERT INTO product_ingredient(product_id, ingredient_id, quantity, amount)
 VALUES ('013c25c4-fc72-4919-af03-4379aff7a989', 'ba97de21-2721-40cc-a326-f3bfebedf862', 1, 500);
 

@@ -6,7 +6,6 @@ import (
 	"github.com/rs/zerolog"
 	"hamburgueria/internal/modules/product/domain/entity"
 	"hamburgueria/internal/modules/product/infra/database/postgres/sql/read"
-	"hamburgueria/internal/modules/product/infra/database/postgres/sql/write"
 	"hamburgueria/pkg/sql"
 )
 
@@ -14,21 +13,6 @@ type ProductCategoryRepository struct {
 	readWriteClient sql.Client
 	readOnlyClient  sql.Client
 	logger          zerolog.Logger
-}
-
-func (c ProductCategoryRepository) CreateProductCategory(ctx context.Context, category entity.ProductCategoryEntity) (*entity.ProductCategoryEntity, error) {
-	insertCommand := sql.NewCommand(ctx, c.readWriteClient, write.InsertProductCategoryRW, category)
-	err := insertCommand.Exec()
-
-	if err != nil {
-		c.logger.Error().
-			Err(err).
-			Str("Name", category.Name).
-			Msg("Failed to insert new product category")
-		return nil, err
-	}
-
-	return &entity.ProductCategoryEntity{ID: category.ID, Name: category.Name}, nil
 }
 
 func (c ProductCategoryRepository) GetAllProductCategories(ctx context.Context) ([]entity.ProductCategoryEntity, error) {
