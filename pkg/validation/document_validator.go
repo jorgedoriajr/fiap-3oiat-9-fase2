@@ -1,6 +1,7 @@
 package validation
 
 import (
+	"github.com/go-playground/validator"
 	"strconv"
 	"strings"
 )
@@ -59,4 +60,8 @@ func ValidateCPF(cpf string) bool {
 	}
 
 	return true
+}
+
+func ValidateCPFType(fl validator.FieldLevel) bool {
+	return ValidateCPF(fl.Field().String())
 }

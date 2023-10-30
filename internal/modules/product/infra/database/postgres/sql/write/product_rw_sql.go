@@ -1,15 +1,13 @@
 package write
 
 const InsertProductRW = `
-		INSERT INTO customer (
-		  id,
+		INSERT INTO product (
 		  name,
 		  amount,
 		  description,
 		  category,
 		  menu,
-		  ingredients,
 		  created_at,
 		  updated_at
-		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+		) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id
 `
