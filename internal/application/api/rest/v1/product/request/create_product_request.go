@@ -32,7 +32,6 @@ func toIngredients(ingredients []IngredientRequest) []command.Ingredient {
 	for _, ingredient := range ingredients {
 		ingredientsCmd = append(ingredientsCmd, command.Ingredient{
 			ID:       ingredient.ID,
-			Name:     ingredient.Name,
 			Quantity: ingredient.Quantity,
 			//Amount:   ingredient.Amount,
 			//Type:     command.GetIngredientTypeByName(ingredient.Type),

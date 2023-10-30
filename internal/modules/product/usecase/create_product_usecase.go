@@ -11,7 +11,6 @@ import (
 
 var (
 	createProductUseCaseInstance *CreateProductUseCase
-	createProductUseCaseOnce     sync.Once
 )
 
 type CreateProductUseCase struct {
@@ -31,10 +30,11 @@ func (c CreateProductUseCase) AddProduct(ctx context.Context, command command.Cr
 }
 
 func NewCreateProductUseCase(productPersistence output.ProductPersistencePort) *CreateProductUseCase {
-	createProductUseCaseOnce.Do(func() {
+	sync.OnceValue[*CreateProductUseCase](func() *CreateProductUseCase {
 		createProductUseCaseInstance = &CreateProductUseCase{
 			productPersistencePort: productPersistence,
 		}
+		return createProductUseCaseInstance
 	})
 	return createProductUseCaseInstance
 }

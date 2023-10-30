@@ -29,6 +29,10 @@ func (p ProductFinderService) FindByID(ctx context.Context, id uuid.UUID) (*enti
 	return p.productPersistencePort.GetByID(ctx, id)
 }
 
+//func (p ProductFinderService) FindByIDWithIngredients(ctx context.Context, id uuid.UUID) (*result.FindProductWithIngredientsResult, error) {
+//	return p.productPersistencePort.GetByIDWithIngredients(ctx, id)
+//}
+
 func (p ProductFinderService) FindByNumber(ctx context.Context, number int) (*entity.ProductEntity, error) {
 	return p.productPersistencePort.GetByNumber(ctx, number)
 }

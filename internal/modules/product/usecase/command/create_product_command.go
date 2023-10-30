@@ -17,7 +17,6 @@ type CreateProductCommand struct {
 
 type Ingredient struct {
 	ID       string
-	Name     string
 	Quantity int
 }
 
