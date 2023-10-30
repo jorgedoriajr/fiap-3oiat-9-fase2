@@ -5,14 +5,14 @@ CREATE TABLE IF NOT EXISTS "customer" (
     phone               varchar(15),
     name                varchar(255) not null ,
     email               varchar(255),
-    opt_in_promotion    boolean,
+    opt_in_promotion    boolean default true,
     created_at          timestamp not null,
     updated_at          timestamp
 );
 
 CREATE TABLE IF NOT EXISTS "product_category" (
     name            varchar(255) primary key,
-    created_at      timestamp not null
+    accept_custom   boolean not null default false
 );
 
 CREATE TABLE IF NOT EXISTS "ingredient_type" (
