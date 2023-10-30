@@ -11,6 +11,7 @@ import (
 	productPort "hamburgueria/internal/modules/product/ports/output"
 	productCommand "hamburgueria/internal/modules/product/usecase/command"
 	productResult "hamburgueria/internal/modules/product/usecase/result"
+	"sync"
 	"time"
 )
 
@@ -75,17 +76,7 @@ func (c CreateOrderUseCase) AddOrder(
 		Amount:     amount,
 	}
 
-	err := c.OrderPersistence.Create(ctx, order)
-	if err != nil {
-		return nil, err
-	}
-
-	err = c.createOrderHistory(ctx, order)
-	if err != nil {
-		return nil, err
-	}
-
-	err = c.createOrderProducts(ctx, order)
+	err := c.createOrder(ctx, order)
 	if err != nil {
 		return nil, err
 	}
@@ -94,6 +85,25 @@ func (c CreateOrderUseCase) AddOrder(
 		Amount:      amount,
 		PaymentData: "not implemented",
 	}, err
+}
+
+// TODO need to create transaction
+func (c CreateOrderUseCase) createOrder(ctx context.Context, order entity.Order) error {
+	err := c.OrderPersistence.Create(ctx, order)
+	if err != nil {
+		return err
+	}
+
+	err = c.createOrderHistory(ctx, order)
+	if err != nil {
+		return err
+	}
+
+	err = c.createOrderProducts(ctx, order)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (c CreateOrderUseCase) createOrderProducts(ctx context.Context, order entity.Order) error {
@@ -143,4 +153,28 @@ func (c CreateOrderUseCase) createProduct(
 		Menu:        false,
 		Ingredients: ingredients,
 	})
+}
+
+var (
+	createOrderUseCaseInstance CreateOrderUseCase
+	createOrderUseCaseOnce     sync.Once
+)
+
+func GetCreateOrderUseCase(
+	ProductUseCase productInputPort.CreateProductUseCasePort,
+	ProductPersistence productPort.ProductPersistencePort,
+	OrderPersistence output.OrderPersistencePort,
+	OrderHistoryPersistence output.OrderHistoryPersistencePort,
+	OrderProductPersistence output.OrderProductPersistencePort,
+) CreateOrderUseCase {
+	createOrderUseCaseOnce.Do(func() {
+		createOrderUseCaseInstance = CreateOrderUseCase{
+			ProductUseCase:          ProductUseCase,
+			ProductPersistence:      ProductPersistence,
+			OrderPersistence:        OrderPersistence,
+			OrderHistoryPersistence: OrderHistoryPersistence,
+			OrderProductPersistence: OrderProductPersistence,
+		}
+	})
+	return createOrderUseCaseInstance
 }

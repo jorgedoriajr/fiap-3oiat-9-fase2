@@ -3,13 +3,16 @@ package injection
 import (
 	"hamburgueria/internal/application/api/rest/v1/customer"
 	"hamburgueria/internal/application/api/rest/v1/ingredient"
+	"hamburgueria/internal/application/api/rest/v1/order"
 	"hamburgueria/internal/application/api/rest/v1/product"
 	"hamburgueria/internal/application/api/swagger"
 	"hamburgueria/internal/modules/customer/infra/database"
 	customerUseCase "hamburgueria/internal/modules/customer/usecase"
-	postgres2 "hamburgueria/internal/modules/ingredient/infra/database/postgres"
-	service2 "hamburgueria/internal/modules/ingredient/service"
-	usecase2 "hamburgueria/internal/modules/ingredient/usecase"
+	ingredientPostgres "hamburgueria/internal/modules/ingredient/infra/database/postgres"
+	ingredientService "hamburgueria/internal/modules/ingredient/service"
+	ingredientUsecase "hamburgueria/internal/modules/ingredient/usecase"
+	orderDatabase "hamburgueria/internal/modules/order/infra/database"
+	orderUsecase "hamburgueria/internal/modules/order/usecase"
 	"hamburgueria/internal/modules/product/infra/database/postgres"
 	"hamburgueria/internal/modules/product/service"
 	"hamburgueria/internal/modules/product/usecase"
@@ -21,6 +24,7 @@ type DependencyInjection struct {
 	CustomerController   *customer.CustomerController
 	ProductController    *product.Controller
 	IngredientController *ingredient.Controller
+	OrderController      *order.Controller
 	Swagger              *swagger.Swagger
 }
 
@@ -40,10 +44,24 @@ func NewDependencyInjection() DependencyInjection {
 		logger.Get(),
 	)
 
-	ingredientPersistence := postgres2.NewIngredientRepository(
+	ingredientPersistence := ingredientPostgres.NewIngredientRepository(
 		ReadWriteClient,
 		ReadOnlyClient,
 		logger.Get(),
+	)
+
+	productUseCase := usecase.NewCreateProductUseCase(productPersistence)
+
+	orderHistoryPersistence := orderDatabase.GetOrderHistoryPersistence(ReadWriteClient, logger.Get())
+	orderProductPersistence := orderDatabase.GetOrderProductPersistence(ReadWriteClient, logger.Get())
+	orderPersistence := orderDatabase.GetOrderPersistence(ReadWriteClient, logger.Get())
+
+	createOrderUseCase := orderUsecase.GetCreateOrderUseCase(
+		productUseCase,
+		productPersistence,
+		orderPersistence,
+		orderHistoryPersistence,
+		orderProductPersistence,
 	)
 
 	return DependencyInjection{
@@ -52,13 +70,15 @@ func NewDependencyInjection() DependencyInjection {
 			GetCustomerUseCase:    customerUseCase.GetCustomerUseCase{CustomerPersistence: customerPersistence},
 		},
 		ProductController: &product.Controller{
-			CreateProductUseCase: usecase.NewCreateProductUseCase(productPersistence),
+			CreateProductUseCase: productUseCase,
 			ProductFinderService: service.NewProductFinderService(productPersistence),
 		},
-
+		OrderController: &order.Controller{
+			CreateOrderUseCase: createOrderUseCase,
+		},
 		IngredientController: &ingredient.Controller{
-			CreateIngredientUseCase: usecase2.NewCreateIngredientUseCase(ingredientPersistence),
-			IngredientFinderService: service2.NewIngredientFinderService(ingredientPersistence),
+			CreateIngredientUseCase: ingredientUsecase.NewCreateIngredientUseCase(ingredientPersistence),
+			IngredientFinderService: ingredientService.NewIngredientFinderService(ingredientPersistence),
 		},
 		Swagger: &swagger.Swagger{},
 	}

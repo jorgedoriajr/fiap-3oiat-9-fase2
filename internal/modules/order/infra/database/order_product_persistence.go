@@ -7,6 +7,7 @@ import (
 	"hamburgueria/internal/modules/order/infra/database/postgres/sql/write"
 	"hamburgueria/pkg/querymapper"
 	"hamburgueria/pkg/sql"
+	"sync"
 )
 
 type OrderProductRepository struct {
@@ -32,4 +33,22 @@ func (c OrderProductRepository) Create(ctx context.Context, orderProduct entity.
 	}
 
 	return nil
+}
+
+var (
+	orderProductRepositoryInstance OrderProductRepository
+	orderProductRepositoryOnce     sync.Once
+)
+
+func GetOrderProductPersistence(
+	ReadWriteClient sql.Client,
+	Logger zerolog.Logger,
+) OrderProductRepository {
+	orderProductRepositoryOnce.Do(func() {
+		orderProductRepositoryInstance = OrderProductRepository{
+			ReadWriteClient: ReadWriteClient,
+			Logger:          Logger,
+		}
+	})
+	return orderProductRepositoryInstance
 }
