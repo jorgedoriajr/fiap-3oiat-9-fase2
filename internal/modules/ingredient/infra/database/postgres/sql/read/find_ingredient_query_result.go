@@ -11,7 +11,7 @@ type FindIngredientQueryResult struct {
 	Name     string    `db:"name"`
 	Amount   int       `db:"amount"`
 	Type     string    `db:"type"`
-	Quantity string    `db:"quantity,omitempty"`
+	Quantity int       `db:"quantity,omitempty"`
 }
 
 func (fc FindIngredientQueryResult) ToEntity() *entity.IngredientEntity {
