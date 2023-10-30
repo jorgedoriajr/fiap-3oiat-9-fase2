@@ -55,9 +55,22 @@ func (fc FindProductWithIngredientsQueryResult) ToResult() *result.FindProductWi
 		Number:      fc.Number,
 		Amount:      fc.Amount,
 		Description: fc.Description,
-		Category:    fc.Category,
+		Category:    valueobject.ProductCategory(fc.Category),
 		Menu:        fc.Menu,
-		Ingredients: fc.Ingredients,
+		CreatedAt:   fc.CreatedAt,
+		UpdatedAt:   fc.UpdatedAt,
+	}
+}
+
+func (fc FindProductQueryResult) ToCommandResult() *entity.ProductEntity {
+	return &entity.ProductEntity{
+		ID:          fc.ID,
+		Name:        fc.Name,
+		Number:      fc.Number,
+		Amount:      fc.Amount,
+		Description: fc.Description,
+		Category:    valueobject.ProductCategory(fc.Category),
+		Menu:        fc.Menu,
 		CreatedAt:   fc.CreatedAt,
 		UpdatedAt:   fc.UpdatedAt,
 	}

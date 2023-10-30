@@ -86,21 +86,6 @@ func (c ProductRepository) GetByID(ctx context.Context, productID uuid.UUID) (*e
 	return result.ToEntity(), nil
 }
 
-//func (c ProductRepository) FindProductByIDWithIngredients(ctx context.Context, productID uuid.UUID) (*result.FindProductWithIngredientsResult, error) {
-//
-//	result, err := sql.NewQuery[*read.FindProductWithIngredientsQueryResult](ctx, c.readOnlyClient, read.FindProductByID, productID).One()
-//
-//	if err != nil {
-//		c.logger.Error().
-//			Err(err).
-//			Str("productID", productID.String()).
-//			Msg("Failed to get product by id")
-//		return nil, err
-//	}
-//
-//	return result.ToResult(), nil
-//}
-
 func (c ProductRepository) GetByNumber(ctx context.Context, productNumber int) (*entity.ProductEntity, error) {
 	result, err := sql.NewQuery[read.FindProductQueryResult](ctx, c.readOnlyClient, read.FindProductByID, productNumber).One()
 
