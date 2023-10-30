@@ -10,7 +10,7 @@ type InsertOrderProductRWQueryMapper struct {
 	OrderId   uuid.UUID `position:"1"`
 	ProductId uuid.UUID `position:"2"`
 	Quantity  int       `position:"3"`
-	Amount    int64     `position:"4"`
+	Amount    int       `position:"4"`
 }
 
 func EntityToInsertOrderProductQueryMapper(orderProduct entity.OrderProduct) InsertOrderProductRWQueryMapper {

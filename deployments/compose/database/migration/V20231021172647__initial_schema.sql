@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS "ingredient_type" (
 
 CREATE TABLE IF NOT EXISTS "ingredient" (
     id          UUID not null primary key default public.uuid_generate_v4(),
-    name        varchar(255) not null,
+    name        varchar(255) unique not null,
     amount      bigint not null,
     type        varchar(50) references "ingredient_type"(name)
 );
@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS "ingredient" (
 
 CREATE TABLE IF NOT EXISTS "product" (
     id                      UUID not null primary key default public.uuid_generate_v4(),
+    number                  serial,
     name                    varchar(255) not null,
     amount                  bigint not null,
     description             text,

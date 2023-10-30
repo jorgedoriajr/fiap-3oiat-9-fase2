@@ -9,7 +9,7 @@ import (
 type InsertOrderRWQueryMapper struct {
 	Id               uuid.UUID `position:"0"`
 	CustomerDocument string    `position:"1"`
-	Amount           int64     `position:"2"`
+	Amount           int       `position:"2"`
 	Status           string    `position:"3"`
 	CreatedAt        time.Time `position:"4"`
 	UpdatedAt        time.Time `position:"5"`

@@ -1,6 +1,6 @@
 package response
 
 type OrderResponse struct {
-	Amount      int64 `json:"amount"`
+	Amount      int `json:"amount"`
 	PaymentData string
 }

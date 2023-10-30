@@ -1,4 +1,4 @@
-package rest
+package order
 
 import (
 	"bytes"
@@ -11,11 +11,11 @@ import (
 	"net/http"
 )
 
-type OrderController struct {
+type Controller struct {
 	CreateOrderUseCase input.CreateOrderPort
 }
 
-func (c *OrderController) RegisterEchoRoutes(e *echo.Echo) {
+func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
 	group := e.Group("/v1/orders",
 		middleware.GetTraceCallsMiddlewareFunc(),
 		middleware.GetLogCallsMiddlewareFunc(),
@@ -34,7 +34,7 @@ func (c *OrderController) RegisterEchoRoutes(e *echo.Echo) {
 // @Failure      503 {object} model.ErrorResponse
 // @Success      200
 // @Router       /v1/orders [post]
-func (c *OrderController) AddOrder(ctx echo.Context) error {
+func (c *Controller) AddOrder(ctx echo.Context) error {
 
 	payloadBuffer := new(bytes.Buffer)
 	_, err := payloadBuffer.ReadFrom(ctx.Request().Body)

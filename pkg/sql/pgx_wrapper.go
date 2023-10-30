@@ -24,7 +24,7 @@ func (c CommandTag) String() string {
 	return c.ct.String()
 }
 
-func (c CommandTag) RowsAffected() int64 {
+func (c CommandTag) RowsAffected() int {
 	return c.ct.RowsAffected()
 }
 
@@ -35,7 +35,7 @@ func (c sqlClient) Exec(ctx context.Context, query string, args ...interface{}) 
 		tracer.ServiceName(c.applicationName),
 		tracer.ResourceName(fmt.Sprintf("Exec %s", query)),
 		tracer.SpanType(ext.SpanTypeSQL),
-		tracer.Tag(ext.Component, "ifood/go-packages"),
+		tracer.Tag(ext.Component, "pkg/sql"),
 		tracer.Tag(ext.SpanKind, ext.SpanKindClient),
 		tracer.Tag(ext.DBType, ext.DBSystemPostgreSQL),
 		tracer.Measured(),
@@ -52,7 +52,7 @@ func (c sqlClient) Query(ctx context.Context, query string, args ...interface{})
 		tracer.ServiceName(c.applicationName),
 		tracer.ResourceName(fmt.Sprintf("Query %s", query)),
 		tracer.SpanType(ext.SpanTypeSQL),
-		tracer.Tag(ext.Component, "ifood/go-packages"),
+		tracer.Tag(ext.Component, "pkg/sql"),
 		tracer.Tag(ext.SpanKind, ext.SpanKindClient),
 		tracer.Tag(ext.DBType, ext.DBSystemPostgreSQL),
 		tracer.Measured(),
@@ -69,7 +69,7 @@ func (c sqlClient) QueryRow(ctx context.Context, query string, args ...interface
 		tracer.ServiceName(c.applicationName),
 		tracer.ResourceName(fmt.Sprintf("QueryRow %s", query)),
 		tracer.SpanType(ext.SpanTypeSQL),
-		tracer.Tag(ext.Component, "ifood/go-packages"),
+		tracer.Tag(ext.Component, "pkg/sql"),
 		tracer.Tag(ext.SpanKind, ext.SpanKindClient),
 		tracer.Tag(ext.DBType, ext.DBSystemPostgreSQL),
 		tracer.Measured(),
@@ -86,7 +86,7 @@ func (c sqlClient) Ping(ctx context.Context) error {
 		tracer.ServiceName(c.applicationName),
 		tracer.ResourceName("Ping"),
 		tracer.SpanType(ext.SpanTypeSQL),
-		tracer.Tag(ext.Component, "ifood/go-packages"),
+		tracer.Tag(ext.Component, "pkg/sql"),
 		tracer.Tag(ext.SpanKind, ext.SpanKindClient),
 		tracer.Tag(ext.DBType, ext.DBSystemPostgreSQL),
 		tracer.Measured(),
@@ -103,7 +103,7 @@ func (c sqlClient) SendBatch(ctx context.Context, batch *Batch) (CommandTag, err
 		tracer.ServiceName(c.applicationName),
 		tracer.ResourceName("SendBatch"),
 		tracer.SpanType(ext.SpanTypeSQL),
-		tracer.Tag(ext.Component, "ifood/go-packages"),
+		tracer.Tag(ext.Component, "pkg/sql"),
 		tracer.Tag(ext.SpanKind, ext.SpanKindClient),
 		tracer.Tag(ext.DBType, ext.DBSystemPostgreSQL),
 		tracer.Measured(),

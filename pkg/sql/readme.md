@@ -85,7 +85,7 @@ type CommandTag struct {
 #### func (CommandTag) RowsAffected
 
 ```go
-func (c CommandTag) RowsAffected() int64
+func (c CommandTag) RowsAffected() int
 ```
 
 #### func (CommandTag) String

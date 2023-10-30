@@ -12,5 +12,5 @@ type Order struct {
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 	Status     string
-	Amount     int64
+	Amount     int
 }

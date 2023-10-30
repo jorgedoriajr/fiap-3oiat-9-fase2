@@ -6,6 +6,7 @@ import (
 	"hamburgueria/pkg/httpserver"
 	"hamburgueria/pkg/sql"
 	"hamburgueria/pkg/starter"
+	"hamburgueria/pkg/validation"
 )
 
 func main() {
@@ -27,6 +28,7 @@ func main() {
 		WithConfig(starter.GetHttpServerConfig()).
 		WithHealthCheck(sql.GetHealthChecker()).
 		WithControllers(injection.GetAllControllers(dependencyInjection)...).
+		WithValidator(validation.GetEchoValidator()).
 		Build()
 
 	server.Listen()

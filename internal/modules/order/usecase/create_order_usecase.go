@@ -7,7 +7,7 @@ import (
 	"hamburgueria/internal/modules/order/port/output"
 	"hamburgueria/internal/modules/order/usecase/command"
 	"hamburgueria/internal/modules/order/usecase/result"
-	productEntity "hamburgueria/internal/modules/product/domain/entity"
+	productInputPort "hamburgueria/internal/modules/product/ports/input"
 	productPort "hamburgueria/internal/modules/product/ports/output"
 	productCommand "hamburgueria/internal/modules/product/usecase/command"
 	productResult "hamburgueria/internal/modules/product/usecase/result"
@@ -15,7 +15,7 @@ import (
 )
 
 type CreateOrderUseCase struct {
-	ProductUseCase     productPort.CreateProductUseCasePort
+	ProductUseCase     productInputPort.CreateProductUseCasePort
 	ProductPersistence productPort.ProductPersistencePort
 	OrderPersistence   output.OrderPersistencePort
 }
@@ -25,43 +25,41 @@ func (c CreateOrderUseCase) AddOrder(
 	createOrderCommand command.CreateOrderCommand,
 ) (*result.CreateOrderResult, error) {
 
-	var amount int64
+	var amount int
 	var products []entity.OrderProduct
 	orderId := uuid.New()
 
 	for _, createProductCommand := range createOrderCommand.Products {
 		var productAmount int
 		if createProductCommand.Type == "default" {
-			product, err := c.ProductPersistence.GetByID(ctx, createProductCommand.Id.String())
+			product, err := c.ProductPersistence.GetByID(ctx, createProductCommand.Id)
 			if err != nil {
 				return nil, err
 			}
-
+			productAmount = product.Amount * createProductCommand.Quantity
 			products = append(products, entity.OrderProduct{
 				Id:        uuid.New(),
 				ProductId: product.ID,
 				OrderId:   orderId,
 				Quantity:  createProductCommand.Quantity,
-				Amount:    int64(product.Amount),
+				Amount:    productAmount,
 			})
-			productAmount = product.Amount
-
 		} else {
 			productCreated, err := c.createProduct(ctx)
 			if err != nil {
 				return nil, err
 			}
+			productAmount = productCreated.Amount * createProductCommand.Quantity
 			products = append(products, entity.OrderProduct{
 				Id:        uuid.New(),
 				ProductId: productCreated.ID,
 				OrderId:   orderId,
 				Quantity:  createProductCommand.Quantity,
-				Amount:    int64(productCreated.Amount),
+				Amount:    productAmount,
 			})
-			productAmount = productCreated.Amount
 		}
 
-		amount = amount + int64(productAmount*createProductCommand.Quantity)
+		amount = amount + productAmount
 
 	}
 
@@ -95,14 +93,4 @@ func (c CreateOrderUseCase) createProduct(ctx context.Context) (productResult.Cr
 		Menu:        false,
 		Ingredients: nil, //TODO fix
 	})
-}
-
-func (c CreateOrderUseCase) findProductByType(ctx context.Context, createProductCommand command.CreateOrderProductsCommand) (*productEntity.ProductEntity, error) {
-	var product productEntity.ProductEntity
-	var err error
-
-	if createProductCommand.Type == "personalized" {
-		product, err = c.ProductPersistence.GetByID(ctx, createProductCommand.Id.String()) // TODO findByIngredients
-	}
-	return &product, err
 }

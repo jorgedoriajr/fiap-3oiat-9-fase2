@@ -1,6 +1,6 @@
 package result
 
 type CreateOrderResult struct {
-	Amount      int64
+	Amount      int
 	PaymentData string
 }

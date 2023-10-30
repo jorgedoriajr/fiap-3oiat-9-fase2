@@ -3,14 +3,19 @@ package read
 const tableColumns = `
 		  id,
 		  name,
+		  number,
 		  amount,
 		  description,
 		  category,
 		  menu,
-		  ingredients,
 		  created_at,
 		  updated_at
 `
+const FindAllProducts = `
+		SELECT
+			` + tableColumns + `
+		FROM product
+		`
 const FindProductByID = `
 		SELECT
 			` + tableColumns + `
@@ -18,9 +23,9 @@ const FindProductByID = `
 		WHERE id = $1
 		LIMIT 1`
 
-const FindProductByName = `
+const FindProductByCategory = `
 		SELECT
 			` + tableColumns + `
 		FROM product
-		WHERE name = $1
-		LIMIT 1`
+		WHERE category = $1
+		`

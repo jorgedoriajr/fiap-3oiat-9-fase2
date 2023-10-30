@@ -9,5 +9,5 @@ type OrderProduct struct {
 	ProductId uuid.UUID
 	OrderId   uuid.UUID
 	Quantity  int
-	Amount    int64
+	Amount    int
 }

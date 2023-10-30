@@ -2,7 +2,6 @@ package sql
 
 import (
 	"context"
-
 	"github.com/georgysavva/scany/v2/pgxscan"
 )
 
@@ -36,4 +35,8 @@ func (q Query[T]) Many() ([]T, error) {
 
 	err := pgxscan.Select(q.command.ctx, q.command.client.conn, &result, q.command.queryString, q.command.args...)
 	return result, err
+}
+
+func (q Query[T]) Insert() Row {
+	return q.command.client.QueryRow(q.command.ctx, q.command.queryString, q.command.args...)
 }
