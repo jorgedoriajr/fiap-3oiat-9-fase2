@@ -3,7 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/google/uuid"
 	"github.com/urfave/cli/v2"
+	postgres2 "hamburgueria/internal/modules/ingredient/infra/database/postgres"
+	"hamburgueria/internal/modules/ingredient/service"
 	"hamburgueria/internal/modules/product/infra/database/postgres"
 	"hamburgueria/internal/modules/product/usecase"
 	command2 "hamburgueria/internal/modules/product/usecase/command"
@@ -82,6 +85,43 @@ func main() {
 					}
 
 					fmt.Println(createProductResult)
+					return nil
+				},
+			},
+			{
+				Name:        "by-product",
+				Usage:       "get ingredients by product",
+				Description: "get ingredients by product",
+				Action: func(c *cli.Context) error {
+
+					ingredientPersistence := postgres2.NewIngredientRepository(
+						sql.GetClient("readWrite"),
+						sql.GetClient("readOnly"),
+						logger.Get(),
+					)
+
+					serviceI := service.NewIngredientFinderService(ingredientPersistence)
+
+					//command := command2.CreateProductCommand{
+					//	Name:        "New Product",
+					//	Amount:      10000,
+					//	Description: "new product",
+					//	Category:    "Dish",
+					//	Menu:        true,
+					//}
+
+					id := uuid.MustParse("e962a63f-e1bb-4011-9b30-cbdc771ae740")
+
+					createProductResult, err := serviceI.FindIngredientsByProductId(context.TODO(), id)
+					if err != nil {
+						return err
+					}
+
+					for _, entity := range createProductResult {
+						fmt.Println(entity)
+
+					}
+
 					return nil
 				},
 			},

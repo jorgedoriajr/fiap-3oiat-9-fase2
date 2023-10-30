@@ -23,6 +23,13 @@ const FindProductByID = `
 		WHERE id = $1
 		LIMIT 1`
 
+const FindProductByIDWithIngredients = `
+		SELECT
+			` + tableColumns + `
+		FROM product
+		WHERE id = $1
+		LIMIT 1`
+
 const FindProductByCategory = `
 		SELECT
 			` + tableColumns + `

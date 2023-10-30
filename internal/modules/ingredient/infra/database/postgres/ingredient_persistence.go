@@ -87,6 +87,21 @@ func (c IngredientRepository) GetByID(ctx context.Context, ingredientId uuid.UUI
 	return result.ToEntity(), nil
 }
 
+func (c IngredientRepository) GetByProductID(ctx context.Context, productID uuid.UUID) ([]read.FindIngredientQueryResult, error) {
+
+	result, err := sql.NewQuery[read.FindIngredientQueryResult](ctx, c.readOnlyClient, read.FindIngredientsByProductID, productID).Many()
+
+	if err != nil {
+		c.logger.Error().
+			Err(err).
+			Str("productID", productID.String()).
+			Msg("Failed to get ingredient by productID")
+		return nil, err
+	}
+
+	return result, nil
+}
+
 func NewIngredientRepository(
 	readWriteClient sql.Client,
 	readOnlyClient sql.Client,
