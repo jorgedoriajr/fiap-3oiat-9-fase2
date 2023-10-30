@@ -15,9 +15,11 @@ import (
 )
 
 type CreateOrderUseCase struct {
-	ProductUseCase     productInputPort.CreateProductUseCasePort
-	ProductPersistence productPort.ProductPersistencePort
-	OrderPersistence   output.OrderPersistencePort
+	ProductUseCase          productInputPort.CreateProductUseCasePort
+	ProductPersistence      productPort.ProductPersistencePort
+	OrderPersistence        output.OrderPersistencePort
+	OrderHistoryPersistence output.OrderHistoryPersistencePort
+	OrderProductPersistence output.OrderProductPersistencePort
 }
 
 func (c CreateOrderUseCase) AddOrder(
@@ -45,7 +47,7 @@ func (c CreateOrderUseCase) AddOrder(
 				Amount:    productAmount,
 			})
 		} else {
-			productCreated, err := c.createProduct(ctx)
+			productCreated, err := c.createProduct(ctx, createProductCommand)
 			if err != nil {
 				return nil, err
 			}
@@ -63,18 +65,27 @@ func (c CreateOrderUseCase) AddOrder(
 
 	}
 
-	err := c.OrderPersistence.Create(
-		ctx,
-		entity.Order{
-			Id:         uuid.New(),
-			CustomerId: createOrderCommand.CustomerDocument,
-			Products:   products,
-			CreatedAt:  time.Now(),
-			UpdatedAt:  time.Now(),
-			Status:     "CREATED",
-			Amount:     amount,
-		},
-	)
+	order := entity.Order{
+		Id:         orderId,
+		CustomerId: createOrderCommand.CustomerDocument,
+		Products:   products,
+		CreatedAt:  time.Now(),
+		UpdatedAt:  time.Now(),
+		Status:     "CREATED",
+		Amount:     amount,
+	}
+
+	err := c.OrderPersistence.Create(ctx, order)
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.createOrderHistory(ctx, order)
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.createOrderProducts(ctx, order)
 	if err != nil {
 		return nil, err
 	}
@@ -85,12 +96,51 @@ func (c CreateOrderUseCase) AddOrder(
 	}, err
 }
 
-func (c CreateOrderUseCase) createProduct(ctx context.Context) (productResult.CreateProductResult, error) {
+func (c CreateOrderUseCase) createOrderProducts(ctx context.Context, order entity.Order) error {
+	for _, product := range order.Products {
+		err := c.OrderProductPersistence.Create(ctx, entity.OrderProduct{
+			Id:        uuid.New(),
+			ProductId: product.ProductId,
+			OrderId:   order.Id,
+			Quantity:  product.Quantity,
+			Amount:    product.Amount,
+		})
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (c CreateOrderUseCase) createOrderHistory(ctx context.Context, order entity.Order) error {
+	return c.OrderHistoryPersistence.Create(ctx, entity.OrderHistory{
+		Id:        uuid.New(),
+		OrderId:   order.Id,
+		Status:    order.Status,
+		ChangeBy:  "user",
+		CreatedAt: order.CreatedAt,
+	})
+}
+
+func (c CreateOrderUseCase) createProduct(
+	ctx context.Context,
+	createOrderProductsCommand command.CreateOrderProductsCommand,
+) (productResult.CreateProductResult, error) {
+
+	var ingredients []productCommand.Ingredient
+
+	for _, ingredient := range createOrderProductsCommand.Ingredients {
+		ingredients = append(ingredients, productCommand.Ingredient{
+			ID:       ingredient.Id.String(),
+			Quantity: ingredient.Quantity,
+		})
+	}
+
 	return c.ProductUseCase.AddProduct(ctx, productCommand.CreateProductCommand{
 		Name:        "Personalized Product",
 		Description: "Produto personalidado pelo cliente",
-		Category:    "Dish",
+		Category:    createOrderProductsCommand.ProductCategory,
 		Menu:        false,
-		Ingredients: nil, //TODO fix
+		Ingredients: ingredients,
 	})
 }

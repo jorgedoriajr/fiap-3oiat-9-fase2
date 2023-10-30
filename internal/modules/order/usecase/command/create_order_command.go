@@ -8,10 +8,11 @@ type CreateOrderCommand struct {
 }
 
 type CreateOrderProductsCommand struct {
-	Id          uuid.UUID
-	Quantity    int
-	Ingredients []CreateOrderIngredientCommand
-	Type        string
+	Id              uuid.UUID
+	Quantity        int
+	Ingredients     []CreateOrderIngredientCommand
+	Type            string
+	ProductCategory string
 }
 
 type CreateOrderIngredientCommand struct {
