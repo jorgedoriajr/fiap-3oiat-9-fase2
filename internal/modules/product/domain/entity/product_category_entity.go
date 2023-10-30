@@ -1,8 +1,8 @@
 package entity
 
-import "hamburgueria/internal/modules/product/domain/valueobject"
+import "github.com/google/uuid"
 
 type ProductCategoryEntity struct {
-	ID   int
-	Name valueobject.ProductCategory
+	ID   uuid.UUID
+	Name string
 }
