@@ -8,12 +8,13 @@ import (
 	"hamburgueria/internal/modules/customer/infra/database/postgres/sql/write"
 	"hamburgueria/pkg/querymapper"
 	"hamburgueria/pkg/sql"
+	"sync"
 )
 
 type CustomerRepository struct {
-	ReadWriteClient sql.Client
-	ReadOnlyClient  sql.Client
-	Logger          zerolog.Logger
+	readWriteClient sql.Client
+	readOnlyClient  sql.Client
+	logger          zerolog.Logger
 }
 
 func (c CustomerRepository) Create(ctx context.Context, customer entity.Customer) error {
@@ -21,11 +22,11 @@ func (c CustomerRepository) Create(ctx context.Context, customer entity.Customer
 	mapper := write.EntityToInsertCustomerQueryMapper(customer)
 	args := querymapper.GetArrayOfPropertiesFrom(mapper)
 
-	insertCommand := sql.NewCommand(ctx, c.ReadWriteClient, write.InsertCustomerRW, args...)
+	insertCommand := sql.NewCommand(ctx, c.readWriteClient, write.InsertCustomerRW, args...)
 	err := insertCommand.Exec()
 
 	if err != nil {
-		c.Logger.Error().
+		c.logger.Error().
 			Err(err).
 			Str("document", customer.Document).
 			Msg("Failed to insert customer")
@@ -37,10 +38,10 @@ func (c CustomerRepository) Create(ctx context.Context, customer entity.Customer
 
 func (c CustomerRepository) Get(ctx context.Context, document string) (customerResult *entity.Customer, err error) {
 
-	result, err := sql.NewQuery[*read.FindCustomerQueryResult](ctx, c.ReadOnlyClient, read.FindCustomerByCpf, document).One()
+	result, err := sql.NewQuery[*read.FindCustomerQueryResult](ctx, c.readOnlyClient, read.FindCustomerByCpf, document).One()
 
 	if err != nil {
-		c.Logger.Error().
+		c.logger.Error().
 			Err(err).
 			Str("document", document).
 			Msg("Failed to get customer")
@@ -48,4 +49,24 @@ func (c CustomerRepository) Get(ctx context.Context, document string) (customerR
 	}
 
 	return result.ToEntity(), nil
+}
+
+var (
+	customerRepositoryInstance CustomerRepository
+	customerRepositoryOnce     sync.Once
+)
+
+func GetCustomerPersistence(
+	ReadWriteClient sql.Client,
+	ReadOnlyClient sql.Client,
+	Logger zerolog.Logger,
+) CustomerRepository {
+	customerRepositoryOnce.Do(func() {
+		customerRepositoryInstance = CustomerRepository{
+			readWriteClient: ReadWriteClient,
+			readOnlyClient:  ReadOnlyClient,
+			logger:          Logger,
+		}
+	})
+	return customerRepositoryInstance
 }

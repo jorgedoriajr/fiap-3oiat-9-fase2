@@ -5,15 +5,16 @@ import (
 	"hamburgueria/internal/modules/customer/domain/entity"
 	"hamburgueria/internal/modules/customer/port/output"
 	"hamburgueria/internal/modules/customer/usecase/command"
+	"sync"
 	"time"
 )
 
 type CreateCustomerUseCase struct {
-	CustomerPersistence output.CustomerPersistencePort
+	customerPersistence output.CustomerPersistencePort
 }
 
 func (c CreateCustomerUseCase) AddCustomer(ctx context.Context, customer command.CreateCustomerCommand) error {
-	return c.CustomerPersistence.Create(
+	return c.customerPersistence.Create(
 		ctx,
 		entity.Customer{
 			Document:       customer.Document,
@@ -25,4 +26,20 @@ func (c CreateCustomerUseCase) AddCustomer(ctx context.Context, customer command
 			UpdatedAt:      time.Now(),
 		},
 	)
+}
+
+var (
+	createCustomerUseCaseInstance CreateCustomerUseCase
+	createCustomerUseCaseOnce     sync.Once
+)
+
+func GetCreateCustomerUseCase(
+	CustomerPersistence output.CustomerPersistencePort,
+) CreateCustomerUseCase {
+	createCustomerUseCaseOnce.Do(func() {
+		createCustomerUseCaseInstance = CreateCustomerUseCase{
+			customerPersistence: CustomerPersistence,
+		}
+	})
+	return createCustomerUseCaseInstance
 }

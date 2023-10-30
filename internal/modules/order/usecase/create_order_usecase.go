@@ -16,11 +16,11 @@ import (
 )
 
 type CreateOrderUseCase struct {
-	ProductUseCase          productInputPort.CreateProductUseCasePort
-	ProductPersistence      productPort.ProductPersistencePort
-	OrderPersistence        output.OrderPersistencePort
-	OrderHistoryPersistence output.OrderHistoryPersistencePort
-	OrderProductPersistence output.OrderProductPersistencePort
+	productUseCase          productInputPort.CreateProductUseCasePort
+	productPersistence      productPort.ProductPersistencePort
+	orderPersistence        output.OrderPersistencePort
+	orderHistoryPersistence output.OrderHistoryPersistencePort
+	orderProductPersistence output.OrderProductPersistencePort
 }
 
 func (c CreateOrderUseCase) AddOrder(
@@ -35,7 +35,7 @@ func (c CreateOrderUseCase) AddOrder(
 	for _, createProductCommand := range createOrderCommand.Products {
 		var productAmount int
 		if createProductCommand.Type == "default" {
-			product, err := c.ProductPersistence.GetByID(ctx, createProductCommand.Id)
+			product, err := c.productPersistence.GetByID(ctx, createProductCommand.Id)
 			if err != nil {
 				return nil, err
 			}
@@ -89,7 +89,7 @@ func (c CreateOrderUseCase) AddOrder(
 
 // TODO need to create transaction
 func (c CreateOrderUseCase) createOrder(ctx context.Context, order entity.Order) error {
-	err := c.OrderPersistence.Create(ctx, order)
+	err := c.orderPersistence.Create(ctx, order)
 	if err != nil {
 		return err
 	}
@@ -108,7 +108,7 @@ func (c CreateOrderUseCase) createOrder(ctx context.Context, order entity.Order)
 
 func (c CreateOrderUseCase) createOrderProducts(ctx context.Context, order entity.Order) error {
 	for _, product := range order.Products {
-		err := c.OrderProductPersistence.Create(ctx, entity.OrderProduct{
+		err := c.orderProductPersistence.Create(ctx, entity.OrderProduct{
 			Id:        uuid.New(),
 			ProductId: product.ProductId,
 			OrderId:   order.Id,
@@ -123,7 +123,7 @@ func (c CreateOrderUseCase) createOrderProducts(ctx context.Context, order entit
 }
 
 func (c CreateOrderUseCase) createOrderHistory(ctx context.Context, order entity.Order) error {
-	return c.OrderHistoryPersistence.Create(ctx, entity.OrderHistory{
+	return c.orderHistoryPersistence.Create(ctx, entity.OrderHistory{
 		Id:        uuid.New(),
 		OrderId:   order.Id,
 		Status:    order.Status,
@@ -146,7 +146,7 @@ func (c CreateOrderUseCase) createProduct(
 		})
 	}
 
-	return c.ProductUseCase.AddProduct(ctx, productCommand.CreateProductCommand{
+	return c.productUseCase.AddProduct(ctx, productCommand.CreateProductCommand{
 		Name:        "Personalized Product",
 		Description: "Produto personalidado pelo cliente",
 		Category:    createOrderProductsCommand.ProductCategory,
@@ -169,11 +169,11 @@ func GetCreateOrderUseCase(
 ) CreateOrderUseCase {
 	createOrderUseCaseOnce.Do(func() {
 		createOrderUseCaseInstance = CreateOrderUseCase{
-			ProductUseCase:          ProductUseCase,
-			ProductPersistence:      ProductPersistence,
-			OrderPersistence:        OrderPersistence,
-			OrderHistoryPersistence: OrderHistoryPersistence,
-			OrderProductPersistence: OrderProductPersistence,
+			productUseCase:          ProductUseCase,
+			productPersistence:      ProductPersistence,
+			orderPersistence:        OrderPersistence,
+			orderHistoryPersistence: OrderHistoryPersistence,
+			orderProductPersistence: OrderProductPersistence,
 		}
 	})
 	return createOrderUseCaseInstance

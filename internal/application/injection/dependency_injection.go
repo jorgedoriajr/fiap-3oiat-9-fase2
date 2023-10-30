@@ -32,11 +32,7 @@ func NewDependencyInjection() DependencyInjection {
 
 	ReadWriteClient, ReadOnlyClient := sql.GetClient("readWrite"), sql.GetClient("readOnly")
 
-	customerPersistence := database.CustomerRepository{
-		ReadWriteClient: ReadWriteClient,
-		ReadOnlyClient:  ReadOnlyClient,
-		Logger:          logger.Get(),
-	}
+	customerPersistence := database.GetCustomerPersistence(ReadWriteClient, ReadOnlyClient, logger.Get())
 
 	productPersistence := postgres.NewProductRepository(
 		ReadWriteClient,
@@ -66,8 +62,8 @@ func NewDependencyInjection() DependencyInjection {
 
 	return DependencyInjection{
 		CustomerController: &customer.CustomerController{
-			CreateCustomerUseCase: customerUseCase.CreateCustomerUseCase{CustomerPersistence: customerPersistence},
-			GetCustomerUseCase:    customerUseCase.GetCustomerUseCase{CustomerPersistence: customerPersistence},
+			CreateCustomerUseCase: customerUseCase.GetCreateCustomerUseCase(customerPersistence),
+			GetCustomerUseCase:    customerUseCase.GetGetCustomerUseCase(customerPersistence),
 		},
 		ProductController: &product.Controller{
 			CreateProductUseCase: productUseCase,

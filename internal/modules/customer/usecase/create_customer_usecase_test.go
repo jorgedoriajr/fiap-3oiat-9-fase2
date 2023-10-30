@@ -16,7 +16,7 @@ func TestCreateCustomerUseCase(t *testing.T) {
 	t.Run(`should add customer`, func(t *testing.T) {
 		repositoryMock := mocks.NewCustomerPersistencePort(t)
 		allowListService := CreateCustomerUseCase{
-			CustomerPersistence: repositoryMock,
+			customerPersistence: repositoryMock,
 		}
 
 		customer := request.CreateCustomer{
@@ -41,7 +41,7 @@ func TestCreateCustomerUseCase(t *testing.T) {
 	t.Run(`should not add customer if error`, func(t *testing.T) {
 		repositoryMock := mocks.NewCustomerPersistencePort(t)
 		allowListService := CreateCustomerUseCase{
-			CustomerPersistence: repositoryMock,
+			customerPersistence: repositoryMock,
 		}
 
 		customer := request.CreateCustomer{
