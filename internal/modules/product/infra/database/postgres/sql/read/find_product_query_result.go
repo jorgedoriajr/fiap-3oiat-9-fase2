@@ -2,7 +2,7 @@ package read
 
 import (
 	"github.com/google/uuid"
-	entity2 "hamburgueria/internal/modules/ingredient/domain/entity"
+	"hamburgueria/internal/modules/ingredient/infra/database/postgres/sql/read"
 	"hamburgueria/internal/modules/product/domain/entity"
 	"hamburgueria/internal/modules/product/domain/valueobject"
 	"hamburgueria/internal/modules/product/usecase/result"
@@ -22,16 +22,16 @@ type FindProductQueryResult struct {
 }
 
 type FindProductWithIngredientsQueryResult struct {
-	ID          uuid.UUID                  `db:"id"`
-	Name        string                     `db:"name"`
-	Number      int                        `db:"number"`
-	Amount      int                        `db:"amount"`
-	Description string                     `db:"description"`
-	Category    string                     `db:"category"`
-	Menu        bool                       `db:"menu"`
-	Ingredients []entity2.IngredientEntity `db:"ingredients"`
-	CreatedAt   time.Time                  `db:"created_at"`
-	UpdatedAt   time.Time                  `db:"updated_at"`
+	ID          uuid.UUID                        `db:"id"`
+	Name        string                           `db:"name"`
+	Number      int                              `db:"number"`
+	Amount      int                              `db:"amount"`
+	Description string                           `db:"description"`
+	Category    string                           `db:"category"`
+	Menu        bool                             `db:"menu"`
+	Ingredients []read.FindIngredientQueryResult `db:"ingredients"`
+	CreatedAt   time.Time                        `db:"created_at"`
+	UpdatedAt   time.Time                        `db:"updated_at"`
 }
 
 func (fc FindProductQueryResult) ToEntity() *entity.ProductEntity {

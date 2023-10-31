@@ -2,12 +2,14 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/urfave/cli/v2"
 	postgres2 "hamburgueria/internal/modules/ingredient/infra/database/postgres"
 	"hamburgueria/internal/modules/ingredient/service"
 	"hamburgueria/internal/modules/product/infra/database/postgres"
+	service2 "hamburgueria/internal/modules/product/service"
 	"hamburgueria/internal/modules/product/usecase"
 	command2 "hamburgueria/internal/modules/product/usecase/command"
 	"hamburgueria/pkg/logger"
@@ -100,7 +102,15 @@ func main() {
 						logger.Get(),
 					)
 
+					productPersistence := postgres.NewProductRepository(
+						sql.GetClient("readWrite"),
+						sql.GetClient("readOnly"),
+						logger.Get(),
+					)
+
 					serviceI := service.NewIngredientFinderService(ingredientPersistence)
+
+					productFinder := service2.NewProductFinderService(productPersistence, *serviceI)
 
 					//command := command2.CreateProductCommand{
 					//	Name:        "New Product",
@@ -117,11 +127,16 @@ func main() {
 						return err
 					}
 
-					for _, entity := range createProductResult {
-						fmt.Println(entity)
-
+					result, err := productFinder.FindByIDWithIngredients(context.TODO(), id)
+					if err != nil {
+						return err
 					}
 
+					for _, entity := range createProductResult {
+						fmt.Println(JsonPretty(entity))
+					}
+
+					fmt.Println(JsonPretty(result))
 					return nil
 				},
 			},
@@ -131,4 +146,9 @@ func main() {
 	if err := app.Run(os.Args); err != nil {
 		log.Fatalf("Erro ao executar comando - %s", err)
 	}
+}
+
+func JsonPretty(i interface{}) string {
+	r, _ := json.MarshalIndent(i, "", " ")
+	return string(r)
 }
