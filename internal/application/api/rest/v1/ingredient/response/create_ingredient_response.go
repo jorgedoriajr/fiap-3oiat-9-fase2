@@ -3,15 +3,14 @@ package response
 import (
 	"github.com/google/uuid"
 	"hamburgueria/internal/modules/ingredient/domain/entity"
-	"hamburgueria/internal/modules/ingredient/domain/valueobject"
 	"hamburgueria/internal/modules/ingredient/usecase/result"
 )
 
 type ProductCreatedResponse struct {
-	ID     uuid.UUID                  `json:"id,omitempty"`
-	Name   string                     `json:"name"`
-	Amount int                        `json:"amount"`
-	Type   valueobject.IngredientType `json:"type"`
+	ID     uuid.UUID `json:"id,omitempty"`
+	Name   string    `json:"name"`
+	Amount int       `json:"amount"`
+	Type   string    `json:"type"`
 }
 
 func (pcr ProductCreatedResponse) From(entity entity.IngredientEntity) ProductCreatedResponse {

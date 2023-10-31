@@ -11,7 +11,7 @@ type CreateIngredientCommand struct {
 	Type   string
 }
 
-func (c CreateIngredientCommand) ToIngredientType() *entity.IngredientEntity {
+func (c CreateIngredientCommand) ToIngredientEntity() *entity.IngredientEntity {
 	return &entity.IngredientEntity{
 		ID:     uuid.New(),
 		Name:   c.Name,
