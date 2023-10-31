@@ -36,6 +36,14 @@ func (p ProductFinderService) FindByCategory(ctx context.Context, category strin
 		return nil, err
 	}
 	return p.getIngredientsForProducts(ctx, products)
+}
+
+func (p ProductFinderService) FindByOrderId(ctx context.Context, orderId uuid.UUID) ([]*result.FindProductWithIngredientsResult, error) {
+	products, err := p.productPersistencePort.GetByOrderID(ctx, orderId)
+	if err != nil {
+		return nil, err
+	}
+	return p.getIngredientsForProducts(ctx, products)
 
 }
 

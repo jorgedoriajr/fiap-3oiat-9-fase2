@@ -11,7 +11,7 @@ type CreateOrder struct {
 }
 
 type CreateOrderProducts struct {
-	Id          string                  `json:"id"`
+	Number      int                     `json:"number"`
 	Quantity    int                     `json:"quantity"`
 	Ingredients []CreateOrderIngredient `json:"ingredients"`
 	Type        string                  `json:"type"`
@@ -35,7 +35,7 @@ func (c CreateOrder) ToCommand() command.CreateOrderCommand {
 		}
 
 		productsCommand = append(productsCommand, command.CreateOrderProductsCommand{
-			Id:          uuid.MustParse(product.Id),
+			Number:      product.Number,
 			Quantity:    product.Quantity,
 			Ingredients: ingredientsCommand,
 			Type:        product.Type,

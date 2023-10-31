@@ -115,6 +115,7 @@ func (c *Controller) GetOrders(ctx echo.Context) error {
 			Amount:     order.Amount,
 			CustomerId: order.CustomerId,
 			CreatedAt:  order.CreatedAt,
+			Products:   order.Products,
 		})
 	}
 	return ctx.JSON(http.StatusOK, ordersResponse)

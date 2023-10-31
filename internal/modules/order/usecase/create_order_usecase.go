@@ -32,7 +32,7 @@ func (c CreateOrderUseCase) AddOrder(
 	for _, createProductCommand := range createOrderCommand.Products {
 		var productAmount int
 		if createProductCommand.Type == "default" {
-			product, err := c.productFinderService.FindByID(ctx, createProductCommand.Id)
+			product, err := c.productFinderService.FindByNumber(ctx, createProductCommand.Number)
 			if err != nil {
 				return nil, err
 			}

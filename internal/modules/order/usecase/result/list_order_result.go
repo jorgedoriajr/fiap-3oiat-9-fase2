@@ -2,6 +2,7 @@ package result
 
 import (
 	"github.com/google/uuid"
+	"hamburgueria/internal/modules/product/usecase/result"
 	"time"
 )
 
@@ -11,4 +12,5 @@ type ListOrderResult struct {
 	Amount     int
 	CustomerId string
 	CreatedAt  time.Time
+	Products   []*result.FindProductWithIngredientsResult
 }

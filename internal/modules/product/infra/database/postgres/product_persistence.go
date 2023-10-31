@@ -86,6 +86,25 @@ func (c ProductRepository) GetByID(ctx context.Context, productID uuid.UUID) (*e
 	return result.ToEntity(), nil
 }
 
+func (c ProductRepository) GetByOrderID(ctx context.Context, orderId uuid.UUID) ([]entity.ProductEntity, error) {
+
+	results, err := sql.NewQuery[read.FindProductQueryResult](ctx, c.readOnlyClient, read.FindProductByOrderID, orderId).Many()
+
+	if err != nil {
+		c.logger.Error().
+			Err(err).
+			Str("orderId", orderId.String()).
+			Msg("Failed to get products by order id")
+		return nil, err
+	}
+
+	var entities []entity.ProductEntity
+	for _, productResult := range results {
+		entities = append(entities, *productResult.ToEntity())
+	}
+	return entities, nil
+}
+
 func (c ProductRepository) GetByNumber(ctx context.Context, productNumber int) (*entity.ProductEntity, error) {
 	result, err := sql.NewQuery[read.FindProductQueryResult](ctx, c.readOnlyClient, read.FindProductByNumber, productNumber).One()
 

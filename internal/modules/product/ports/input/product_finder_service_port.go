@@ -16,5 +16,7 @@ type ProductFinderServicePort interface {
 
 	FindByCategory(ctx context.Context, category string) ([]*result.FindProductWithIngredientsResult, error)
 
+	FindByOrderID(ctx context.Context, orderId uuid.UUID) ([]*result.FindProductWithIngredientsResult, error)
+
 	FindAllProducts(ctx context.Context) ([]*result.FindProductWithIngredientsResult, error)
 }
