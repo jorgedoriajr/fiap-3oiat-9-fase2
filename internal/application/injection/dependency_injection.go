@@ -9,8 +9,8 @@ import (
 	"hamburgueria/internal/modules/customer/usecase/create"
 	"hamburgueria/internal/modules/customer/usecase/get"
 	postgres2 "hamburgueria/internal/modules/ingredient/infra/database/postgres"
-	service2 "hamburgueria/internal/modules/ingredient/service"
-	usecase2 "hamburgueria/internal/modules/ingredient/usecase"
+	ingredientService "hamburgueria/internal/modules/ingredient/service"
+	ingredientUsecase "hamburgueria/internal/modules/ingredient/usecase"
 	"hamburgueria/internal/modules/product/infra/database/postgres"
 	"hamburgueria/internal/modules/product/service"
 	"hamburgueria/internal/modules/product/usecase"
@@ -47,6 +47,8 @@ func NewDependencyInjection() DependencyInjection {
 		logger.Get(),
 	)
 
+	ingredientFinder := ingredientService.NewIngredientFinderService(ingredientPersistence)
+
 	return DependencyInjection{
 		CustomerController: &customer.CustomerController{
 			CreateCustomerUseCase: create.CreateCustomerUseCase{CustomerPersistence: customerPersistence},
@@ -54,12 +56,11 @@ func NewDependencyInjection() DependencyInjection {
 		},
 		ProductController: &product.Controller{
 			CreateProductUseCase: usecase.NewCreateProductUseCase(productPersistence),
-			ProductFinderService: service.NewProductFinderService(productPersistence),
+			ProductFinderService: service.NewProductFinderService(productPersistence, *ingredientFinder),
 		},
-
 		IngredientController: &ingredient.Controller{
-			CreateIngredientUseCase: usecase2.NewCreateIngredientUseCase(ingredientPersistence),
-			IngredientFinderService: service2.NewIngredientFinderService(ingredientPersistence),
+			CreateIngredientUseCase: ingredientUsecase.NewCreateIngredientUseCase(ingredientPersistence),
+			IngredientFinderService: ingredientFinder,
 		},
 		Swagger: &swagger.Swagger{},
 	}

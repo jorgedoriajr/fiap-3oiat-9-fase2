@@ -1,8 +1,12 @@
 package entity
 
 type IngredientType struct {
-	Name            string
+	Name                    string
+	ConfigByProductCategory []IngredientTypeProductCategory
+}
+
+type IngredientTypeProductCategory struct {
 	Optional        string
-	Max_QTD         string
+	MaxQtd          string
 	ProductCategory string
 }

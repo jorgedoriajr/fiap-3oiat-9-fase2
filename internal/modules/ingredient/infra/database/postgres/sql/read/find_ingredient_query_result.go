@@ -3,7 +3,6 @@ package read
 import (
 	"github.com/google/uuid"
 	"hamburgueria/internal/modules/ingredient/domain/entity"
-	"hamburgueria/internal/modules/ingredient/domain/valueobject"
 )
 
 type FindIngredientQueryResult struct {
@@ -19,7 +18,7 @@ func (fc FindIngredientQueryResult) ToEntity() *entity.IngredientEntity {
 		ID:     fc.ID,
 		Name:   fc.Name,
 		Amount: fc.Amount,
-		Type:   valueobject.IngredientType(fc.Type),
+		Type:   fc.Type,
 	}
 }
 
@@ -37,12 +36,12 @@ func (fc FindIngredientQueryResult) ToCommandResult() *entity.IngredientEntity {
 		ID:     fc.ID,
 		Name:   fc.Name,
 		Amount: fc.Amount,
-		Type:   valueobject.IngredientType(fc.Type),
+		Type:   fc.Type,
 	}
 }
 
-func ToIngredientEntityList(results []FindIngredientQueryResult) []*entity.Ingredient {
-	entities := make([]*entity.Ingredient, len(results))
+func ToIngredientEntityList(results []FindIngredientQueryResult) []*entity.IngredientEntity {
+	entities := make([]*entity.IngredientEntity, len(results))
 
 	for i, result := range results {
 		entities[i] = result.ToEntity()

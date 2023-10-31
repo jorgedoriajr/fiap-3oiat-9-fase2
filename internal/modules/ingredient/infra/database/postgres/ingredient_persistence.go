@@ -5,7 +5,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"hamburgueria/internal/modules/ingredient/domain/entity"
-	"hamburgueria/internal/modules/ingredient/domain/valueobject"
 	"hamburgueria/internal/modules/ingredient/infra/database/postgres/sql/read"
 	"hamburgueria/internal/modules/ingredient/infra/database/postgres/sql/write"
 	"hamburgueria/pkg/querymapper"
@@ -35,7 +34,7 @@ func (c IngredientRepository) GetAll(ctx context.Context) ([]entity.IngredientEn
 	return allIngredients, nil
 }
 
-func (c IngredientRepository) GetByType(ctx context.Context, ingredientType valueobject.IngredientType) ([]entity.IngredientEntity, error) {
+func (c IngredientRepository) GetByType(ctx context.Context, ingredientType string) ([]entity.IngredientEntity, error) {
 	ingredientsByType, ingredientsByTypeErr := sql.NewQuery[entity.IngredientEntity](
 		ctx,
 		c.readOnlyClient,
