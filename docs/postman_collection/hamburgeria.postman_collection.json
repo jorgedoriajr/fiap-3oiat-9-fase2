@@ -300,7 +300,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"customerDocument\": \"21709085606\",\n    \"products\": [\n        {\n            \"id\": \"787b1e5d-c5d8-4ed4-9554-ec0e6555c8f1\",\n            \"type\": \"default\",\n            \"quantity\": 2\n        },\n        {\n            \"id\": \"ee491b9b-36d4-4b57-9aa6-21df5885c21e\",\n            \"type\": \"default\",\n            \"quantity\": 1\n        }\n    ]\n}",
+					"raw": "{\n    \"customerDocument\": \"21709085606\",\n    \"products\": [\n        {\n            \"number\": 1,\n            \"type\": \"default\",\n            \"quantity\": 2\n        },\n        {\n            \"number\": 4,\n            \"type\": \"default\",\n            \"quantity\": 2\n        }\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
