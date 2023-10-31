@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"hamburgueria/internal/application/api/middleware"
 	"hamburgueria/internal/application/api/rest/v1/ingredient/request"
+	"hamburgueria/internal/application/api/rest/v1/ingredient/response"
 	"hamburgueria/internal/modules/ingredient/ports/input"
 	"hamburgueria/internal/modules/ingredient/usecase/result"
 
@@ -35,7 +36,7 @@ func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
 // @Failure      401 {object} v1.ErrorResponse
 // @Failure      404 {object} v1.ErrorResponse
 // @Failure      503 {object} v1.ErrorResponse
-// @Success      200 {object} response.IngredientCreatedResponse
+// @Success      200 {object} response.IngredientResponse
 // @Router       /v1/ingredients [post]
 func (c *Controller) AddIngredient(e echo.Context) error {
 	req := new(request.CreateIngredientRequest)
@@ -58,7 +59,7 @@ func (c *Controller) AddIngredient(e echo.Context) error {
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return e.JSON(http.StatusOK, resultIngredient.ToResponse())
+	return e.JSON(http.StatusOK, response.FromCreateIngredientResult(resultIngredient))
 }
 
 // GetIngredientByID
@@ -70,7 +71,7 @@ func (c *Controller) AddIngredient(e echo.Context) error {
 // @Failure      401 {object} v1.ErrorResponse
 // @Failure      404 {object} v1.ErrorResponse
 // @Failure      503 {object} v1.ErrorResponse
-// @Success      200 {object} result.FindIngredientResult
+// @Success      200 {object} response.IngredientResponse
 // @Router       /v1/ingredients/{ingredientID} [get]
 func (c *Controller) GetIngredientByID(ctx echo.Context) error {
 	id := ctx.Param("ingredientID")
@@ -81,7 +82,7 @@ func (c *Controller) GetIngredientByID(ctx echo.Context) error {
 		})
 	}
 	ingredientID := uuid.MustParse(id)
-	response, err := c.IngredientFinderService.FindIngredientByID(ctx.Request().Context(), ingredientID)
+	ingredientResult, err := c.IngredientFinderService.FindIngredientByID(ctx.Request().Context(), ingredientID)
 	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
 			"code":    400,
@@ -89,11 +90,11 @@ func (c *Controller) GetIngredientByID(ctx echo.Context) error {
 		})
 	}
 
-	if response == nil {
+	if ingredientResult == nil {
 		return ctx.JSON(http.StatusNoContent, nil)
 	}
 
-	return ctx.JSON(http.StatusOK, response)
+	return ctx.JSON(http.StatusOK, response.FromFindIngredientResult(*ingredientResult))
 }
 
 // GetIngredients
@@ -105,18 +106,18 @@ func (c *Controller) GetIngredientByID(ctx echo.Context) error {
 // @Failure      401 {object} v1.ErrorResponse
 // @Failure      404 {object} v1.ErrorResponse
 // @Failure      503 {object} v1.ErrorResponse
-// @Success      200 {object} []result.FindIngredientResult
+// @Success      200 {object} []response.IngredientResponse
 // @Router       /v1/ingredients [get]
 func (c *Controller) GetIngredients(ctx echo.Context) error {
 	ingredientType := ctx.QueryParam("type")
 
-	var response []result.FindIngredientResult
+	var resultIngredients []result.FindIngredientResult
 	var err error
 
 	if ingredientType != "" {
-		response, err = c.IngredientFinderService.FindIngredientByType(ctx.Request().Context(), ingredientType)
+		resultIngredients, err = c.IngredientFinderService.FindIngredientByType(ctx.Request().Context(), ingredientType)
 	} else {
-		response, err = c.IngredientFinderService.FindAllIngredients(ctx.Request().Context())
+		resultIngredients, err = c.IngredientFinderService.FindAllIngredients(ctx.Request().Context())
 	}
 
 	if err != nil {
@@ -126,10 +127,10 @@ func (c *Controller) GetIngredients(ctx echo.Context) error {
 		})
 	}
 
-	if response == nil {
+	if resultIngredients == nil {
 		return ctx.JSON(http.StatusNoContent, nil)
 	}
 
-	return ctx.JSON(http.StatusOK, response)
+	return ctx.JSON(http.StatusOK, response.FromFindIngredientsResult(resultIngredients))
 
 }

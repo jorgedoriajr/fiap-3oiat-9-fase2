@@ -2,7 +2,6 @@ package result
 
 import (
 	"github.com/google/uuid"
-	"hamburgueria/internal/application/api/rest/v1/ingredient/response"
 	"hamburgueria/internal/modules/ingredient/domain/entity"
 )
 
@@ -19,13 +18,5 @@ func ToCreateIngredientResultFrom(entity entity.IngredientEntity) CreateIngredie
 		Name:   entity.Name,
 		Amount: entity.Amount,
 		Type:   entity.Type,
-	}
-}
-
-func (c CreateIngredientResult) ToResponse() response.IngredientCreatedResponse {
-	return response.IngredientCreatedResponse{
-		Name:   c.Name,
-		Amount: c.Amount,
-		Type:   c.Type,
 	}
 }
