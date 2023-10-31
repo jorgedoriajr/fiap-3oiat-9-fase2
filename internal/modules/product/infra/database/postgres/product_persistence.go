@@ -87,7 +87,7 @@ func (c ProductRepository) GetByID(ctx context.Context, productID uuid.UUID) (*e
 }
 
 func (c ProductRepository) GetByNumber(ctx context.Context, productNumber int) (*entity.ProductEntity, error) {
-	result, err := sql.NewQuery[read.FindProductQueryResult](ctx, c.readOnlyClient, read.FindProductByID, productNumber).One()
+	result, err := sql.NewQuery[read.FindProductQueryResult](ctx, c.readOnlyClient, read.FindProductByNumber, productNumber).One()
 
 	if err != nil {
 		c.logger.Error().
