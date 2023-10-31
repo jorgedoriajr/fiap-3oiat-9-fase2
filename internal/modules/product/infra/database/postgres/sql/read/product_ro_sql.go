@@ -53,8 +53,8 @@ const FindProductByOrderID = `
 		p.description,
 		p.category,
 		p.img_path,
-		p.amount,
-		po.quantity,
+		op.amount as total_amount,
+		op.quantity
 	FROM
 	    order_product AS op
 	JOIN

@@ -107,16 +107,5 @@ func (c *Controller) GetOrders(ctx echo.Context) error {
 		return ctx.JSON(http.StatusNoContent, nil)
 	}
 
-	var ordersResponse []response.ListOrderResponse
-	for _, order := range resultOrders {
-		ordersResponse = append(ordersResponse, response.ListOrderResponse{
-			OrderId:    order.OrderId,
-			Status:     order.Status,
-			Amount:     order.Amount,
-			CustomerId: order.CustomerId,
-			CreatedAt:  order.CreatedAt,
-			Products:   order.Products,
-		})
-	}
-	return ctx.JSON(http.StatusOK, ordersResponse)
+	return ctx.JSON(http.StatusOK, response.FromResult(resultOrders))
 }

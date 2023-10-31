@@ -10,7 +10,7 @@ import (
 type IngredientFinderServicePort interface {
 	FindIngredientByID(ctx context.Context, id uuid.UUID) (*result.FindIngredientResult, error)
 
-	FindIngredientsByProductId(ctx context.Context, productID uuid.UUID) ([]read.FindIngredientQueryResult, error)
+	FindIngredientsByProductId(ctx context.Context, productID uuid.UUID) ([]read.FindProductIngredientQueryResult, error)
 
 	FindIngredientByType(ctx context.Context, ingredientType string) ([]result.FindIngredientResult, error)
 

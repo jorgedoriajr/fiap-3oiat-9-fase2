@@ -2,8 +2,6 @@ package result
 
 import (
 	"github.com/google/uuid"
-	"hamburgueria/internal/modules/ingredient/infra/database/postgres/sql/read"
-	"sync/atomic"
 	"time"
 )
 
@@ -29,17 +27,15 @@ type FindProductWithIngredientsResult struct {
 	Category    string
 	Menu        bool
 	ImgPath     string
-	Ingredients []read.FindIngredientQueryResult
+	Ingredients []FindProductsIngredientsResult
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
 
-func (f *FindProductWithIngredientsResult) CalculateIngredientsAmount() {
-
-	var totalAmount int64
-
-	for _, ig := range f.Ingredients {
-		atomic.AddInt64(&totalAmount, int64(ig.Amount*ig.Quantity))
-	}
-	f.Amount = int(totalAmount)
+type FindProductsIngredientsResult struct {
+	ID          uuid.UUID
+	Name        string
+	TotalAmount int
+	Type        string
+	Quantity    int
 }

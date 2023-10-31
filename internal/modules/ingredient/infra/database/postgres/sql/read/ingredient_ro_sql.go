@@ -29,8 +29,8 @@ const FindIngredientsByProductID = `
 	SELECT
 		i.id AS id,
 		i.name AS name,
-		i.amount AS amount,
 		i.type AS type,
+		pi.amount as total_amount,
 		pi.quantity as quantity
 	FROM
 		ingredient AS i

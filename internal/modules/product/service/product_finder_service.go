@@ -3,8 +3,10 @@ package service
 import (
 	"context"
 	"github.com/google/uuid"
+	readIngredient "hamburgueria/internal/modules/ingredient/infra/database/postgres/sql/read"
 	"hamburgueria/internal/modules/ingredient/service"
 	"hamburgueria/internal/modules/product/domain/entity"
+	"hamburgueria/internal/modules/product/infra/database/postgres/sql/read"
 	"hamburgueria/internal/modules/product/ports/output"
 	"hamburgueria/internal/modules/product/usecase/result"
 	"sync"
@@ -43,8 +45,61 @@ func (p ProductFinderService) FindByOrderID(ctx context.Context, orderId uuid.UU
 	if err != nil {
 		return nil, err
 	}
-	return p.getIngredientsForProducts(ctx, products)
+	var productsWithIngredient []*result.FindProductWithIngredientsResult
 
+	for _, product := range products {
+		ingredients, iErr := p.ingredientFinderService.FindIngredientsByProductId(ctx, product.ID)
+		if iErr != nil {
+			return nil, iErr
+		}
+		r := convertFindProductOrderQueryResultWithIngredientsResult(ingredients, product)
+
+		productsWithIngredient = append(productsWithIngredient, r)
+	}
+	return productsWithIngredient, nil
+
+}
+
+func convertFindProductOrderQueryResultWithIngredientsResult(ingredients []readIngredient.FindProductIngredientQueryResult, product read.FindProductOrderQueryResult) *result.FindProductWithIngredientsResult {
+	var ingredientsResult []result.FindProductsIngredientsResult
+	for _, ingredient := range ingredients {
+		ingredientsResult = append(ingredientsResult, ingredient.ToResult())
+	}
+	r := &result.FindProductWithIngredientsResult{
+		ID:          product.ID,
+		Name:        product.Name,
+		Number:      product.Number,
+		Description: product.Description,
+		Category:    product.Category,
+		Menu:        product.Menu,
+		ImgPath:     product.ImgPath,
+		Amount:      product.TotalAmount,
+		Ingredients: ingredientsResult,
+		CreatedAt:   product.CreatedAt,
+		UpdatedAt:   product.UpdatedAt,
+	}
+	return r
+}
+
+func convertWithIngredientsResult(ingredients []readIngredient.FindProductIngredientQueryResult, product *entity.ProductEntity) *result.FindProductWithIngredientsResult {
+	var ingredientsResult []result.FindProductsIngredientsResult
+	for _, ingredient := range ingredients {
+		ingredientsResult = append(ingredientsResult, ingredient.ToResult())
+	}
+	r := &result.FindProductWithIngredientsResult{
+		ID:          product.ID,
+		Name:        product.Name,
+		Number:      product.Number,
+		Description: product.Description,
+		Category:    product.Category,
+		Menu:        product.Menu,
+		ImgPath:     product.ImgPath,
+		Amount:      product.Amount,
+		Ingredients: ingredientsResult,
+		CreatedAt:   product.CreatedAt,
+		UpdatedAt:   product.UpdatedAt,
+	}
+	return r
 }
 
 func (p ProductFinderService) FindByID(ctx context.Context, id uuid.UUID) (*entity.ProductEntity, error) {
@@ -61,19 +116,7 @@ func (p ProductFinderService) FindByIDWithIngredients(ctx context.Context, id uu
 		return nil, iErr
 	}
 
-	r := &result.FindProductWithIngredientsResult{
-		ID:          product.ID,
-		Name:        product.Name,
-		Number:      product.Number,
-		Description: product.Description,
-		Category:    product.Category,
-		Menu:        product.Menu,
-		Ingredients: ingredients,
-		CreatedAt:   product.CreatedAt,
-		UpdatedAt:   product.UpdatedAt,
-	}
-	r.CalculateIngredientsAmount()
-	return r, nil
+	return convertWithIngredientsResult(ingredients, product), nil
 }
 
 func (p ProductFinderService) FindByNumber(ctx context.Context, number int) (*result.FindProductWithIngredientsResult, error) {
@@ -87,20 +130,7 @@ func (p ProductFinderService) FindByNumber(ctx context.Context, number int) (*re
 		return nil, iErr
 	}
 
-	r := &result.FindProductWithIngredientsResult{
-		ID:          product.ID,
-		Name:        product.Name,
-		Number:      product.Number,
-		Description: product.Description,
-		Category:    product.Category,
-		Menu:        product.Menu,
-		Ingredients: ingredients,
-		CreatedAt:   product.CreatedAt,
-		UpdatedAt:   product.UpdatedAt,
-	}
-	r.CalculateIngredientsAmount()
-
-	return r, nil
+	return convertWithIngredientsResult(ingredients, product), nil
 }
 
 func (p ProductFinderService) getIngredientsForProducts(ctx context.Context, products []entity.ProductEntity) ([]*result.FindProductWithIngredientsResult, error) {
@@ -113,21 +143,7 @@ func (p ProductFinderService) getIngredientsForProducts(ctx context.Context, pro
 			return nil, iErr
 		}
 
-		r := &result.FindProductWithIngredientsResult{
-			ID:          product.ID,
-			Name:        product.Name,
-			Number:      product.Number,
-			Description: product.Description,
-			Category:    product.Category,
-			Menu:        product.Menu,
-			ImgPath:     product.ImgPath,
-			Ingredients: ingredients,
-			CreatedAt:   product.CreatedAt,
-			UpdatedAt:   product.UpdatedAt,
-		}
-		r.CalculateIngredientsAmount()
-
-		productsWithIngredient = append(productsWithIngredient, r)
+		productsWithIngredient = append(productsWithIngredient, convertWithIngredientsResult(ingredients, &product))
 	}
 
 	return productsWithIngredient, nil

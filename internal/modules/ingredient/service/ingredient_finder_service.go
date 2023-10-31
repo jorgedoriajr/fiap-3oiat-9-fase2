@@ -47,7 +47,7 @@ func (p IngredientFinderService) FindIngredientByID(ctx context.Context, id uuid
 	return &findIngredientResult, nil
 }
 
-func (p IngredientFinderService) FindIngredientsByProductId(ctx context.Context, productID uuid.UUID) ([]read.FindIngredientQueryResult, error) {
+func (p IngredientFinderService) FindIngredientsByProductId(ctx context.Context, productID uuid.UUID) ([]read.FindProductIngredientQueryResult, error) {
 	return p.ingredientPersistence.GetByProductID(ctx, productID)
 }
 

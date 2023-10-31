@@ -19,6 +19,20 @@ type FindProductQueryResult struct {
 	UpdatedAt   time.Time `db:"updated_at"`
 }
 
+type FindProductOrderQueryResult struct {
+	ID          uuid.UUID `db:"id"`
+	Name        string    `db:"name"`
+	Number      int       `db:"number"`
+	Quantity    int       `db:"quantity"`
+	TotalAmount int       `db:"total_amount"`
+	Description string    `db:"description"`
+	Category    string    `db:"category"`
+	Menu        bool      `db:"menu"`
+	ImgPath     string    `db:"img_path"`
+	CreatedAt   time.Time `db:"created_at"`
+	UpdatedAt   time.Time `db:"updated_at"`
+}
+
 func (fc FindProductQueryResult) ToEntity() *entity.ProductEntity {
 	return &entity.ProductEntity{
 		ID:          fc.ID,
