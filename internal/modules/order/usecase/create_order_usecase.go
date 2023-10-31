@@ -2,22 +2,19 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"github.com/google/uuid"
 	"hamburgueria/internal/modules/order/domain/entity"
 	"hamburgueria/internal/modules/order/port/output"
 	"hamburgueria/internal/modules/order/usecase/command"
 	"hamburgueria/internal/modules/order/usecase/result"
-	productInputPort "hamburgueria/internal/modules/product/ports/input"
-	productPort "hamburgueria/internal/modules/product/ports/output"
-	productCommand "hamburgueria/internal/modules/product/usecase/command"
-	productResult "hamburgueria/internal/modules/product/usecase/result"
+	"hamburgueria/internal/modules/product/service"
 	"sync"
 	"time"
 )
 
 type CreateOrderUseCase struct {
-	productUseCase          productInputPort.CreateProductUseCasePort
-	productPersistence      productPort.ProductPersistencePort
+	productFinderService    service.ProductFinderService
 	orderPersistence        output.OrderPersistencePort
 	orderHistoryPersistence output.OrderHistoryPersistencePort
 	orderProductPersistence output.OrderProductPersistencePort
@@ -35,7 +32,7 @@ func (c CreateOrderUseCase) AddOrder(
 	for _, createProductCommand := range createOrderCommand.Products {
 		var productAmount int
 		if createProductCommand.Type == "default" {
-			product, err := c.productPersistence.GetByID(ctx, createProductCommand.Id)
+			product, err := c.productFinderService.FindByID(ctx, createProductCommand.Id)
 			if err != nil {
 				return nil, err
 			}
@@ -48,18 +45,7 @@ func (c CreateOrderUseCase) AddOrder(
 				Amount:    productAmount,
 			})
 		} else {
-			productCreated, err := c.createProduct(ctx, createProductCommand)
-			if err != nil {
-				return nil, err
-			}
-			productAmount = productCreated.Amount * createProductCommand.Quantity
-			products = append(products, entity.OrderProduct{
-				Id:        uuid.New(),
-				ProductId: productCreated.Id,
-				OrderId:   orderId,
-				Quantity:  createProductCommand.Quantity,
-				Amount:    productAmount,
-			})
+			return nil, errors.New("not implemented")
 		}
 
 		amount = amount + productAmount
@@ -132,48 +118,23 @@ func (c CreateOrderUseCase) createOrderHistory(ctx context.Context, order entity
 	})
 }
 
-func (c CreateOrderUseCase) createProduct(
-	ctx context.Context,
-	createOrderProductsCommand command.CreateOrderProductsCommand,
-) (productResult.CreateProductResult, error) {
-
-	var ingredients []productCommand.Ingredient
-
-	for _, ingredient := range createOrderProductsCommand.Ingredients {
-		ingredients = append(ingredients, productCommand.Ingredient{
-			ID:       ingredient.Id.String(),
-			Quantity: ingredient.Quantity,
-		})
-	}
-
-	return c.productUseCase.AddProduct(ctx, productCommand.CreateProductCommand{
-		Name:        "Personalized Product",
-		Description: "Produto personalidado pelo cliente",
-		Category:    createOrderProductsCommand.ProductCategory,
-		Menu:        false,
-		Ingredients: ingredients,
-	})
-}
-
 var (
 	createOrderUseCaseInstance CreateOrderUseCase
 	createOrderUseCaseOnce     sync.Once
 )
 
 func GetCreateOrderUseCase(
-	ProductUseCase productInputPort.CreateProductUseCasePort,
-	ProductPersistence productPort.ProductPersistencePort,
-	OrderPersistence output.OrderPersistencePort,
-	OrderHistoryPersistence output.OrderHistoryPersistencePort,
-	OrderProductPersistence output.OrderProductPersistencePort,
+	productFinderService service.ProductFinderService,
+	orderPersistence output.OrderPersistencePort,
+	orderHistoryPersistence output.OrderHistoryPersistencePort,
+	orderProductPersistence output.OrderProductPersistencePort,
 ) CreateOrderUseCase {
 	createOrderUseCaseOnce.Do(func() {
 		createOrderUseCaseInstance = CreateOrderUseCase{
-			productUseCase:          ProductUseCase,
-			productPersistence:      ProductPersistence,
-			orderPersistence:        OrderPersistence,
-			orderHistoryPersistence: OrderHistoryPersistence,
-			orderProductPersistence: OrderProductPersistence,
+			productFinderService:    productFinderService,
+			orderPersistence:        orderPersistence,
+			orderHistoryPersistence: orderHistoryPersistence,
+			orderProductPersistence: orderProductPersistence,
 		}
 	})
 	return createOrderUseCaseInstance

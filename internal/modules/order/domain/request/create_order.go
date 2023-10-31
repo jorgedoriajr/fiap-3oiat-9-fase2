@@ -6,20 +6,20 @@ import (
 )
 
 type CreateOrder struct {
-	CustomerDocument string                `json:"document"`
+	CustomerDocument string                `json:"customerDocument"`
 	Products         []CreateOrderProducts `json:"products"`
 }
 
 type CreateOrderProducts struct {
-	Id          uuid.UUID               `json:"id"`
+	Id          string                  `json:"id"`
 	Quantity    int                     `json:"quantity"`
 	Ingredients []CreateOrderIngredient `json:"ingredients"`
 	Type        string                  `json:"type"`
 }
 
 type CreateOrderIngredient struct {
-	Id       uuid.UUID `json:"id"`
-	Quantity int       `json:"quantity"`
+	Id       string `json:"id"`
+	Quantity int    `json:"quantity"`
 }
 
 func (c CreateOrder) ToCommand() command.CreateOrderCommand {
@@ -29,13 +29,13 @@ func (c CreateOrder) ToCommand() command.CreateOrderCommand {
 		var ingredientsCommand []command.CreateOrderIngredientCommand
 		for _, ingredient := range product.Ingredients {
 			ingredientsCommand = append(ingredientsCommand, command.CreateOrderIngredientCommand{
-				Id:       ingredient.Id,
+				Id:       uuid.MustParse(ingredient.Id),
 				Quantity: ingredient.Quantity,
 			})
 		}
 
 		productsCommand = append(productsCommand, command.CreateOrderProductsCommand{
-			Id:          product.Id,
+			Id:          uuid.MustParse(product.Id),
 			Quantity:    product.Quantity,
 			Ingredients: ingredientsCommand,
 			Type:        product.Type,
