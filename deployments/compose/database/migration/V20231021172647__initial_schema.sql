@@ -42,7 +42,8 @@ CREATE TABLE IF NOT EXISTS "product" (
     amount                  bigint not null,
     description             text,
     category                varchar(50) references "product_category"(name) not null ,
-    menu                    boolean not null ,
+    menu                    boolean not null,
+    img_path                varchar(255) not null,
     created_at              timestamp not null,
     updated_at              timestamp
 );

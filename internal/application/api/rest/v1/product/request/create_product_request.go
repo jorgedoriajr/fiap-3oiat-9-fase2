@@ -9,6 +9,7 @@ type CreateProductRequest struct {
 	Description string              `json:"description" validator:"required"`
 	Category    string              `json:"category" validator:"required"`
 	Menu        bool                `json:"menu" validator:"required"`
+	ImgPath     string              `json:"imgPath" validator:"required"`
 	Ingredients []IngredientRequest `json:"ingredients" validator:"required"`
 }
 
@@ -22,7 +23,7 @@ type IngredientRequest struct {
 
 func (cp CreateProductRequest) ToCommand() command.CreateProductCommand {
 	return *command.NewCreateProductCommand(
-		cp.Name, cp.Description, cp.Category, cp.Menu, toIngredients(cp.Ingredients),
+		cp.Name, cp.Description, cp.Category, cp.Menu, toIngredients(cp.Ingredients), cp.ImgPath,
 	)
 }
 

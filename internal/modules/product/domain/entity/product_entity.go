@@ -13,6 +13,7 @@ type ProductEntity struct {
 	Description string
 	Category    string
 	Menu        bool
+	ImgPath     string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

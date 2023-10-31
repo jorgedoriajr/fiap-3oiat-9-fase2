@@ -108,40 +108,46 @@ INSERT INTO ingredient(id, name, amount, type)
 VALUES ('85f0288e-f692-458e-ab0f-93c31adb5579', 'Batata', 2000, 'Acompanhamento');
 
 -- product
-INSERT INTO product(id, name, amount, description, category, menu, created_at, updated_at)
+INSERT INTO product(id, name, amount, description, category, menu, created_at, updated_at, img_path)
 VALUES (
     '787b1e5d-c5d8-4ed4-9554-ec0e6555c8f1',
-    'Burger Cheddar Bacon', 4100, 'Burger blend de 220g de Angus, cheddar e bacon', 'Lanche', true, now(), now()
+    'Burger Cheddar Bacon', 4100, 'Burger blend de 220g de Angus, cheddar e bacon', 'Lanche', true, now(), now(),
+    'https://s2.glbimg.com/J37rcGJSqqOBHXy7PtN1JGOCgww=/620x455/e.glbimg.com/og/ed/f/original/2020/09/03/bacon_burger_-_01.jpg'
 );
 
-INSERT INTO product(id, name, amount, description, category, menu, created_at, updated_at)
+INSERT INTO product(id, name, amount, description, category, menu, created_at, updated_at, img_path)
 VALUES (
    'ec2e5922-f616-48b4-9e46-97f086db3e7f',
-   'Double Cheddar Burger', 6500, '2 Burgers blend de 220g de Angus e duplo cheddar', 'Lanche', true, now(), now()
+   'Double Cheddar Burger', 6500, '2 Burgers blend de 220g de Angus e duplo cheddar', 'Lanche', true, now(), now(),
+    'https://cache-backend-mcd.mcdonaldscupones.com/media/image/product$kzXWKJ6A/200/200/original?country=br'
 );
 
-INSERT INTO product(id, name, amount, description, category, menu, created_at, updated_at)
+INSERT INTO product(id, name, amount, description, category, menu, created_at, updated_at, img_path)
 VALUES (
     '013c25c4-fc72-4919-af03-4379aff7a989',
-    'Burger Vegano', 3000, 'Burguer blend de 220g vegano', 'Lanche', true, now(), now()
+    'Burger Vegano', 3000, 'Burguer blend de 220g vegano', 'Lanche', true, now(), now(),
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSskVrwJSwG8_UoTvCAT75wKp7jg8V3YTjxCqo6WvKBvc8bw6psjTzxzAHU-N86xns6s30&usqp=CAU'
 );
 
-INSERT INTO product(id, name, amount, description, category, menu, created_at, updated_at)
+INSERT INTO product(id, name, amount, description, category, menu, created_at, updated_at, img_path)
 VALUES (
    'ee491b9b-36d4-4b57-9aa6-21df5885c21e',
-   'Heineken Long Neck', 1000, 'Heineken Long Neck 330ml', 'Bebida', true, now(), now()
+   'Heineken Long Neck', 1000, 'Heineken Long Neck 330ml', 'Bebida', true, now(), now(),
+    'https://d2r9epyceweg5n.cloudfront.net/stores/001/184/939/products/heineken-long-neck1-5d98f7fb397dec9bce15889526302090-640-0.png'
 );
 
-INSERT INTO product(id, name, amount, description, category, menu, created_at, updated_at)
+INSERT INTO product(id, name, amount, description, category, menu, created_at, updated_at, img_path)
 VALUES (
    '9724f90f-c557-4a31-a69c-57c7ddb91e69',
-   'Coca-Cola Lata', 1000, 'Coca-Cola Lata 350ml', 'Bebida', true, now(), now()
+   'Coca-Cola Lata', 1000, 'Coca-Cola Lata 350ml', 'Bebida', true, now(), now(),
+   'https://www.imigrantesbebidas.com.br/bebida/images/products/full/1984-refrigerante-coca-cola-lata-350ml.jpg'
 );
 
-INSERT INTO product(id, name, amount, description, category, menu, created_at, updated_at)
+INSERT INTO product(id, name, amount, description, category, menu, created_at, updated_at, img_path)
 VALUES (
    '343ffe88-8d87-41f0-9433-a212d48a7c0b',
-   'Batata com cheddar e bacon', 3100, 'Porção de batata com cheddar e bacon', 'Acompanhamento', true, now(), now()
+   'Batata com cheddar e bacon', 3100, 'Porção de batata com cheddar e bacon', 'Acompanhamento', true, now(), now(),
+    'https://receitinhas.com.br/wp-content/uploads/2017/06/Batatosa-scaled.jpg'
 );
 
 -- product_ingredient

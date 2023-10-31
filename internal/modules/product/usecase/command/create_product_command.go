@@ -12,6 +12,7 @@ type CreateProductCommand struct {
 	Description string
 	Category    string
 	Menu        bool
+	ImgPath     string
 	Ingredients []Ingredient
 }
 
@@ -26,6 +27,7 @@ func NewCreateProductCommand(
 	Category string,
 	Menu bool,
 	Ingredients []Ingredient,
+	ImgPath string,
 ) *CreateProductCommand {
 
 	cmd := &CreateProductCommand{
@@ -33,6 +35,7 @@ func NewCreateProductCommand(
 		Description: Description,
 		Category:    Category,
 		Menu:        Menu,
+		ImgPath:     ImgPath,
 		Ingredients: Ingredients,
 	}
 	//cmd.calculateAmountFromIngredients()
@@ -55,6 +58,7 @@ func (cmd CreateProductCommand) ToProductEntity() entity.ProductEntity {
 		Description: cmd.Description,
 		Category:    cmd.Category,
 		Menu:        cmd.Menu,
+		ImgPath:     cmd.ImgPath,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
 	}
