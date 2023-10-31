@@ -958,7 +958,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "https://localhost/8080",
 	BasePath:         "/v1",
 	Schemes:          []string{},
-	Title:            "Hamburgeria - Grupo 9",
+	Title:            "Hamburgueria - Grupo 9",
 	Description:      "Projeto de auto atendimento para hamburgueria",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

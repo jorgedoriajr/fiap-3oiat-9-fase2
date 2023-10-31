@@ -220,7 +220,7 @@ host: https://localhost/8080
 info:
   contact: {}
   description: Projeto de auto atendimento para hamburgueria
-  title: Hamburgeria - Grupo 9
+  title: Hamburgueria - Grupo 9
   version: "1.0"
 paths:
   /v1/customers:

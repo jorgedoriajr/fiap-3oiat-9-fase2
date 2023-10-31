@@ -10,7 +10,7 @@ import (
 	"hamburgueria/pkg/validation"
 )
 
-// @title Hamburgeria - Grupo 9
+// @title Hamburgueria - Grupo 9
 // @version 1.0
 // @description Projeto de auto atendimento para hamburgueria
 // @host https://localhost/8080
