@@ -15,22 +15,26 @@ type IngredientTypeRepository struct {
 	logger          zerolog.Logger
 }
 
-func (c IngredientTypeRepository) GetByName(ctx context.Context, ingredientTypeName string) (*entity.IngredientType, error) {
+func (c IngredientTypeRepository) GetTypeByName(ctx context.Context, name string) (*entity.IngredientType, error) {
 
-	result, err := sql.NewQuery[read.FindIngredientTypeQueryResult](ctx, c.readOnlyClient, read.FindIngredientTypeByName, ingredientTypeName).One()
+	result, err := sql.NewQuery[read.FindIngredientTypeQueryResult](ctx, c.readOnlyClient, read.FindIngredientTypeByName, name).One()
 
 	if err != nil {
 		c.logger.Error().
 			Err(err).
-			Str("ingredientType", ingredientTypeName).
+			Str("ingredientType", name).
 			Msg("Failed to get ingredient")
 		return nil, err
 	}
 
-	return result.ToEntity(), nil
+	if result.Name == "" {
+		return nil, nil
+	}
+	ingredientTypeResponse := result.ToEntity()
+	return &ingredientTypeResponse, nil
 }
 
-func (c IngredientTypeRepository) GetByProductCategory(ctx context.Context, productCategoryName string) ([]*entity.IngredientType, error) {
+func (c IngredientTypeRepository) GetByProductCategory(ctx context.Context, productCategoryName string) ([]entity.IngredientType, error) {
 
 	result, err := sql.NewQuery[read.FindIngredientTypeQueryResult](ctx, c.readOnlyClient, read.FindIngredientTypeByProductCategory, productCategoryName).Many()
 
@@ -44,7 +48,7 @@ func (c IngredientTypeRepository) GetByProductCategory(ctx context.Context, prod
 	return read.ToIngredientTypeEntityList(result), nil
 }
 
-func (c IngredientTypeRepository) GetAll(ctx context.Context) ([]*entity.IngredientType, error) {
+func (c IngredientTypeRepository) GetAll(ctx context.Context) ([]entity.IngredientType, error) {
 
 	result, err := sql.NewQuery[read.FindIngredientTypeQueryResult](ctx, c.readOnlyClient, read.FindIngredientTypeAll).Many()
 
@@ -56,4 +60,12 @@ func (c IngredientTypeRepository) GetAll(ctx context.Context) ([]*entity.Ingredi
 	}
 
 	return read.ToIngredientTypeEntityList(result), nil
+}
+
+func NewIngredientTypeRepository(
+	readWriteClient sql.Client,
+	readOnlyClient sql.Client,
+	logger zerolog.Logger,
+) *IngredientTypeRepository {
+	return &IngredientTypeRepository{readWriteClient: readWriteClient, readOnlyClient: readOnlyClient, logger: logger}
 }

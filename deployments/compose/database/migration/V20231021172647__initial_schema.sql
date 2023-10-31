@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "ingredient_type" (
 
 CREATE TABLE IF NOT EXISTS "ingredient_type_product_category" (
     id                  UUID not null primary key default public.uuid_generate_v4(),
-    ingredient_type     varchar(50) references "ingredient_type"(name)
+    ingredient_type     varchar(50) references "ingredient_type"(name),
     optional            boolean,
     max_qtd             int,
     product_category    varchar(50) references "product_category"(name)

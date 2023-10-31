@@ -45,7 +45,7 @@ func (c IngredientRepository) GetByType(ctx context.Context, ingredientType stri
 	if ingredientsByTypeErr != nil {
 		c.logger.Error().
 			Err(ingredientsByTypeErr).
-			Str("type", string(ingredientType)).
+			Str("type", ingredientType).
 			Msg("Failed to get ingredients by type")
 		return nil, ingredientsByTypeErr
 	}

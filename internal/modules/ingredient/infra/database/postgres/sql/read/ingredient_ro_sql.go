@@ -23,8 +23,7 @@ const FindIngredientsByType = `
 		SELECT
 			` + tableColumns + `
 		FROM ingredient
-		WHERE id = $1
-		LIMIT 1`
+		WHERE type = $1`
 
 const FindIngredientsByProductID = `
 	SELECT

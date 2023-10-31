@@ -20,5 +20,5 @@ const FindIngredientTypeByProductCategory = `
 
 const FindIngredientTypeAll = `
 		SELECT
-			name
+			` + tableIngredientTypeColumns + `
 		FROM ingredient_type`

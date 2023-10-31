@@ -33,6 +33,9 @@ VALUES('Bebidas Alcoólicas');
 INSERT INTO ingredient_type(name)
 VALUES('Bebidas Não Alcoólicas');
 
+INSERT INTO ingredient_type(name)
+VALUES('Salada');
+
 -- ingredient_type_product_category
 INSERT INTO ingredient_type_product_category(ingredient_type, optional, max_qtd, product_category)
 VALUES ('Pão', false, 1, 'Lanche');
@@ -66,6 +69,9 @@ VALUES ('Bebidas Alcoólicas', false, null, 'Bebida');
 
 INSERT INTO ingredient_type_product_category(ingredient_type, optional, max_qtd, product_category)
 VALUES ('Bebidas Não Alcoólicas', false, null, 'Bebida');
+
+INSERT INTO ingredient_type_product_category(ingredient_type, optional, max_qtd, product_category)
+VALUES ('Salada', true, null, 'Lanche');
 
 -- Ingredient
 INSERT INTO ingredient(id, name, amount, type)
@@ -154,13 +160,13 @@ VALUES (
 
 -- 'Batata com cheddar e bacon'
 INSERT INTO product_ingredient(product_id, ingredient_id, quantity, amount)
-VALUES ('343ffe88-8d87-41f0-9433-a212d48a7c0b', '85f0288e-f692-458e-ab0f-93c31adb5579', 1, 2000)
+VALUES ('343ffe88-8d87-41f0-9433-a212d48a7c0b', '85f0288e-f692-458e-ab0f-93c31adb5579', 1, 2000);
 
 INSERT INTO product_ingredient(product_id, ingredient_id, quantity, amount)
-VALUES ('343ffe88-8d87-41f0-9433-a212d48a7c0b', 'b9cae298-e74a-4bc7-985d-d268f2bc76a6', 1, 500)
+VALUES ('343ffe88-8d87-41f0-9433-a212d48a7c0b', 'b9cae298-e74a-4bc7-985d-d268f2bc76a6', 1, 500);
 
 INSERT INTO product_ingredient(product_id, ingredient_id, quantity, amount)
-VALUES ('343ffe88-8d87-41f0-9433-a212d48a7c0b', 'd4d14983-d431-48aa-9e2c-8a14e704101d', 1, 600)
+VALUES ('343ffe88-8d87-41f0-9433-a212d48a7c0b', 'd4d14983-d431-48aa-9e2c-8a14e704101d', 1, 600);
 
 -- 'Coca-Cola Lata'
 INSERT INTO product_ingredient(product_id, ingredient_id, quantity, amount)

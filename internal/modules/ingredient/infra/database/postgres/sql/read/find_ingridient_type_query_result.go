@@ -15,7 +15,7 @@ type FindIngredientsTypeProductCategory struct {
 	ProductCategory string `db:"product_category"`
 }
 
-func (fc FindIngredientTypeQueryResult) ToEntity() *entity.IngredientType {
+func (fc FindIngredientTypeQueryResult) ToEntity() entity.IngredientType {
 	var ingredientsTypePerProductCategory []entity.IngredientTypeProductCategory
 	for _, ingredientTypePerProductCategory := range fc.IngredientsTypePerProductCategory {
 		ingredientsTypePerProductCategory = append(ingredientsTypePerProductCategory, entity.IngredientTypeProductCategory{
@@ -25,14 +25,14 @@ func (fc FindIngredientTypeQueryResult) ToEntity() *entity.IngredientType {
 		})
 	}
 
-	return &entity.IngredientType{
+	return entity.IngredientType{
 		Name:                    fc.Name,
 		ConfigByProductCategory: ingredientsTypePerProductCategory,
 	}
 }
 
-func ToIngredientTypeEntityList(results []FindIngredientTypeQueryResult) []*entity.IngredientType {
-	entities := make([]*entity.IngredientType, len(results))
+func ToIngredientTypeEntityList(results []FindIngredientTypeQueryResult) []entity.IngredientType {
+	entities := make([]entity.IngredientType, len(results))
 
 	for i, result := range results {
 		entities[i] = result.ToEntity()

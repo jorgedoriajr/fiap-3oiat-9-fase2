@@ -3,6 +3,7 @@ package injection
 import (
 	"hamburgueria/internal/application/api/rest/v1/customer"
 	"hamburgueria/internal/application/api/rest/v1/ingredient"
+	"hamburgueria/internal/application/api/rest/v1/ingredienttype"
 	"hamburgueria/internal/application/api/rest/v1/order"
 	"hamburgueria/internal/application/api/rest/v1/product"
 	"hamburgueria/internal/application/api/swagger"
@@ -21,11 +22,12 @@ import (
 )
 
 type DependencyInjection struct {
-	CustomerController   *customer.CustomerController
-	ProductController    *product.Controller
-	IngredientController *ingredient.Controller
-	OrderController      *order.Controller
-	Swagger              *swagger.Swagger
+	CustomerController       *customer.CustomerController
+	ProductController        *product.Controller
+	IngredientController     *ingredient.Controller
+	OrderController          *order.Controller
+	IngredientTypeController *ingredienttype.Controller
+	Swagger                  *swagger.Swagger
 }
 
 func NewDependencyInjection() DependencyInjection {
@@ -46,7 +48,15 @@ func NewDependencyInjection() DependencyInjection {
 		logger.Get(),
 	)
 
+	ingredientTypePersistence := ingredientPostgres.NewIngredientTypeRepository(
+		ReadWriteClient,
+		ReadOnlyClient,
+		logger.Get(),
+	)
+
 	ingredientFinder := ingredientService.NewIngredientFinderService(ingredientPersistence)
+
+	ingredientTypeFinder := ingredientService.GetIngredientTypeFinderService(ingredientTypePersistence)
 
 	productUseCase := usecase.NewCreateProductUseCase(productPersistence)
 
@@ -78,6 +88,7 @@ func NewDependencyInjection() DependencyInjection {
 			CreateIngredientUseCase: ingredientUsecase.NewCreateIngredientUseCase(ingredientPersistence),
 			IngredientFinderService: ingredientFinder,
 		},
-		Swagger: &swagger.Swagger{},
+		IngredientTypeController: &ingredienttype.Controller{IngredientTypeFinderService: ingredientTypeFinder},
+		Swagger:                  &swagger.Swagger{},
 	}
 }

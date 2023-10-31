@@ -9,6 +9,8 @@ func GetAllControllers(injection DependencyInjection) []httpserver.Controller {
 		injection.CustomerController,
 		injection.ProductController,
 		injection.IngredientController,
+		injection.OrderController,
+		injection.IngredientTypeController,
 		injection.Swagger,
 	}
 }
