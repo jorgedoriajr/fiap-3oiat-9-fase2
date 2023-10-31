@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"hamburgueria/internal/modules/customer/domain/entity"
-	"hamburgueria/internal/modules/customer/domain/request"
+	"hamburgueria/internal/modules/customer/usecase/command"
 	"hamburgueria/tests/mocks"
 	"testing"
 )
@@ -19,7 +19,7 @@ func TestCreateCustomerUseCase(t *testing.T) {
 			customerPersistence: repositoryMock,
 		}
 
-		customer := request.CreateCustomer{
+		customer := command.CreateCustomerCommand{
 			Document: "58642725826",
 			Name:     "Name",
 			Phone:    "11999999999",
@@ -44,7 +44,7 @@ func TestCreateCustomerUseCase(t *testing.T) {
 			customerPersistence: repositoryMock,
 		}
 
-		customer := request.CreateCustomer{
+		customer := command.CreateCustomerCommand{
 			Document: "58642725826",
 			Name:     "Name",
 			Phone:    "11999999999",

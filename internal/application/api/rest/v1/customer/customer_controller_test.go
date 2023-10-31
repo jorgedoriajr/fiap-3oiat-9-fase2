@@ -51,7 +51,7 @@ func TestCustomerController(t *testing.T) {
 		responseStatusCode := rec.Result().StatusCode
 
 		responseBodyAsString, _ := io.ReadAll(responseBody)
-		expectedResponse := "{\"document\":\"98932673667\",\"name\":\"Name\",\"phone\":\"11999999999\"}\n"
+		expectedResponse := "{\"document\":\"98932673667\",\"name\":\"Name\",\"phone\":\"11999999999\",\"email\":\"\"}\n"
 
 		assert.Nil(t, err)
 		assert.Equal(t, responseStatusCode, http.StatusOK)
@@ -215,10 +215,10 @@ func TestCustomerController(t *testing.T) {
 		responseStatusCode := rec.Result().StatusCode
 
 		responseBodyAsString, _ := io.ReadAll(responseBody)
-		expectedResponse := "{\"code\":400,\"message\":\"some error\"}\n"
+		expectedResponse := "{\"code\":500,\"message\":\"some error\"}\n"
 
 		assert.Nil(t, err)
-		assert.Equal(t, responseStatusCode, http.StatusBadRequest)
+		assert.Equal(t, responseStatusCode, http.StatusInternalServerError)
 		assert.Equal(t, string(responseBodyAsString), expectedResponse)
 
 		createCustomerPortMock.AssertExpectations(t)

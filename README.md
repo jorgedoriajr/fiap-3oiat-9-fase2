@@ -45,6 +45,18 @@ Install dependencies.
 
 `go get -u ./...`
 
+Starter database
+
+`docker compose -f ./deployments/compose/docker-compose.yml up -d`
+
+If have problems with permission with the database startup, maybe you will need to give permission to this file
+
+`chmod +x ./deployments/compose/database/setup-postgresql-databases.sh`, them starter the docker compose again.
+
 Run application
 
-`make run`
+`CONF=./config/config.yml go run -race cmd/main.go`
+
+Run unit test
+
+`go test -v -race ./...`
