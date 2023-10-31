@@ -13,7 +13,7 @@ httpServer:
 
 databases:
   readOnly:
-    host: localhost
+    host: ${DB_HOST:localhost}
     port: 5432
     databaseName: hamburgueria
     user: hamburgueria-app-read
@@ -21,7 +21,7 @@ databases:
     maxPoolSize: 5
 
   readWrite:
-    host: localhost
+    host: ${DB_HOST:localhost}
     port: 5432
     databaseName: hamburgueria
     user: hamburgueria-app-write
