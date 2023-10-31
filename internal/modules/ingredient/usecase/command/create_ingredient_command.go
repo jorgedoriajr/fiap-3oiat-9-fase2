@@ -3,16 +3,15 @@ package command
 import (
 	"github.com/google/uuid"
 	"hamburgueria/internal/modules/ingredient/domain/entity"
-	"hamburgueria/internal/modules/ingredient/domain/valueobject"
 )
 
 type CreateIngredientCommand struct {
 	Name   string
 	Amount int
-	Type   valueobject.IngredientType
+	Type   string
 }
 
-func (c CreateIngredientCommand) ToIngredientType() *entity.IngredientEntity {
+func (c CreateIngredientCommand) ToIngredientEntity() *entity.IngredientEntity {
 	return &entity.IngredientEntity{
 		ID:     uuid.New(),
 		Name:   c.Name,
@@ -24,7 +23,7 @@ func (c CreateIngredientCommand) ToIngredientType() *entity.IngredientEntity {
 func NewCreateIngredientCommand(
 	Name string,
 	Amount int,
-	Type valueobject.IngredientType,
+	Type string,
 ) *CreateIngredientCommand {
 	return &CreateIngredientCommand{
 		Name:   Name,

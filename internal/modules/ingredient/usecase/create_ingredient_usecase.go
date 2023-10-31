@@ -19,7 +19,7 @@ type CreateIngredientUseCase struct {
 }
 
 func (c CreateIngredientUseCase) AddIngredient(ctx context.Context, command command.CreateIngredientCommand) (result.CreateIngredientResult, error) {
-	ingredient := command.ToIngredientType()
+	ingredient := command.ToIngredientEntity()
 
 	fmt.Printf("creating new ingredient: [%v]", ingredient)
 	err := c.ingredientPersistence.Create(ctx, *ingredient)

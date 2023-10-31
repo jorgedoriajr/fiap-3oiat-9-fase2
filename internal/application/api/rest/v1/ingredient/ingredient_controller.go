@@ -6,7 +6,6 @@ import (
 	"hamburgueria/internal/application/api/middleware"
 	"hamburgueria/internal/application/api/rest/v1/ingredient/request"
 	"hamburgueria/internal/modules/ingredient/domain/entity"
-	"hamburgueria/internal/modules/ingredient/domain/valueobject"
 	"hamburgueria/internal/modules/ingredient/ports/input"
 
 	"net/http"
@@ -115,7 +114,7 @@ func (c *Controller) GetIngredients(ctx echo.Context) error {
 	var err error
 
 	if ingredientType != "" {
-		response, err = c.IngredientFinderService.FindIngredientByType(ctx.Request().Context(), valueobject.IngredientType(ingredientType))
+		response, err = c.IngredientFinderService.FindIngredientByType(ctx.Request().Context(), ingredientType)
 	} else {
 		response, err = c.IngredientFinderService.FindAllIngredients(ctx.Request().Context())
 	}

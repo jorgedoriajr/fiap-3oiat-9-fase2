@@ -5,7 +5,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"hamburgueria/internal/modules/ingredient/domain/entity"
-	"hamburgueria/internal/modules/ingredient/domain/valueobject"
 	"hamburgueria/internal/modules/ingredient/infra/database/postgres/sql/read"
 	"hamburgueria/internal/modules/ingredient/infra/database/postgres/sql/write"
 	"hamburgueria/pkg/querymapper"
@@ -35,7 +34,7 @@ func (c IngredientRepository) GetAll(ctx context.Context) ([]entity.IngredientEn
 	return allIngredients, nil
 }
 
-func (c IngredientRepository) GetByType(ctx context.Context, ingredientType valueobject.IngredientType) ([]entity.IngredientEntity, error) {
+func (c IngredientRepository) GetByType(ctx context.Context, ingredientType string) ([]entity.IngredientEntity, error) {
 	ingredientsByType, ingredientsByTypeErr := sql.NewQuery[entity.IngredientEntity](
 		ctx,
 		c.readOnlyClient,
@@ -85,6 +84,21 @@ func (c IngredientRepository) GetByID(ctx context.Context, ingredientId uuid.UUI
 	}
 
 	return result.ToEntity(), nil
+}
+
+func (c IngredientRepository) GetByProductID(ctx context.Context, productID uuid.UUID) ([]read.FindIngredientQueryResult, error) {
+
+	result, err := sql.NewQuery[read.FindIngredientQueryResult](ctx, c.readOnlyClient, read.FindIngredientsByProductID, productID).Many()
+
+	if err != nil {
+		c.logger.Error().
+			Err(err).
+			Str("productID", productID.String()).
+			Msg("Failed to get ingredient by productID")
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func NewIngredientRepository(

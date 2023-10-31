@@ -2,15 +2,14 @@ package result
 
 import (
 	"github.com/google/uuid"
-	"hamburgueria/internal/modules/ingredient/domain/valueobject"
 	"time"
 )
 
-type FindProductResult struct {
+type FindIngredientResult struct {
 	ID        uuid.UUID
 	Name      string
 	Amount    int
-	Type      valueobject.IngredientType
+	Type      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

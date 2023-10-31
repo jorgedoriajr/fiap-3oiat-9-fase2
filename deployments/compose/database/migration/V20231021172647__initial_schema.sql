@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS "payment" (
 
 CREATE TABLE IF NOT EXISTS "order" (
     id              UUID not null primary key default public.uuid_generate_v4(),
-    customer_id     varchar(14) references "customer"(cpf) not null,
+    customer_id     varchar(14) references "customer"(cpf),
     payment_id      UUID references "payment"(id),
     takeAway        boolean not null default false,
     amount          bigint not null,
