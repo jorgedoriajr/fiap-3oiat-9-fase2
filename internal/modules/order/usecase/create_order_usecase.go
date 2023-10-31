@@ -67,6 +67,8 @@ func (c CreateOrderUseCase) AddOrder(
 		return nil, err
 	}
 
+	//TODO start event order-created to request payment
+
 	return &result.CreateOrderResult{
 		Amount:      amount,
 		PaymentData: "not implemented",

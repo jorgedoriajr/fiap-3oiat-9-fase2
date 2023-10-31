@@ -7,4 +7,6 @@ import (
 
 type OrderPersistencePort interface {
 	Create(ctx context.Context, order entity.Order) error
+	FindAll(ctx context.Context) ([]entity.Order, error)
+	FindByStatus(ctx context.Context, status string) ([]entity.Order, error)
 }

@@ -34,30 +34,30 @@ type DependencyInjection struct {
 
 func NewDependencyInjection() DependencyInjection {
 
-	ReadWriteClient, ReadOnlyClient := sql.GetClient("readWrite"), sql.GetClient("readOnly")
+	readWriteClient, readOnlyClient := sql.GetClient("readWrite"), sql.GetClient("readOnly")
 
-	customerPersistence := database.GetCustomerPersistence(ReadWriteClient, ReadOnlyClient, logger.Get())
+	customerPersistence := database.GetCustomerPersistence(readWriteClient, readOnlyClient, logger.Get())
 
 	productPersistence := postgres.NewProductRepository(
-		ReadWriteClient,
-		ReadOnlyClient,
+		readWriteClient,
+		readOnlyClient,
 		logger.Get(),
 	)
 
 	ingredientPersistence := ingredientPostgres.NewIngredientRepository(
-		ReadWriteClient,
-		ReadOnlyClient,
+		readWriteClient,
+		readOnlyClient,
 		logger.Get(),
 	)
 
 	ingredientTypePersistence := ingredientPostgres.NewIngredientTypeRepository(
-		ReadWriteClient,
-		ReadOnlyClient,
+		readWriteClient,
+		readOnlyClient,
 		logger.Get(),
 	)
 
-	productIngredientPersistence := postgres.NewProductIngredientRepository(ReadWriteClient, ReadOnlyClient, logger.Get())
-	productCategoryPersistence := postgres.NewProductCategoryRepository(ReadWriteClient, ReadOnlyClient, logger.Get())
+	productIngredientPersistence := postgres.NewProductIngredientRepository(readWriteClient, readOnlyClient, logger.Get())
+	productCategoryPersistence := postgres.NewProductCategoryRepository(readWriteClient, readOnlyClient, logger.Get())
 
 	ingredientFinder := ingredientService.NewIngredientFinderService(ingredientPersistence)
 	ingredientTypeFinder := ingredientService.GetIngredientTypeFinderService(ingredientTypePersistence)
@@ -65,9 +65,9 @@ func NewDependencyInjection() DependencyInjection {
 	productUseCase := usecase.NewCreateProductUseCase(productPersistence, *ingredientFinder, productIngredientPersistence)
 	productFinder := service.NewProductFinderService(productPersistence, *ingredientFinder)
 
-	orderHistoryPersistence := orderDatabase.GetOrderHistoryPersistence(ReadWriteClient, logger.Get())
-	orderProductPersistence := orderDatabase.GetOrderProductPersistence(ReadWriteClient, logger.Get())
-	orderPersistence := orderDatabase.GetOrderPersistence(ReadWriteClient, logger.Get())
+	orderHistoryPersistence := orderDatabase.GetOrderHistoryPersistence(readWriteClient, logger.Get())
+	orderProductPersistence := orderDatabase.GetOrderProductPersistence(readWriteClient, logger.Get())
+	orderPersistence := orderDatabase.GetOrderPersistence(readWriteClient, readOnlyClient, logger.Get())
 
 	createOrderUseCase := orderUsecase.GetCreateOrderUseCase(
 		*productFinder,
@@ -89,6 +89,7 @@ func NewDependencyInjection() DependencyInjection {
 		},
 		OrderController: &order.Controller{
 			CreateOrderUseCase: createOrderUseCase,
+			ListOrderUseCase:   orderUsecase.GetListOrderUseCase(orderPersistence),
 		},
 		IngredientController: &ingredient.Controller{
 			CreateIngredientUseCase: ingredientUsecase.NewCreateIngredientUseCase(ingredientPersistence),
