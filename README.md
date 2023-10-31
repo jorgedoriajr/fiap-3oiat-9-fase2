@@ -26,3 +26,25 @@ The `cmd` folder stores the `main.go` file and the application **handlers**
 The `pkg` folder stores the external implementations that could be used by other projects(ex: Kafka Client)
 
 The `configs` folder contains the configuration, loading environment variables, loading feature flags, etc.
+
+## Open Api Doc
+
+    http://ifoodcard-redeem-handler.aws.cluster-01.k8s.enterprise-sandbox.dc-ifood.com/swagger/index.html
+
+    Documentacao gerada pelo swaggo. (http://github.com/swaggo/echo-swagger)
+    Acessar doc: ${path}/swagger/index.html
+
+    Após documentar novos endpoints é necessario gerar novamente os arquivos através do comando:
+    swag init -g cmd/main.go
+
+## Executing
+
+### **Run Project**
+
+Install dependencies. 
+
+`go get -u ./...`
+
+Run application
+
+`make run`

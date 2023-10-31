@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"context"
-	"hamburgueria/internal/modules/customer/domain/response"
+	"hamburgueria/internal/application/api/rest/v1/customer/response"
 	"hamburgueria/internal/modules/customer/port/output"
 	"sync"
 )

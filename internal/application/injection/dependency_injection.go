@@ -23,7 +23,7 @@ import (
 )
 
 type DependencyInjection struct {
-	CustomerController        *customer.CustomerController
+	CustomerController        *customer.Controller
 	ProductController         *product.Controller
 	IngredientController      *ingredient.Controller
 	OrderController           *order.Controller
@@ -81,7 +81,7 @@ func NewDependencyInjection() DependencyInjection {
 	getProductCategoryUseCase := usecase.NewGetProductCategoryUseCase(productCategoryPersistence)
 
 	return DependencyInjection{
-		CustomerController: &customer.CustomerController{
+		CustomerController: &customer.Controller{
 			CreateCustomerUseCase: customerUseCase.GetCreateCustomerUseCase(customerPersistence),
 			GetCustomerUseCase:    customerUseCase.GetGetCustomerUseCase(customerPersistence),
 		},

@@ -24,10 +24,10 @@ func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
 // @Summary     Get Ingredient types
 // @Description Get Ingredient types
 // @Produce      json
-// @Failure      400 {object} model.ErrorResponse
-// @Failure      401 {object} model.ErrorResponse
-// @Failure      404 {object} model.ErrorResponse
-// @Failure      503 {object} model.ErrorResponse
+// @Failure      400 {object} v1.ErrorResponse
+// @Failure      401 {object} v1.ErrorResponse
+// @Failure      404 {object} v1.ErrorResponse
+// @Failure      503 {object} v1.ErrorResponse
 // @Success      200 {object} []response.IngredientTypeResponse
 // @Router       /v1/ingredient-types [get]
 func (c *Controller) GetIngredientTypes(ctx echo.Context) error {

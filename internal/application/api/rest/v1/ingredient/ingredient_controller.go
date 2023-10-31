@@ -31,11 +31,11 @@ func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
 // @Description Add Ingredient
 // @Produce      json
 // @Param 		 request 	   body   request.CreateIngredientRequest true "Request Body"
-// @Failure      400 {object} model.ErrorResponse
-// @Failure      401 {object} model.ErrorResponse
-// @Failure      404 {object} model.ErrorResponse
-// @Failure      503 {object} model.ErrorResponse
-// @Success      201
+// @Failure      400 {object} v1.ErrorResponse
+// @Failure      401 {object} v1.ErrorResponse
+// @Failure      404 {object} v1.ErrorResponse
+// @Failure      503 {object} v1.ErrorResponse
+// @Success      200 {object} response.IngredientCreatedResponse
 // @Router       /v1/ingredients [post]
 func (c *Controller) AddIngredient(e echo.Context) error {
 	req := new(request.CreateIngredientRequest)
@@ -54,11 +54,11 @@ func (c *Controller) AddIngredient(e echo.Context) error {
 		})
 	}
 
-	result, err := c.CreateIngredientUseCase.AddIngredient(e.Request().Context(), req.ToCommand())
+	resultIngredient, err := c.CreateIngredientUseCase.AddIngredient(e.Request().Context(), req.ToCommand())
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return e.JSON(http.StatusOK, result.ToResponse())
+	return e.JSON(http.StatusOK, resultIngredient.ToResponse())
 }
 
 // GetIngredientByID
@@ -66,11 +66,11 @@ func (c *Controller) AddIngredient(e echo.Context) error {
 // @Description Get Ingredient by id
 // @Produce      json
 // @Param        id    path      string  true  "id"
-// @Failure      400 {object} model.ErrorResponse
-// @Failure      401 {object} model.ErrorResponse
-// @Failure      404 {object} model.ErrorResponse
-// @Failure      503 {object} model.ErrorResponse
-// @Success      200
+// @Failure      400 {object} v1.ErrorResponse
+// @Failure      401 {object} v1.ErrorResponse
+// @Failure      404 {object} v1.ErrorResponse
+// @Failure      503 {object} v1.ErrorResponse
+// @Success      200 {object} result.FindIngredientResult
 // @Router       /v1/ingredients/{ingredientID} [get]
 func (c *Controller) GetIngredientByID(ctx echo.Context) error {
 	id := ctx.Param("ingredientID")
@@ -101,11 +101,11 @@ func (c *Controller) GetIngredientByID(ctx echo.Context) error {
 // @Description Get Ingredients
 // @Produce      json
 // @Param 		type query string false "Filter Ingredients by type"
-// @Failure      400 {object} model.ErrorResponse
-// @Failure      401 {object} model.ErrorResponse
-// @Failure      404 {object} model.ErrorResponse
-// @Failure      503 {object} model.ErrorResponse
-// @Success      200 {object} []entity.IngredientType
+// @Failure      400 {object} v1.ErrorResponse
+// @Failure      401 {object} v1.ErrorResponse
+// @Failure      404 {object} v1.ErrorResponse
+// @Failure      503 {object} v1.ErrorResponse
+// @Success      200 {object} []result.FindIngredientResult
 // @Router       /v1/ingredients [get]
 func (c *Controller) GetIngredients(ctx echo.Context) error {
 	ingredientType := ctx.QueryParam("type")

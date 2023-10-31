@@ -29,12 +29,12 @@ func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
 // @Summary     Add Product
 // @Description Add Product
 // @Produce      json
-// @Param 		 request 	   body   request.CreateCustomerCommand true "Request Body"
-// @Failure      400 {object} model.ErrorResponse
-// @Failure      401 {object} model.ErrorResponse
-// @Failure      404 {object} model.ErrorResponse
-// @Failure      503 {object} model.ErrorResponse
-// @Success      201
+// @Param 		 request 	   body   request.CreateProductRequest true "Request Body"
+// @Failure      400 {object} v1.ErrorResponse
+// @Failure      401 {object} v1.ErrorResponse
+// @Failure      404 {object} v1.ErrorResponse
+// @Failure      503 {object} v1.ErrorResponse
+// @Success      200 {object} response.ProductCreatedResponse
 // @Router       /v1/products [post]
 func (c *Controller) AddProduct(e echo.Context) error {
 	req := new(request.CreateProductRequest)
@@ -53,11 +53,11 @@ func (c *Controller) AddProduct(e echo.Context) error {
 		})
 	}
 
-	resultp, err := c.CreateProductUseCase.AddProduct(e.Request().Context(), req.ToCommand())
+	resultProduct, err := c.CreateProductUseCase.AddProduct(e.Request().Context(), req.ToCommand())
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return e.JSON(http.StatusOK, resultp.ToResponse())
+	return e.JSON(http.StatusOK, resultProduct.ToResponse())
 }
 
 // GetProductById
@@ -65,11 +65,11 @@ func (c *Controller) AddProduct(e echo.Context) error {
 // @Description Get Product by id
 // @Produce      json
 // @Param        id    path      string  true  "id"
-// @Failure      400 {object} model.ErrorResponse
-// @Failure      401 {object} model.ErrorResponse
-// @Failure      404 {object} model.ErrorResponse
-// @Failure      503 {object} model.ErrorResponse
-// @Success      200
+// @Failure      400 {object} v1.ErrorResponse
+// @Failure      401 {object} v1.ErrorResponse
+// @Failure      404 {object} v1.ErrorResponse
+// @Failure      503 {object} v1.ErrorResponse
+// @Success      200 {object} []result.FindProductWithIngredientsResult
 // @Router       /v1/products/{productID} [get]
 func (c *Controller) GetProductById(ctx echo.Context) error {
 	id := ctx.Param("productId")
@@ -100,11 +100,11 @@ func (c *Controller) GetProductById(ctx echo.Context) error {
 // @Description Get Products
 // @Produce      json
 // @Param 		category query string false "Filter products by category"
-// @Failure      400 {object} model.ErrorResponse
-// @Failure      401 {object} model.ErrorResponse
-// @Failure      404 {object} model.ErrorResponse
-// @Failure      503 {object} model.ErrorResponse
-// @Success      200 {object} []entity.ProductEntity
+// @Failure      400 {object} v1.ErrorResponse
+// @Failure      401 {object} v1.ErrorResponse
+// @Failure      404 {object} v1.ErrorResponse
+// @Failure      503 {object} v1.ErrorResponse
+// @Success      200 {object} []result.FindProductWithIngredientsResult
 // @Router       /v1/products [get]
 func (c *Controller) GetProducts(ctx echo.Context) error {
 	category := ctx.QueryParam("category")

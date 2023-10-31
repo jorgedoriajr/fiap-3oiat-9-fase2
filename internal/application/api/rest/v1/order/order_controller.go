@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"github.com/labstack/echo/v4"
 	"hamburgueria/internal/application/api/middleware"
-	"hamburgueria/internal/modules/order/domain/request"
-	"hamburgueria/internal/modules/order/domain/response"
+	"hamburgueria/internal/application/api/rest/v1/order/request"
+	"hamburgueria/internal/application/api/rest/v1/order/response"
 	"hamburgueria/internal/modules/order/port/input"
 	"hamburgueria/internal/modules/order/usecase/result"
 	"net/http"
@@ -31,11 +31,11 @@ func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
 // @Description Add order
 // @Produce      json
 // @Param 		 request 	   body   request.CreateOrder true "Request Body"
-// @Failure      400 {object} model.ErrorResponse
-// @Failure      401 {object} model.ErrorResponse
-// @Failure      404 {object} model.ErrorResponse
-// @Failure      503 {object} model.ErrorResponse
-// @Success      200
+// @Failure      400 {object} v1.ErrorResponse
+// @Failure      401 {object} v1.ErrorResponse
+// @Failure      404 {object} v1.ErrorResponse
+// @Failure      503 {object} v1.ErrorResponse
+// @Success      200 {object} response.OrderResponse
 // @Router       /v1/orders [post]
 func (c *Controller) AddOrder(ctx echo.Context) error {
 
@@ -73,14 +73,14 @@ func (c *Controller) AddOrder(ctx echo.Context) error {
 }
 
 // GetOrders
-// @Summary     Get Orders
-// @Description Get Orders
+// @Summary      Get Orders
+// @Description  Get Orders
 // @Produce      json
 // @Param 		 status query string false "Filter Orders by status"
-// @Failure      400 {object} model.ErrorResponse
-// @Failure      401 {object} model.ErrorResponse
-// @Failure      404 {object} model.ErrorResponse
-// @Failure      503 {object} model.ErrorResponse
+// @Failure      400 {object} v1.ErrorResponse
+// @Failure      401 {object} v1.ErrorResponse
+// @Failure      404 {object} v1.ErrorResponse
+// @Failure      503 {object} v1.ErrorResponse
 // @Success      200 {object} []response.ListOrderResponse
 // @Router       /v1/orders/ [get]
 func (c *Controller) GetOrders(ctx echo.Context) error {

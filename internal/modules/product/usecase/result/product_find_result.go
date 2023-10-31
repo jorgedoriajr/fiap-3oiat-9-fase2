@@ -43,31 +43,3 @@ func (f *FindProductWithIngredientsResult) CalculateIngredientsAmount() {
 	}
 	f.Amount = int(totalAmount)
 }
-
-func NewFindProductWithIngredientsResult(
-	ID uuid.UUID,
-	name string,
-	number int,
-	amount int,
-	description string,
-	category string,
-	menu bool,
-	ingredients []read.FindIngredientQueryResult,
-	imgPath string,
-	createdAt time.Time,
-	updatedAt time.Time,
-) *FindProductWithIngredientsResult {
-	return &FindProductWithIngredientsResult{
-		ID:          ID,
-		Name:        name,
-		Number:      number,
-		Amount:      amount,
-		Description: description,
-		Category:    category,
-		Menu:        menu,
-		ImgPath:     imgPath,
-		Ingredients: ingredients,
-		CreatedAt:   createdAt,
-		UpdatedAt:   updatedAt,
-	}
-}

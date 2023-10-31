@@ -5,18 +5,18 @@ import (
 	"encoding/json"
 	"github.com/labstack/echo/v4"
 	"hamburgueria/internal/application/api/middleware"
-	"hamburgueria/internal/modules/customer/domain/request"
+	"hamburgueria/internal/application/api/rest/v1/customer/request"
 	"hamburgueria/internal/modules/customer/port/input"
 	"hamburgueria/pkg/validation"
 	"net/http"
 )
 
-type CustomerController struct {
+type Controller struct {
 	CreateCustomerUseCase input.CreateCustomerPort
 	GetCustomerUseCase    input.GetCustomerPort
 }
 
-func (c *CustomerController) RegisterEchoRoutes(e *echo.Echo) {
+func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
 	group := e.Group("/v1/customers",
 		middleware.GetTraceCallsMiddlewareFunc(),
 		middleware.GetLogCallsMiddlewareFunc(),
@@ -30,13 +30,13 @@ func (c *CustomerController) RegisterEchoRoutes(e *echo.Echo) {
 // @Description Get Customer by document
 // @Produce      json
 // @Param        document    path      string  true  "Document"
-// @Failure      400 {object} model.ErrorResponse
-// @Failure      401 {object} model.ErrorResponse
-// @Failure      404 {object} model.ErrorResponse
-// @Failure      503 {object} model.ErrorResponse
-// @Success      200
+// @Failure      400 {object} v1.ErrorResponse
+// @Failure      401 {object} v1.ErrorResponse
+// @Failure      404 {object} v1.ErrorResponse
+// @Failure      503 {object} v1.ErrorResponse
+// @Success      200 {object} response.Customer
 // @Router       /v1/customers/{document} [get]
-func (c *CustomerController) GetCustomer(ctx echo.Context) error {
+func (c *Controller) GetCustomer(ctx echo.Context) error {
 	document := ctx.Param("document")
 
 	response, err := c.GetCustomerUseCase.GetCustomer(ctx.Request().Context(), document)
@@ -60,13 +60,13 @@ func (c *CustomerController) GetCustomer(ctx echo.Context) error {
 // @Description Add customer
 // @Produce      json
 // @Param 		 request 	   body   request.CreateCustomer true "Request Body"
-// @Failure      400 {object} model.ErrorResponse
-// @Failure      401 {object} model.ErrorResponse
-// @Failure      404 {object} model.ErrorResponse
-// @Failure      503 {object} model.ErrorResponse
+// @Failure      400 {object} v1.ErrorResponse
+// @Failure      401 {object} v1.ErrorResponse
+// @Failure      404 {object} v1.ErrorResponse
+// @Failure      503 {object} v1.ErrorResponse
 // @Success      200
 // @Router       /v1/customers [post]
-func (c *CustomerController) AddCustomer(ctx echo.Context) error {
+func (c *Controller) AddCustomer(ctx echo.Context) error {
 
 	payloadBuffer := new(bytes.Buffer)
 	_, err := payloadBuffer.ReadFrom(ctx.Request().Body)

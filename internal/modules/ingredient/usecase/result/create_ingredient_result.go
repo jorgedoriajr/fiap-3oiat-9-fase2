@@ -22,8 +22,8 @@ func ToCreateIngredientResultFrom(entity entity.IngredientEntity) CreateIngredie
 	}
 }
 
-func (c CreateIngredientResult) ToResponse() response.ProductCreatedResponse {
-	return response.ProductCreatedResponse{
+func (c CreateIngredientResult) ToResponse() response.IngredientCreatedResponse {
+	return response.IngredientCreatedResponse{
 		Name:   c.Name,
 		Amount: c.Amount,
 		Type:   c.Type,

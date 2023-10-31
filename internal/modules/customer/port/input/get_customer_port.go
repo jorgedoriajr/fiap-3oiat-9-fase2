@@ -2,7 +2,7 @@ package input
 
 import (
 	"context"
-	"hamburgueria/internal/modules/customer/domain/response"
+	"hamburgueria/internal/application/api/rest/v1/customer/response"
 )
 
 type GetCustomerPort interface {

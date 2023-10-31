@@ -2,6 +2,7 @@ package main
 
 import (
 	"hamburgueria/config"
+	_ "hamburgueria/docs"
 	"hamburgueria/internal/application/injection"
 	"hamburgueria/pkg/httpserver"
 	"hamburgueria/pkg/sql"
@@ -9,8 +10,12 @@ import (
 	"hamburgueria/pkg/validation"
 )
 
+// @title Hamburgeria - Grupo 9
+// @version 1.0
+// @description Projeto de auto atendimento para hamburgueria
+// @host https://localhost/8080
+// @BasePath /v1
 func main() {
-
 	starter.Initialize()
 
 	var serviceConfig config.ApplicationConfig

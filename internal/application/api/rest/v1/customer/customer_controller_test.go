@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"hamburgueria/internal/modules/customer/domain/response"
+	"hamburgueria/internal/application/api/rest/v1/customer/response"
 	"hamburgueria/tests/mocks"
 	"io"
 	"net/http"
@@ -20,7 +20,7 @@ func TestCustomerController(t *testing.T) {
 
 		createCustomerPortMock := mocks.NewCreateCustomerPort(t)
 		getCustomerPortMock := mocks.NewGetCustomerPort(t)
-		controller := CustomerController{
+		controller := Controller{
 			CreateCustomerUseCase: createCustomerPortMock,
 			GetCustomerUseCase:    getCustomerPortMock,
 		}
@@ -66,7 +66,7 @@ func TestCustomerController(t *testing.T) {
 
 		createCustomerPortMock := mocks.NewCreateCustomerPort(t)
 		getCustomerPortMock := mocks.NewGetCustomerPort(t)
-		controller := CustomerController{
+		controller := Controller{
 			CreateCustomerUseCase: createCustomerPortMock,
 			GetCustomerUseCase:    getCustomerPortMock,
 		}
@@ -107,7 +107,7 @@ func TestCustomerController(t *testing.T) {
 
 		createCustomerPortMock := mocks.NewCreateCustomerPort(t)
 		getCustomerPortMock := mocks.NewGetCustomerPort(t)
-		controller := CustomerController{
+		controller := Controller{
 			CreateCustomerUseCase: createCustomerPortMock,
 			GetCustomerUseCase:    getCustomerPortMock,
 		}
@@ -149,7 +149,7 @@ func TestCustomerController(t *testing.T) {
 
 		createCustomerPortMock := mocks.NewCreateCustomerPort(t)
 		getCustomerPortMock := mocks.NewGetCustomerPort(t)
-		controller := CustomerController{
+		controller := Controller{
 			CreateCustomerUseCase: createCustomerPortMock,
 			GetCustomerUseCase:    getCustomerPortMock,
 		}
@@ -188,7 +188,7 @@ func TestCustomerController(t *testing.T) {
 
 		createCustomerPortMock := mocks.NewCreateCustomerPort(t)
 		getCustomerPortMock := mocks.NewGetCustomerPort(t)
-		controller := CustomerController{
+		controller := Controller{
 			CreateCustomerUseCase: createCustomerPortMock,
 			GetCustomerUseCase:    getCustomerPortMock,
 		}

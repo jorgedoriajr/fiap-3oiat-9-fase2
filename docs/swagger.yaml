@@ -1,0 +1,605 @@
+basePath: /v1
+definitions:
+  read.FindIngredientQueryResult:
+    properties:
+      amount:
+        type: integer
+      id:
+        type: string
+      name:
+        type: string
+      quantity:
+        type: integer
+      type:
+        type: string
+    type: object
+  request.CreateCustomer:
+    properties:
+      document:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      optInPromotion:
+        type: boolean
+      phone:
+        type: string
+    type: object
+  request.CreateIngredientRequest:
+    properties:
+      amount:
+        type: integer
+      name:
+        type: string
+      type:
+        type: string
+    type: object
+  request.CreateOrder:
+    properties:
+      customerDocument:
+        type: string
+      products:
+        items:
+          $ref: '#/definitions/request.CreateOrderProducts'
+        type: array
+    type: object
+  request.CreateOrderIngredient:
+    properties:
+      id:
+        type: string
+      quantity:
+        type: integer
+    type: object
+  request.CreateOrderProducts:
+    properties:
+      id:
+        type: string
+      ingredients:
+        items:
+          $ref: '#/definitions/request.CreateOrderIngredient'
+        type: array
+      quantity:
+        type: integer
+      type:
+        type: string
+    type: object
+  request.CreateProductRequest:
+    properties:
+      category:
+        type: string
+      description:
+        type: string
+      imgPath:
+        type: string
+      ingredients:
+        items:
+          $ref: '#/definitions/request.IngredientRequest'
+        type: array
+      menu:
+        type: boolean
+      name:
+        type: string
+    type: object
+  request.IngredientRequest:
+    properties:
+      id:
+        type: string
+      quantity:
+        type: integer
+    type: object
+  response.Customer:
+    properties:
+      document:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+  response.IngredientCreatedResponse:
+    properties:
+      amount:
+        type: integer
+      name:
+        type: string
+      type:
+        type: string
+    type: object
+  response.IngredientTypeResponse:
+    properties:
+      name:
+        type: string
+    type: object
+  response.ListOrderResponse:
+    properties:
+      amount:
+        type: integer
+      createdAt:
+        type: string
+      customerId:
+        type: string
+      orderId:
+        type: string
+      status:
+        type: string
+    type: object
+  response.OrderResponse:
+    properties:
+      amount:
+        type: integer
+      paymentData:
+        type: string
+    type: object
+  response.ProductCategoryResponse:
+    properties:
+      acceptCustom:
+        type: boolean
+      name:
+        type: string
+    type: object
+  response.ProductCreatedResponse:
+    properties:
+      amount:
+        type: integer
+      category:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      imgPath:
+        type: string
+      menu:
+        type: boolean
+      name:
+        type: string
+    type: object
+  result.FindIngredientResult:
+    properties:
+      amount:
+        type: integer
+      id:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+    type: object
+  result.FindProductWithIngredientsResult:
+    properties:
+      amount:
+        type: integer
+      category:
+        type: string
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      imgPath:
+        type: string
+      ingredients:
+        items:
+          $ref: '#/definitions/read.FindIngredientQueryResult'
+        type: array
+      menu:
+        type: boolean
+      name:
+        type: string
+      number:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  v1.ErrorResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+host: https://localhost/8080
+info:
+  contact: {}
+  description: Projeto de auto atendimento para hamburgueria
+  title: Hamburgeria - Grupo 9
+  version: "1.0"
+paths:
+  /v1/customers:
+    post:
+      description: Add customer
+      parameters:
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateCustomer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+      summary: Add customer
+  /v1/customers/{document}:
+    get:
+      description: Get Customer by document
+      parameters:
+      - description: Document
+        in: path
+        name: document
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Customer'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+      summary: Get Customer by document
+  /v1/ingredient-types:
+    get:
+      description: Get Ingredient types
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.IngredientTypeResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+      summary: Get Ingredient types
+  /v1/ingredients:
+    get:
+      description: Get Ingredients
+      parameters:
+      - description: Filter Ingredients by type
+        in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/result.FindIngredientResult'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+      summary: Get Ingredients
+    post:
+      description: Add Ingredient
+      parameters:
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateIngredientRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.IngredientCreatedResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+      summary: Add Ingredient
+  /v1/ingredients/{ingredientID}:
+    get:
+      description: Get Ingredient by id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/result.FindIngredientResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+      summary: Get Ingredient by id
+  /v1/orders:
+    post:
+      description: Add order
+      parameters:
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateOrder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.OrderResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+      summary: Add order
+  /v1/orders/:
+    get:
+      description: Get Orders
+      parameters:
+      - description: Filter Orders by status
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.ListOrderResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+      summary: Get Orders
+  /v1/product-category:
+    get:
+      description: Get Product Categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.ProductCategoryResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+      summary: Get Product Categories
+  /v1/products:
+    get:
+      description: Get Products
+      parameters:
+      - description: Filter products by category
+        in: query
+        name: category
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/result.FindProductWithIngredientsResult'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+      summary: Get Products
+    post:
+      description: Add Product
+      parameters:
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ProductCreatedResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+      summary: Add Product
+  /v1/products/{productID}:
+    get:
+      description: Get Product by id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/result.FindProductWithIngredientsResult'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+      summary: Get Product by id
+swagger: "2.0"
