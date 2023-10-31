@@ -1,17 +1,17 @@
 package command
 
 import (
+	"github.com/google/uuid"
 	"hamburgueria/internal/modules/product/domain/entity"
-	"hamburgueria/internal/modules/product/domain/valueobject"
 	"time"
 )
 
 type CreateProductCommand struct {
 	Name        string
-	Amount      int
 	Description string
-	Category    valueobject.ProductCategory
+	Category    string
 	Menu        bool
+	ImgPath     string
 	Ingredients []Ingredient
 }
 
@@ -23,9 +23,10 @@ type Ingredient struct {
 func NewCreateProductCommand(
 	Name string,
 	Description string,
-	Category valueobject.ProductCategory,
+	Category string,
 	Menu bool,
 	Ingredients []Ingredient,
+	ImgPath string,
 ) *CreateProductCommand {
 
 	cmd := &CreateProductCommand{
@@ -33,55 +34,27 @@ func NewCreateProductCommand(
 		Description: Description,
 		Category:    Category,
 		Menu:        Menu,
+		ImgPath:     ImgPath,
 		Ingredients: Ingredients,
 	}
-	//cmd.calculateAmountFromIngredients()
 	return cmd
 }
 
-//func (c CreateProductCommand) calculateAmountFromIngredients() {
-//	var total int64
-//	for _, ingredient := range c.Ingredients {
-//		atomic.AddInt64(&total, int64(ingredient.Amount))
-//	}
-//	c.Amount = int(total)
-//}
-
-type IngredientType string
-
-func GetIngredientTypeByName(name string) IngredientType {
-	if t, ok := types[name]; ok {
-		return t
-	}
-	return ""
-}
-
-var types = map[string]IngredientType{
-	"Protein":           Protein,
-	"VegetableAndSalad": VegetableAndSalad,
-	"Sauce":             Sauces,
-	"Cheese":            Cheeses,
-}
-
-const (
-	Protein           IngredientType = "Protein"
-	VegetableAndSalad IngredientType = "VegetableAndSalad"
-	Sauces            IngredientType = "Sauce"
-	Cheeses           IngredientType = "Cheese"
-)
-
-func (cmd CreateProductCommand) ToProductEntity() entity.ProductEntity {
+func (cmd CreateProductCommand) ToProductEntity(
+	productId uuid.UUID,
+	ingredients []entity.ProductIngredientEntity,
+	amount int,
+) entity.ProductEntity {
 	return entity.ProductEntity{
+		ID:          productId,
 		Name:        cmd.Name,
-		Amount:      cmd.Amount,
+		Amount:      amount,
 		Description: cmd.Description,
 		Category:    cmd.Category,
 		Menu:        cmd.Menu,
+		ImgPath:     cmd.ImgPath,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
+		Ingredients: ingredients,
 	}
-}
-
-func ToIngredientEntity() {
-
 }

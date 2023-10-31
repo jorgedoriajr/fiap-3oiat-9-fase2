@@ -2,15 +2,15 @@ package result
 
 import (
 	"github.com/google/uuid"
+	"hamburgueria/internal/application/api/rest/v1/ingredient/response"
 	"hamburgueria/internal/modules/ingredient/domain/entity"
-	"hamburgueria/internal/modules/ingredient/domain/valueobject"
 )
 
 type CreateIngredientResult struct {
 	ID     uuid.UUID
 	Name   string
 	Amount int
-	Type   valueobject.IngredientType
+	Type   string
 }
 
 func ToCreateIngredientResultFrom(entity entity.IngredientEntity) CreateIngredientResult {
@@ -19,5 +19,13 @@ func ToCreateIngredientResultFrom(entity entity.IngredientEntity) CreateIngredie
 		Name:   entity.Name,
 		Amount: entity.Amount,
 		Type:   entity.Type,
+	}
+}
+
+func (c CreateIngredientResult) ToResponse() response.ProductCreatedResponse {
+	return response.ProductCreatedResponse{
+		Name:   c.Name,
+		Amount: c.Amount,
+		Type:   c.Type,
 	}
 }

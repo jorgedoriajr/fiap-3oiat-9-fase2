@@ -7,7 +7,6 @@ import (
 	"hamburgueria/internal/application/api/rest/v1/product/request"
 	"hamburgueria/internal/modules/product/ports/input"
 	"hamburgueria/internal/modules/product/usecase/result"
-	"hamburgueria/pkg/validation"
 	"net/http"
 )
 
@@ -54,11 +53,11 @@ func (c *Controller) AddProduct(e echo.Context) error {
 		})
 	}
 
-	result, err := c.CreateProductUseCase.AddProduct(e.Request().Context(), req.ToCommand())
+	resultp, err := c.CreateProductUseCase.AddProduct(e.Request().Context(), req.ToCommand())
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return e.JSON(http.StatusOK, result)
+	return e.JSON(http.StatusOK, resultp.ToResponse())
 }
 
 // GetProductById
@@ -114,12 +113,6 @@ func (c *Controller) GetProducts(ctx echo.Context) error {
 	var err error
 
 	if category != "" {
-		if !validation.ValidateProductCategory(category) {
-			return ctx.JSON(http.StatusBadRequest, map[string]any{
-				"code":    400,
-				"message": "Invalid category",
-			})
-		}
 		response, err = c.ProductFinderService.FindByCategory(ctx.Request().Context(), category)
 	} else {
 		response, err = c.ProductFinderService.FindAllProducts(ctx.Request().Context())

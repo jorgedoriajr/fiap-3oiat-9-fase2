@@ -6,5 +6,5 @@ import (
 )
 
 type GetCustomerPort interface {
-	GetCustomer(ctx context.Context, document string) (*response.CustomerResponse, error)
+	GetCustomer(ctx context.Context, document string) (*response.Customer, error)
 }

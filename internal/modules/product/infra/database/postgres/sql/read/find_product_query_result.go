@@ -4,7 +4,6 @@ import (
 	"github.com/google/uuid"
 	"hamburgueria/internal/modules/ingredient/infra/database/postgres/sql/read"
 	"hamburgueria/internal/modules/product/domain/entity"
-	"hamburgueria/internal/modules/product/domain/valueobject"
 	"hamburgueria/internal/modules/product/usecase/result"
 	"time"
 )
@@ -17,6 +16,7 @@ type FindProductQueryResult struct {
 	Description string    `db:"description"`
 	Category    string    `db:"category"`
 	Menu        bool      `db:"menu"`
+	ImgPath     string    `db:"img_path"`
 	CreatedAt   time.Time `db:"created_at"`
 	UpdatedAt   time.Time `db:"updated_at"`
 }
@@ -29,6 +29,7 @@ type FindProductWithIngredientsQueryResult struct {
 	Description string                           `db:"description"`
 	Category    string                           `db:"category"`
 	Menu        bool                             `db:"menu"`
+	ImgPath     string                           `db:"img_path"`
 	Ingredients []read.FindIngredientQueryResult `db:"ingredients"`
 	CreatedAt   time.Time                        `db:"created_at"`
 	UpdatedAt   time.Time                        `db:"updated_at"`
@@ -41,8 +42,9 @@ func (fc FindProductQueryResult) ToEntity() *entity.ProductEntity {
 		Number:      fc.Number,
 		Amount:      fc.Amount,
 		Description: fc.Description,
-		Category:    valueobject.ProductCategory(fc.Category),
+		Category:    fc.Category,
 		Menu:        fc.Menu,
+		ImgPath:     fc.ImgPath,
 		CreatedAt:   fc.CreatedAt,
 		UpdatedAt:   fc.UpdatedAt,
 	}
@@ -57,7 +59,22 @@ func (fc FindProductWithIngredientsQueryResult) ToResult() *result.FindProductWi
 		Description: fc.Description,
 		Category:    fc.Category,
 		Menu:        fc.Menu,
-		Ingredients: fc.Ingredients,
+		ImgPath:     fc.ImgPath,
+		CreatedAt:   fc.CreatedAt,
+		UpdatedAt:   fc.UpdatedAt,
+	}
+}
+
+func (fc FindProductQueryResult) ToCommandResult() *entity.ProductEntity {
+	return &entity.ProductEntity{
+		ID:          fc.ID,
+		Name:        fc.Name,
+		Number:      fc.Number,
+		Amount:      fc.Amount,
+		Description: fc.Description,
+		Category:    fc.Category,
+		Menu:        fc.Menu,
+		ImgPath:     fc.ImgPath,
 		CreatedAt:   fc.CreatedAt,
 		UpdatedAt:   fc.UpdatedAt,
 	}

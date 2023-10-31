@@ -15,6 +15,7 @@ type FindProductResult struct {
 	Description string
 	Category    string
 	Menu        bool
+	ImgPath     string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
@@ -27,6 +28,7 @@ type FindProductWithIngredientsResult struct {
 	Description string
 	Category    string
 	Menu        bool
+	ImgPath     string
 	Ingredients []read.FindIngredientQueryResult
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
@@ -51,6 +53,7 @@ func NewFindProductWithIngredientsResult(
 	category string,
 	menu bool,
 	ingredients []read.FindIngredientQueryResult,
+	imgPath string,
 	createdAt time.Time,
 	updatedAt time.Time,
 ) *FindProductWithIngredientsResult {
@@ -62,6 +65,7 @@ func NewFindProductWithIngredientsResult(
 		Description: description,
 		Category:    category,
 		Menu:        menu,
+		ImgPath:     imgPath,
 		Ingredients: ingredients,
 		CreatedAt:   createdAt,
 		UpdatedAt:   updatedAt,

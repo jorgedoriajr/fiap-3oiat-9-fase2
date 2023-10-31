@@ -5,23 +5,27 @@ CREATE TABLE IF NOT EXISTS "customer" (
     phone               varchar(15),
     name                varchar(255) not null ,
     email               varchar(255),
-    opt_in_promotion    boolean,
+    opt_in_promotion    boolean default true,
     created_at          timestamp not null,
     updated_at          timestamp
 );
 
 CREATE TABLE IF NOT EXISTS "product_category" (
     name            varchar(255) primary key,
-    created_at      timestamp not null
+    accept_custom   boolean not null default false
 );
 
 CREATE TABLE IF NOT EXISTS "ingredient_type" (
-    name                varchar(50) primary key ,
+    name                varchar(50) primary key
+);
+
+CREATE TABLE IF NOT EXISTS "ingredient_type_product_category" (
+    id                  UUID not null primary key default public.uuid_generate_v4(),
+    ingredient_type     varchar(50) references "ingredient_type"(name),
     optional            boolean,
     max_qtd             int,
     product_category    varchar(50) references "product_category"(name)
 );
-
 
 CREATE TABLE IF NOT EXISTS "ingredient" (
     id          UUID not null primary key default public.uuid_generate_v4(),
@@ -38,7 +42,8 @@ CREATE TABLE IF NOT EXISTS "product" (
     amount                  bigint not null,
     description             text,
     category                varchar(50) references "product_category"(name) not null ,
-    menu                    boolean not null ,
+    menu                    boolean not null,
+    img_path                varchar(255) not null,
     created_at              timestamp not null,
     updated_at              timestamp
 );
@@ -63,9 +68,9 @@ CREATE TABLE IF NOT EXISTS "payment" (
 
 CREATE TABLE IF NOT EXISTS "order" (
     id              UUID not null primary key default public.uuid_generate_v4(),
-    customer_id     varchar(14) references "customer"(cpf) not null,
+    customer_id     varchar(14) references "customer"(cpf),
     payment_id      UUID references "payment"(id),
-    takeAway        boolean not null,
+    takeAway        boolean not null default false,
     amount          bigint not null,
     status          varchar(50) not null ,
     created_at      timestamp not null,

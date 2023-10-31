@@ -5,9 +5,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"hamburgueria/internal/application/api/middleware"
 	"hamburgueria/internal/application/api/rest/v1/ingredient/request"
-	"hamburgueria/internal/modules/ingredient/domain/entity"
-	"hamburgueria/internal/modules/ingredient/domain/valueobject"
 	"hamburgueria/internal/modules/ingredient/ports/input"
+	"hamburgueria/internal/modules/ingredient/usecase/result"
 
 	"net/http"
 )
@@ -59,7 +58,7 @@ func (c *Controller) AddIngredient(e echo.Context) error {
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return e.JSON(http.StatusOK, result)
+	return e.JSON(http.StatusOK, result.ToResponse())
 }
 
 // GetIngredientByID
@@ -111,11 +110,11 @@ func (c *Controller) GetIngredientByID(ctx echo.Context) error {
 func (c *Controller) GetIngredients(ctx echo.Context) error {
 	ingredientType := ctx.QueryParam("type")
 
-	var response []entity.IngredientEntity
+	var response []result.FindIngredientResult
 	var err error
 
 	if ingredientType != "" {
-		response, err = c.IngredientFinderService.FindIngredientByType(ctx.Request().Context(), valueobject.IngredientType(ingredientType))
+		response, err = c.IngredientFinderService.FindIngredientByType(ctx.Request().Context(), ingredientType)
 	} else {
 		response, err = c.IngredientFinderService.FindAllIngredients(ctx.Request().Context())
 	}

@@ -42,8 +42,8 @@ func (c *CustomerController) GetCustomer(ctx echo.Context) error {
 	response, err := c.GetCustomerUseCase.GetCustomer(ctx.Request().Context(), document)
 
 	if err != nil {
-		return ctx.JSON(http.StatusBadRequest, map[string]any{
-			"code":    400,
+		return ctx.JSON(http.StatusInternalServerError, map[string]any{
+			"code":    http.StatusInternalServerError,
 			"message": err.Error(),
 		})
 	}
@@ -59,7 +59,7 @@ func (c *CustomerController) GetCustomer(ctx echo.Context) error {
 // @Summary     Add customer
 // @Description Add customer
 // @Produce      json
-// @Param 		 request 	   body   request.CreateCustomerCommand true "Request Body"
+// @Param 		 request 	   body   request.CreateCustomer true "Request Body"
 // @Failure      400 {object} model.ErrorResponse
 // @Failure      401 {object} model.ErrorResponse
 // @Failure      404 {object} model.ErrorResponse
@@ -78,28 +78,28 @@ func (c *CustomerController) AddCustomer(ctx echo.Context) error {
 		return err
 	}
 
-	var command request.CreateCustomerCommand
-	errJson := json.Unmarshal(payloadBuffer.Bytes(), &command)
+	var createCustomerRequest request.CreateCustomer
+	errJson := json.Unmarshal(payloadBuffer.Bytes(), &createCustomerRequest)
 
 	if errJson != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
-			"code":    400,
+			"code":    http.StatusBadRequest,
 			"message": "UNMARSHAL_ERROR",
 		})
 	}
 
-	isValid := validation.ValidateCPF(command.Document)
+	isValid := validation.ValidateCPF(createCustomerRequest.Document)
 	if !isValid {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
-			"code":    400,
+			"code":    http.StatusBadRequest,
 			"message": "INVALID_DATA",
 		})
 	}
 
-	err = c.CreateCustomerUseCase.AddCustomer(ctx.Request().Context(), command)
+	err = c.CreateCustomerUseCase.AddCustomer(ctx.Request().Context(), createCustomerRequest.ToCommand())
 	if err != nil {
-		return ctx.JSON(http.StatusBadRequest, map[string]any{
-			"code":    400,
+		return ctx.JSON(http.StatusInternalServerError, map[string]any{
+			"code":    http.StatusInternalServerError,
 			"message": err.Error(),
 		})
 	}

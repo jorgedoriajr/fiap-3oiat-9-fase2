@@ -16,19 +16,19 @@ type GetCustomerPort struct {
 }
 
 // GetCustomer provides a mock function with given fields: ctx, document
-func (_m *GetCustomerPort) GetCustomer(ctx context.Context, document string) (*response.CustomerResponse, error) {
+func (_m *GetCustomerPort) GetCustomer(ctx context.Context, document string) (*response.Customer, error) {
 	ret := _m.Called(ctx, document)
 
-	var r0 *response.CustomerResponse
+	var r0 *response.Customer
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, string) (*response.CustomerResponse, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string) (*response.Customer, error)); ok {
 		return rf(ctx, document)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, string) *response.CustomerResponse); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string) *response.Customer); ok {
 		r0 = rf(ctx, document)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*response.CustomerResponse)
+			r0 = ret.Get(0).(*response.Customer)
 		}
 	}
 

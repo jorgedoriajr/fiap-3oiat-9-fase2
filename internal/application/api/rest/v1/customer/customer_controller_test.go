@@ -26,7 +26,7 @@ func TestCustomerController(t *testing.T) {
 		}
 
 		document := "98932673667"
-		customer := response.CustomerResponse{
+		customer := response.Customer{
 			Document: document,
 			Name:     "Name",
 			Phone:    "11999999999",
