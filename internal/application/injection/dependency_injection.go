@@ -50,6 +50,8 @@ func NewDependencyInjection() DependencyInjection {
 		logger.Get(),
 	)
 
+	ingredientFinderService := ingredientService.NewIngredientFinderService(ingredientPersistence)
+
 	ingredientTypePersistence := ingredientPostgres.NewIngredientTypeRepository(
 		readWriteClient,
 		readOnlyClient,
@@ -63,7 +65,7 @@ func NewDependencyInjection() DependencyInjection {
 	ingredientTypeFinder := ingredientService.GetIngredientTypeFinderService(ingredientTypePersistence)
 
 	productUseCase := usecase.NewCreateProductUseCase(productPersistence, *ingredientFinder, productIngredientPersistence)
-	productFinder := service.NewProductFinderService(productPersistence, *ingredientFinder)
+	productFinder := service.NewProductFinderService(productPersistence, *ingredientFinderService)
 
 	orderHistoryPersistence := orderDatabase.GetOrderHistoryPersistence(readWriteClient, logger.Get())
 	orderProductPersistence := orderDatabase.GetOrderProductPersistence(readWriteClient, logger.Get())
@@ -85,7 +87,7 @@ func NewDependencyInjection() DependencyInjection {
 		},
 		ProductController: &product.Controller{
 			CreateProductUseCase: productUseCase,
-			ProductFinderService: productFinder,
+			ProductFinderService: service.NewProductFinderService(productPersistence, *ingredientFinderService),
 		},
 		OrderController: &order.Controller{
 			CreateOrderUseCase: createOrderUseCase,

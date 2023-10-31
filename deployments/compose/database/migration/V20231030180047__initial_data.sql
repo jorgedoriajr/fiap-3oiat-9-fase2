@@ -1,3 +1,5 @@
+
+
 -- product_category
 INSERT INTO product_category(name, accept_custom)
 VALUES ('Bebida', false);

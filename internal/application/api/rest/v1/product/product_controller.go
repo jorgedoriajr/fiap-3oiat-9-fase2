@@ -5,8 +5,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"hamburgueria/internal/application/api/middleware"
 	"hamburgueria/internal/application/api/rest/v1/product/request"
-	"hamburgueria/internal/modules/product/domain/entity"
 	"hamburgueria/internal/modules/product/ports/input"
+	"hamburgueria/internal/modules/product/usecase/result"
 	"net/http"
 )
 
@@ -53,11 +53,11 @@ func (c *Controller) AddProduct(e echo.Context) error {
 		})
 	}
 
-	result, err := c.CreateProductUseCase.AddProduct(e.Request().Context(), req.ToCommand())
+	resultp, err := c.CreateProductUseCase.AddProduct(e.Request().Context(), req.ToCommand())
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return e.JSON(http.StatusOK, result.ToResponse())
+	return e.JSON(http.StatusOK, resultp.ToResponse())
 }
 
 // GetProductById
@@ -80,7 +80,7 @@ func (c *Controller) GetProductById(ctx echo.Context) error {
 		})
 	}
 	productID := uuid.MustParse(id)
-	response, err := c.ProductFinderService.FindByID(ctx.Request().Context(), productID)
+	response, err := c.ProductFinderService.FindByIDWithIngredients(ctx.Request().Context(), productID)
 	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
 			"code":    400,
@@ -109,7 +109,7 @@ func (c *Controller) GetProductById(ctx echo.Context) error {
 func (c *Controller) GetProducts(ctx echo.Context) error {
 	category := ctx.QueryParam("category")
 
-	var response []entity.ProductEntity
+	var response []*result.FindProductWithIngredientsResult
 	var err error
 
 	if category != "" {
