@@ -2,37 +2,41 @@ package usecase
 
 import (
 	"context"
-	"fmt"
 	"hamburgueria/internal/modules/product/ports/output"
-	"hamburgueria/internal/modules/product/usecase/command"
 	"hamburgueria/internal/modules/product/usecase/result"
 	"sync"
 )
 
 var (
-	createProductCategoryUseCaseInstance *CreateProductCategoryUseCase
-	createProductCategoryUseCaseOnce     sync.Once
+	getProductCategoryUseCaseInstance *GetProductCategoryUseCase
+	getProductCategoryUseCaseOnce     sync.Once
 )
 
-type CreateProductCategoryUseCase struct {
+type GetProductCategoryUseCase struct {
 	productCategoryPersistencePort output.ProductCategoryPersistencePort
 }
 
-func (c CreateProductCategoryUseCase) AddProductCategory(ctx context.Context, command command.CreateProductCategoryCommand) (result.CreateProductCategoryResult, error) {
-	category := command.ToEntity()
-	fmt.Printf("creating new product category: [%v]", category)
-	categoryCreated, err := c.productCategoryPersistencePort.CreateProductCategory(ctx, category)
+func (c GetProductCategoryUseCase) FindAll(ctx context.Context) ([]result.FindProductCategoryResult, error) {
+	productCategories, err := c.productCategoryPersistencePort.GetAllProductCategories(ctx)
 	if err != nil {
-		return result.CreateProductCategoryResult{}, err
+		return nil, err
 	}
-	return result.ToCreateProductCategoryResultFrom(*categoryCreated), nil
+
+	var categoriesResult []result.FindProductCategoryResult
+	for _, productCategory := range productCategories {
+		categoriesResult = append(categoriesResult, result.FindProductCategoryResult{
+			Name:         productCategory.Name,
+			AcceptCustom: productCategory.AcceptCustom,
+		})
+	}
+	return categoriesResult, nil
 }
 
-func NewCreateCategoryProductUseCase(productCategoryPersistence output.ProductCategoryPersistencePort) *CreateProductCategoryUseCase {
-	createProductCategoryUseCaseOnce.Do(func() {
-		createProductCategoryUseCaseInstance = &CreateProductCategoryUseCase{
+func NewGetProductCategoryUseCase(productCategoryPersistence output.ProductCategoryPersistencePort) *GetProductCategoryUseCase {
+	getProductCategoryUseCaseOnce.Do(func() {
+		getProductCategoryUseCaseInstance = &GetProductCategoryUseCase{
 			productCategoryPersistencePort: productCategoryPersistence,
 		}
 	})
-	return createProductCategoryUseCaseInstance
+	return getProductCategoryUseCaseInstance
 }

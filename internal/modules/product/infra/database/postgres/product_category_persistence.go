@@ -2,7 +2,6 @@ package postgres
 
 import (
 	"context"
-	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"hamburgueria/internal/modules/product/domain/entity"
 	"hamburgueria/internal/modules/product/infra/database/postgres/sql/read"
@@ -16,7 +15,7 @@ type ProductCategoryRepository struct {
 }
 
 func (c ProductCategoryRepository) GetAllProductCategories(ctx context.Context) ([]entity.ProductCategoryEntity, error) {
-	allProduct, allProductErr := sql.NewQuery[entity.ProductCategoryEntity](
+	allProduct, allProductErr := sql.NewQuery[read.FindProductCategoryQueryResult](
 		ctx,
 		c.readOnlyClient,
 		read.FindAllProductCategories,
@@ -29,14 +28,14 @@ func (c ProductCategoryRepository) GetAllProductCategories(ctx context.Context) 
 		return []entity.ProductCategoryEntity{}, allProductErr
 	}
 
-	return allProduct, nil
+	return read.ToProductCategoryEntityList(allProduct), nil
 }
 
 func (c ProductCategoryRepository) GetProductCategoryByName(ctx context.Context, category string) (*entity.ProductCategoryEntity, error) {
 	productCategoryByName, productCategoryByNameErr := sql.NewQuery[*entity.ProductCategoryEntity](
 		ctx,
 		c.readOnlyClient,
-		read.FindProductByCategory,
+		read.FindProductCategoryByName,
 		category,
 	).One()
 
@@ -48,21 +47,6 @@ func (c ProductCategoryRepository) GetProductCategoryByName(ctx context.Context,
 		return nil, productCategoryByNameErr
 	}
 	return productCategoryByName, nil
-}
-
-func (c ProductCategoryRepository) GetProductCategoryById(ctx context.Context, id uuid.UUID) (*entity.ProductCategoryEntity, error) {
-
-	result, err := sql.NewQuery[read.FindProductQueryResult](ctx, c.readOnlyClient, read.FindProductCategoryByID, id).One()
-
-	if err != nil {
-		c.logger.Error().
-			Err(err).
-			Str("categoryID", id.String()).
-			Msg("Failed to get product category by id")
-		return nil, err
-	}
-
-	return result.ToProductCategoryEntity(), nil
 }
 
 func NewProductCategoryRepository(

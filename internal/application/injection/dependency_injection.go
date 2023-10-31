@@ -6,6 +6,7 @@ import (
 	"hamburgueria/internal/application/api/rest/v1/ingredienttype"
 	"hamburgueria/internal/application/api/rest/v1/order"
 	"hamburgueria/internal/application/api/rest/v1/product"
+	"hamburgueria/internal/application/api/rest/v1/productcategory"
 	"hamburgueria/internal/application/api/swagger"
 	"hamburgueria/internal/modules/customer/infra/database"
 	customerUseCase "hamburgueria/internal/modules/customer/usecase"
@@ -22,12 +23,13 @@ import (
 )
 
 type DependencyInjection struct {
-	CustomerController       *customer.CustomerController
-	ProductController        *product.Controller
-	IngredientController     *ingredient.Controller
-	OrderController          *order.Controller
-	IngredientTypeController *ingredienttype.Controller
-	Swagger                  *swagger.Swagger
+	CustomerController        *customer.CustomerController
+	ProductController         *product.Controller
+	IngredientController      *ingredient.Controller
+	OrderController           *order.Controller
+	IngredientTypeController  *ingredienttype.Controller
+	ProductCategoryController *productcategory.Controller
+	Swagger                   *swagger.Swagger
 }
 
 func NewDependencyInjection() DependencyInjection {
@@ -55,6 +57,7 @@ func NewDependencyInjection() DependencyInjection {
 	)
 
 	productIngredientPersistence := postgres.NewProductIngredientRepository(ReadWriteClient, ReadOnlyClient, logger.Get())
+	productCategoryPersistence := postgres.NewProductCategoryRepository(ReadWriteClient, ReadOnlyClient, logger.Get())
 
 	ingredientFinder := ingredientService.NewIngredientFinderService(ingredientPersistence)
 	ingredientTypeFinder := ingredientService.GetIngredientTypeFinderService(ingredientTypePersistence)
@@ -73,6 +76,8 @@ func NewDependencyInjection() DependencyInjection {
 		orderProductPersistence,
 	)
 
+	getProductCategoryUseCase := usecase.NewGetProductCategoryUseCase(productCategoryPersistence)
+
 	return DependencyInjection{
 		CustomerController: &customer.CustomerController{
 			CreateCustomerUseCase: customerUseCase.GetCreateCustomerUseCase(customerPersistence),
@@ -89,7 +94,8 @@ func NewDependencyInjection() DependencyInjection {
 			CreateIngredientUseCase: ingredientUsecase.NewCreateIngredientUseCase(ingredientPersistence),
 			IngredientFinderService: ingredientFinder,
 		},
-		IngredientTypeController: &ingredienttype.Controller{IngredientTypeFinderService: ingredientTypeFinder},
-		Swagger:                  &swagger.Swagger{},
+		ProductCategoryController: &productcategory.Controller{GetProductCategoryUseCase: getProductCategoryUseCase},
+		IngredientTypeController:  &ingredienttype.Controller{IngredientTypeFinderService: ingredientTypeFinder},
+		Swagger:                   &swagger.Swagger{},
 	}
 }

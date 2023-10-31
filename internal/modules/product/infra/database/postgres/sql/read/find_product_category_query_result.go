@@ -1,25 +1,34 @@
 package read
 
 import (
-	"github.com/google/uuid"
 	"hamburgueria/internal/modules/product/domain/entity"
 )
 
 type FindProductCategoryQueryResult struct {
-	ID   uuid.UUID `db:"id"`
-	Name string    `db:"name"`
+	AcceptCustom bool   `db:"accept_custom"`
+	Name         string `db:"name"`
 }
 
-func (fc FindProductQueryResult) ToProductCategoryEntity() *entity.ProductCategoryEntity {
+func (fc FindProductCategoryQueryResult) ToProductCategoryEntity() *entity.ProductCategoryEntity {
 	return &entity.ProductCategoryEntity{
-		ID:   fc.ID,
-		Name: fc.Name,
+		Name:         fc.Name,
+		AcceptCustom: fc.AcceptCustom,
 	}
 }
 
-func (fc FindProductQueryResult) ToProductCategoryCommandResult() *entity.ProductCategoryEntity {
-	return &entity.ProductCategoryEntity{
-		ID:   fc.ID,
-		Name: fc.Name,
+func (fc FindProductCategoryQueryResult) ToEntity() entity.ProductCategoryEntity {
+	return entity.ProductCategoryEntity{
+		Name:         fc.Name,
+		AcceptCustom: fc.AcceptCustom,
 	}
+}
+
+func ToProductCategoryEntityList(results []FindProductCategoryQueryResult) []entity.ProductCategoryEntity {
+	entities := make([]entity.ProductCategoryEntity, len(results))
+
+	for i, result := range results {
+		entities[i] = result.ToEntity()
+	}
+
+	return entities
 }
