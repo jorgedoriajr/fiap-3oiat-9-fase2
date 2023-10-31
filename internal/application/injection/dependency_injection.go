@@ -47,6 +47,8 @@ func NewDependencyInjection() DependencyInjection {
 		logger.Get(),
 	)
 
+	ingredientFinderService := service2.NewIngredientFinderService(ingredientPersistence)
+
 	return DependencyInjection{
 		CustomerController: &customer.CustomerController{
 			CreateCustomerUseCase: create.CreateCustomerUseCase{CustomerPersistence: customerPersistence},
@@ -54,7 +56,7 @@ func NewDependencyInjection() DependencyInjection {
 		},
 		ProductController: &product.Controller{
 			CreateProductUseCase: usecase.NewCreateProductUseCase(productPersistence),
-			ProductFinderService: service.NewProductFinderService(productPersistence),
+			ProductFinderService: service.NewProductFinderService(productPersistence, *ingredientFinderService),
 		},
 
 		IngredientController: &ingredient.Controller{

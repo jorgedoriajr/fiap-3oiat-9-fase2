@@ -35,6 +35,10 @@ func (p IngredientFinderService) FindIngredientsByProductId(ctx context.Context,
 	return p.ingredientPersistence.GetByProductID(ctx, productID)
 }
 
+//func (p IngredientFinderService) FindIngredientsByProductIds(ctx context.Context, productIDs []uuid.UUID) ([]read.FindIngredientQueryResult, error) {
+//	return p.ingredientPersistence.GetByProductID(ctx, productIDs)
+//}
+
 func NewIngredientFinderService(ingredientPersistence output.IngredientPersistencePort) *IngredientFinderService {
 	ingredientFinderServiceOnce.Do(func() {
 		ingredientFinderServiceInstance = &IngredientFinderService{

@@ -20,12 +20,23 @@ type ProductFinderService struct {
 	ingredientFinderService service.IngredientFinderService
 }
 
-func (p ProductFinderService) FindAllProducts(ctx context.Context) ([]entity.ProductEntity, error) {
-	return p.productPersistencePort.GetAll(ctx)
+func (p ProductFinderService) FindAllProducts(ctx context.Context) ([]*result.FindProductWithIngredientsResult, error) {
+
+	products, err := p.productPersistencePort.GetAll(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return p.getIngredientsForProducts(ctx, products)
 }
 
-func (p ProductFinderService) FindByCategory(ctx context.Context, category string) ([]entity.ProductEntity, error) {
-	return p.productPersistencePort.GetByCategory(ctx, category)
+func (p ProductFinderService) FindByCategory(ctx context.Context, category string) ([]*result.FindProductWithIngredientsResult, error) {
+	products, err := p.productPersistencePort.GetByCategory(ctx, category)
+	if err != nil {
+		return nil, err
+	}
+	return p.getIngredientsForProducts(ctx, products)
+
 }
 
 func (p ProductFinderService) FindByID(ctx context.Context, id uuid.UUID) (*entity.ProductEntity, error) {
@@ -57,8 +68,60 @@ func (p ProductFinderService) FindByIDWithIngredients(ctx context.Context, id uu
 	return r, nil
 }
 
-func (p ProductFinderService) FindByNumber(ctx context.Context, number int) (*entity.ProductEntity, error) {
-	return p.productPersistencePort.GetByNumber(ctx, number)
+func (p ProductFinderService) FindByNumber(ctx context.Context, number int) (*result.FindProductWithIngredientsResult, error) {
+	product, err := p.productPersistencePort.GetByNumber(ctx, number)
+	if err != nil {
+		return nil, err
+	}
+
+	ingredients, iErr := p.ingredientFinderService.FindIngredientsByProductId(ctx, product.ID)
+	if iErr != nil {
+		return nil, iErr
+	}
+
+	r := &result.FindProductWithIngredientsResult{
+		ID:          product.ID,
+		Name:        product.Name,
+		Number:      product.Number,
+		Description: product.Description,
+		Category:    string(product.Category),
+		Menu:        product.Menu,
+		Ingredients: ingredients,
+		CreatedAt:   product.CreatedAt,
+		UpdatedAt:   product.UpdatedAt,
+	}
+	r.CalculateIngredientsAmount()
+
+	return r, nil
+}
+
+func (p ProductFinderService) getIngredientsForProducts(ctx context.Context, products []entity.ProductEntity) ([]*result.FindProductWithIngredientsResult, error) {
+	var productsWithIngredient []*result.FindProductWithIngredientsResult
+
+	for _, product := range products {
+
+		ingredients, iErr := p.ingredientFinderService.FindIngredientsByProductId(ctx, product.ID)
+		if iErr != nil {
+			return nil, iErr
+		}
+
+		r := &result.FindProductWithIngredientsResult{
+			ID:          product.ID,
+			Name:        product.Name,
+			Number:      product.Number,
+			Description: product.Description,
+			Category:    string(product.Category),
+			Menu:        product.Menu,
+			Ingredients: ingredients,
+			CreatedAt:   product.CreatedAt,
+			UpdatedAt:   product.UpdatedAt,
+		}
+		r.CalculateIngredientsAmount()
+
+		productsWithIngredient = append(productsWithIngredient, r)
+	}
+
+	return productsWithIngredient, nil
 }
 
 func NewProductFinderService(
