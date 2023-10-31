@@ -23,7 +23,7 @@ fmt:
 	go fmt ./...
 
 run:
-	CONF=./config/config.yml go run -race cmd/app/main.go
+	CONF=./config/config.yml go run -race cmd/main.go
 
 tools:
 	go get github.com/golangci/golangci-lint/cmd/golangci-lint
