@@ -57,7 +57,7 @@ func (c *Controller) AddProduct(e echo.Context) error {
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return e.JSON(http.StatusOK, result)
+	return e.JSON(http.StatusOK, result.ToResponse())
 }
 
 // GetProductById

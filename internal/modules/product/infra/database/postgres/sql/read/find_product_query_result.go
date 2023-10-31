@@ -16,6 +16,7 @@ type FindProductQueryResult struct {
 	Description string    `db:"description"`
 	Category    string    `db:"category"`
 	Menu        bool      `db:"menu"`
+	ImgPath     string    `db:"img_path"`
 	CreatedAt   time.Time `db:"created_at"`
 	UpdatedAt   time.Time `db:"updated_at"`
 }
@@ -28,6 +29,7 @@ type FindProductWithIngredientsQueryResult struct {
 	Description string                           `db:"description"`
 	Category    string                           `db:"category"`
 	Menu        bool                             `db:"menu"`
+	ImgPath     string                           `db:"img_path"`
 	Ingredients []read.FindIngredientQueryResult `db:"ingredients"`
 	CreatedAt   time.Time                        `db:"created_at"`
 	UpdatedAt   time.Time                        `db:"updated_at"`
@@ -42,6 +44,7 @@ func (fc FindProductQueryResult) ToEntity() *entity.ProductEntity {
 		Description: fc.Description,
 		Category:    fc.Category,
 		Menu:        fc.Menu,
+		ImgPath:     fc.ImgPath,
 		CreatedAt:   fc.CreatedAt,
 		UpdatedAt:   fc.UpdatedAt,
 	}
@@ -56,6 +59,7 @@ func (fc FindProductWithIngredientsQueryResult) ToResult() *result.FindProductWi
 		Description: fc.Description,
 		Category:    fc.Category,
 		Menu:        fc.Menu,
+		ImgPath:     fc.ImgPath,
 		CreatedAt:   fc.CreatedAt,
 		UpdatedAt:   fc.UpdatedAt,
 	}
@@ -70,6 +74,7 @@ func (fc FindProductQueryResult) ToCommandResult() *entity.ProductEntity {
 		Description: fc.Description,
 		Category:    fc.Category,
 		Menu:        fc.Menu,
+		ImgPath:     fc.ImgPath,
 		CreatedAt:   fc.CreatedAt,
 		UpdatedAt:   fc.UpdatedAt,
 	}

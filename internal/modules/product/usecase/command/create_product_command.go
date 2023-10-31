@@ -8,7 +8,6 @@ import (
 
 type CreateProductCommand struct {
 	Name        string
-	Amount      int
 	Description string
 	Category    string
 	Menu        bool
@@ -38,32 +37,24 @@ func NewCreateProductCommand(
 		ImgPath:     ImgPath,
 		Ingredients: Ingredients,
 	}
-	//cmd.calculateAmountFromIngredients()
 	return cmd
 }
 
-//func (c CreateProductCommand) calculateAmountFromIngredients() {
-//	var total int
-//	for _, ingredient := range c.Ingredients {
-//		atomic.Addint(&total, int(ingredient.Amount))
-//	}
-//	c.Amount = int(total)
-//}
-
-func (cmd CreateProductCommand) ToProductEntity() entity.ProductEntity {
+func (cmd CreateProductCommand) ToProductEntity(
+	productId uuid.UUID,
+	ingredients []entity.ProductIngredientEntity,
+	amount int,
+) entity.ProductEntity {
 	return entity.ProductEntity{
-		ID:          uuid.New(),
+		ID:          productId,
 		Name:        cmd.Name,
-		Amount:      cmd.Amount,
+		Amount:      amount,
 		Description: cmd.Description,
 		Category:    cmd.Category,
 		Menu:        cmd.Menu,
 		ImgPath:     cmd.ImgPath,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
+		Ingredients: ingredients,
 	}
-}
-
-func ToIngredientEntity() {
-
 }

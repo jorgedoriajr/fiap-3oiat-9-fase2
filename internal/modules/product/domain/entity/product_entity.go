@@ -16,4 +16,13 @@ type ProductEntity struct {
 	ImgPath     string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+	Ingredients []ProductIngredientEntity
+}
+
+type ProductIngredientEntity struct {
+	ID           uuid.UUID
+	ProductId    uuid.UUID
+	IngredientId uuid.UUID
+	Quantity     int
+	Amount       int
 }

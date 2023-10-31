@@ -15,10 +15,7 @@ type CreateProductRequest struct {
 
 type IngredientRequest struct {
 	ID       string `json:"id"`
-	Name     string `json:"name" validator:"required"`
 	Quantity int    `json:"quantity" validator:"required"`
-	Amount   int    `json:"amount" validator:"required"`
-	Type     string `json:"type" validator:"required,ingredientType"`
 }
 
 func (cp CreateProductRequest) ToCommand() command.CreateProductCommand {
@@ -33,8 +30,6 @@ func toIngredients(ingredients []IngredientRequest) []command.Ingredient {
 		ingredientsCmd = append(ingredientsCmd, command.Ingredient{
 			ID:       ingredient.ID,
 			Quantity: ingredient.Quantity,
-			//Amount:   ingredient.Amount,
-			//Type:     command.GetIngredientTypeByName(ingredient.Type),
 		})
 	}
 	return ingredientsCmd

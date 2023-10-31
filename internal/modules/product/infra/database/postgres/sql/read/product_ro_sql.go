@@ -8,6 +8,7 @@ const tableColumns = `
 		  description,
 		  category,
 		  menu,
+		  img_path,	
 		  created_at,
 		  updated_at
 `
