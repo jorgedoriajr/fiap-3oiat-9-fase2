@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"hamburgueria/internal/application/api/middleware"
 	"hamburgueria/internal/application/api/rest/v1/product/request"
+	response "hamburgueria/internal/application/api/rest/v1/product/response"
 	"hamburgueria/internal/modules/product/ports/input"
 	"hamburgueria/internal/modules/product/usecase/result"
 	"net/http"
@@ -69,7 +70,7 @@ func (c *Controller) AddProduct(e echo.Context) error {
 // @Failure      401 {object} v1.ErrorResponse
 // @Failure      404 {object} v1.ErrorResponse
 // @Failure      503 {object} v1.ErrorResponse
-// @Success      200 {object} []result.FindProductWithIngredientsResult
+// @Success      200 {object} []response.FindProductWithIngredients
 // @Router       /v1/products/{productID} [get]
 func (c *Controller) GetProductById(ctx echo.Context) error {
 	id := ctx.Param("productId")
@@ -80,7 +81,7 @@ func (c *Controller) GetProductById(ctx echo.Context) error {
 		})
 	}
 	productID := uuid.MustParse(id)
-	response, err := c.ProductFinderService.FindByIDWithIngredients(ctx.Request().Context(), productID)
+	resultProduct, err := c.ProductFinderService.FindByIDWithIngredients(ctx.Request().Context(), productID)
 	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
 			"code":    400,
@@ -88,11 +89,11 @@ func (c *Controller) GetProductById(ctx echo.Context) error {
 		})
 	}
 
-	if response == nil {
+	if resultProduct == nil {
 		return ctx.JSON(http.StatusNoContent, nil)
 	}
 
-	return ctx.JSON(http.StatusOK, response)
+	return ctx.JSON(http.StatusOK, response.FromResult(*resultProduct))
 }
 
 // GetProducts
@@ -104,18 +105,18 @@ func (c *Controller) GetProductById(ctx echo.Context) error {
 // @Failure      401 {object} v1.ErrorResponse
 // @Failure      404 {object} v1.ErrorResponse
 // @Failure      503 {object} v1.ErrorResponse
-// @Success      200 {object} []result.FindProductWithIngredientsResult
+// @Success      200 {object} []response.FindProductWithIngredients
 // @Router       /v1/products [get]
 func (c *Controller) GetProducts(ctx echo.Context) error {
 	category := ctx.QueryParam("category")
 
-	var response []*result.FindProductWithIngredientsResult
+	var resultProducts []*result.FindProductWithIngredientsResult
 	var err error
 
 	if category != "" {
-		response, err = c.ProductFinderService.FindByCategory(ctx.Request().Context(), category)
+		resultProducts, err = c.ProductFinderService.FindByCategory(ctx.Request().Context(), category)
 	} else {
-		response, err = c.ProductFinderService.FindAllProducts(ctx.Request().Context())
+		resultProducts, err = c.ProductFinderService.FindAllProducts(ctx.Request().Context())
 	}
 
 	if err != nil {
@@ -125,10 +126,10 @@ func (c *Controller) GetProducts(ctx echo.Context) error {
 		})
 	}
 
-	if response == nil {
+	if resultProducts == nil {
 		return ctx.JSON(http.StatusNoContent, nil)
 	}
 
-	return ctx.JSON(http.StatusOK, response)
+	return ctx.JSON(http.StatusOK, response.FromResultList(resultProducts))
 
 }

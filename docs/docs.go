@@ -479,7 +479,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/result.FindProductWithIngredientsResult"
+                                "$ref": "#/definitions/response.FindProductWithIngredients"
                             }
                         }
                     },
@@ -582,7 +582,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/result.FindProductWithIngredientsResult"
+                                "$ref": "#/definitions/response.FindProductWithIngredients"
                             }
                         }
                     },
@@ -615,26 +615,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "read.FindIngredientQueryResult": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "quantity": {
-                    "type": "integer"
-                },
-                "type": {
-                    "type": "string"
-                }
-            }
-        },
         "request.CreateCustomer": {
             "type": "object",
             "properties": {
@@ -697,14 +677,14 @@ const docTemplate = `{
         "request.CreateOrderProducts": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "string"
-                },
                 "ingredients": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/request.CreateOrderIngredient"
                     }
+                },
+                "number": {
+                    "type": "integer"
                 },
                 "quantity": {
                     "type": "integer"
@@ -768,6 +748,49 @@ const docTemplate = `{
                 }
             }
         },
+        "response.FindProductWithIngredients": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "imgPath": {
+                    "type": "string"
+                },
+                "ingredients": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.FindProductsIngredients"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.FindProductsIngredients": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
         "response.IngredientCreatedResponse": {
             "type": "object",
             "properties": {
@@ -790,6 +813,40 @@ const docTemplate = `{
                 }
             }
         },
+        "response.ListOrderProducts": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "ingredients": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.ListOrderProductsIngredients"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.ListOrderProductsIngredients": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
         "response.ListOrderResponse": {
             "type": "object",
             "properties": {
@@ -804,6 +861,12 @@ const docTemplate = `{
                 },
                 "orderId": {
                     "type": "string"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.ListOrderProducts"
+                    }
                 },
                 "status": {
                     "type": "string"
@@ -871,47 +934,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
-                    "type": "string"
-                }
-            }
-        },
-        "result.FindProductWithIngredientsResult": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "integer"
-                },
-                "category": {
-                    "type": "string"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "imgPath": {
-                    "type": "string"
-                },
-                "ingredients": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/read.FindIngredientQueryResult"
-                    }
-                },
-                "menu": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "number": {
-                    "type": "integer"
-                },
-                "updatedAt": {
                     "type": "string"
                 }
             }

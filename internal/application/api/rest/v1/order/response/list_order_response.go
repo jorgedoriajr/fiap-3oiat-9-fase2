@@ -23,9 +23,9 @@ type ListOrderProducts struct {
 }
 
 type ListOrderProductsIngredients struct {
-	Name        string `json:"name"`
-	TotalAmount int    `json:"totalAmount"`
-	Quantity    int    `json:"quantity"`
+	Name     string `json:"name"`
+	Amount   int    `json:"amount"`
+	Quantity int    `json:"quantity"`
 }
 
 func FromResult(resultOrders []result.ListOrderResult) []ListOrderResponse {
@@ -36,9 +36,9 @@ func FromResult(resultOrders []result.ListOrderResult) []ListOrderResponse {
 			var ingredientsResponse []ListOrderProductsIngredients
 			for _, ingredient := range product.Ingredients {
 				ingredientsResponse = append(ingredientsResponse, ListOrderProductsIngredients{
-					Name:        ingredient.Name,
-					TotalAmount: ingredient.TotalAmount,
-					Quantity:    ingredient.Quantity,
+					Name:     ingredient.Name,
+					Amount:   ingredient.Amount,
+					Quantity: ingredient.Quantity,
 				})
 			}
 			productsResponse = append(productsResponse, ListOrderProducts{

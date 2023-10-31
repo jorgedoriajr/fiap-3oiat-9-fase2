@@ -73,7 +73,7 @@ func convertFindProductOrderQueryResultWithIngredientsResult(ingredients []readI
 		Category:    product.Category,
 		Menu:        product.Menu,
 		ImgPath:     product.ImgPath,
-		Amount:      product.TotalAmount,
+		Amount:      product.Amount,
 		Ingredients: ingredientsResult,
 		CreatedAt:   product.CreatedAt,
 		UpdatedAt:   product.UpdatedAt,

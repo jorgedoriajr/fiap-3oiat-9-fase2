@@ -24,7 +24,7 @@ type FindProductOrderQueryResult struct {
 	Name        string    `db:"name"`
 	Number      int       `db:"number"`
 	Quantity    int       `db:"quantity"`
-	TotalAmount int       `db:"total_amount"`
+	Amount      int       `db:"total_amount"`
 	Description string    `db:"description"`
 	Category    string    `db:"category"`
 	Menu        bool      `db:"menu"`
