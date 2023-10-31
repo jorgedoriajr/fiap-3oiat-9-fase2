@@ -84,7 +84,7 @@ func (c *Controller) AddOrder(ctx echo.Context) error {
 // @Success      200 {object} []response.ListOrderResponse
 // @Router       /v1/orders/ [get]
 func (c *Controller) GetOrders(ctx echo.Context) error {
-
+	//TODO need pagination
 	status := ctx.QueryParam("status")
 
 	var resultOrders []result.ListOrderResult

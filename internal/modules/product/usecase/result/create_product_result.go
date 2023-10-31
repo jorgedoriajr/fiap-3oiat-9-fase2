@@ -2,7 +2,6 @@ package result
 
 import (
 	"github.com/google/uuid"
-	"hamburgueria/internal/application/api/rest/v1/product/response"
 	"hamburgueria/internal/modules/product/domain/entity"
 	"time"
 )
@@ -30,17 +29,5 @@ func FromEntity(entity entity.ProductEntity) CreateProductResult {
 		ImgPath:     entity.ImgPath,
 		CreatedAt:   entity.CreatedAt,
 		UpdatedAt:   entity.UpdatedAt,
-	}
-}
-
-func (c CreateProductResult) ToResponse() response.ProductCreatedResponse {
-	return response.ProductCreatedResponse{
-		Id:          c.Id,
-		Name:        c.Name,
-		Amount:      c.Amount,
-		Description: c.Description,
-		Category:    c.Category,
-		Menu:        c.Menu,
-		ImgPath:     c.ImgPath,
 	}
 }
