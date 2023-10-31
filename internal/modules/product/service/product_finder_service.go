@@ -47,7 +47,7 @@ func (p ProductFinderService) FindByIDWithIngredients(ctx context.Context, id uu
 		Name:        product.Name,
 		Number:      product.Number,
 		Description: product.Description,
-		Category:    string(product.Category),
+		Category:    product.Category,
 		Menu:        product.Menu,
 		Ingredients: ingredients,
 		CreatedAt:   product.CreatedAt,

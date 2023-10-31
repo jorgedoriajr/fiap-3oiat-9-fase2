@@ -2,7 +2,6 @@ package entity
 
 import (
 	"github.com/google/uuid"
-	"hamburgueria/internal/modules/product/domain/valueobject"
 	"time"
 )
 
@@ -12,7 +11,7 @@ type ProductEntity struct {
 	Name        string
 	Amount      int
 	Description string
-	Category    valueobject.ProductCategory
+	Category    string
 	Menu        bool
 	CreatedAt   time.Time
 	UpdatedAt   time.Time

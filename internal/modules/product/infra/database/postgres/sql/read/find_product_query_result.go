@@ -4,7 +4,6 @@ import (
 	"github.com/google/uuid"
 	"hamburgueria/internal/modules/ingredient/infra/database/postgres/sql/read"
 	"hamburgueria/internal/modules/product/domain/entity"
-	"hamburgueria/internal/modules/product/domain/valueobject"
 	"hamburgueria/internal/modules/product/usecase/result"
 	"time"
 )
@@ -41,7 +40,7 @@ func (fc FindProductQueryResult) ToEntity() *entity.ProductEntity {
 		Number:      fc.Number,
 		Amount:      fc.Amount,
 		Description: fc.Description,
-		Category:    valueobject.ProductCategory(fc.Category),
+		Category:    fc.Category,
 		Menu:        fc.Menu,
 		CreatedAt:   fc.CreatedAt,
 		UpdatedAt:   fc.UpdatedAt,
@@ -55,7 +54,7 @@ func (fc FindProductWithIngredientsQueryResult) ToResult() *result.FindProductWi
 		Number:      fc.Number,
 		Amount:      fc.Amount,
 		Description: fc.Description,
-		Category:    valueobject.ProductCategory(fc.Category),
+		Category:    fc.Category,
 		Menu:        fc.Menu,
 		CreatedAt:   fc.CreatedAt,
 		UpdatedAt:   fc.UpdatedAt,
@@ -69,7 +68,7 @@ func (fc FindProductQueryResult) ToCommandResult() *entity.ProductEntity {
 		Number:      fc.Number,
 		Amount:      fc.Amount,
 		Description: fc.Description,
-		Category:    valueobject.ProductCategory(fc.Category),
+		Category:    fc.Category,
 		Menu:        fc.Menu,
 		CreatedAt:   fc.CreatedAt,
 		UpdatedAt:   fc.UpdatedAt,

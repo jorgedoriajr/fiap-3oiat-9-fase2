@@ -1,16 +1,15 @@
 package request
 
 import (
-	"hamburgueria/internal/modules/product/domain/valueobject"
 	"hamburgueria/internal/modules/product/usecase/command"
 )
 
 type CreateProductRequest struct {
-	Name        string                      `json:"name" validator:"required"`
-	Description string                      `json:"description" validator:"required"`
-	Category    valueobject.ProductCategory `json:"category" validator:"required,productCategory"`
-	Menu        bool                        `json:"menu" validator:"required"`
-	Ingredients []IngredientRequest         `json:"ingredients" validator:"required"`
+	Name        string              `json:"name" validator:"required"`
+	Description string              `json:"description" validator:"required"`
+	Category    string              `json:"category" validator:"required"`
+	Menu        bool                `json:"menu" validator:"required"`
+	Ingredients []IngredientRequest `json:"ingredients" validator:"required"`
 }
 
 type IngredientRequest struct {

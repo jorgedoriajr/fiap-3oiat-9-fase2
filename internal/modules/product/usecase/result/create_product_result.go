@@ -1,19 +1,18 @@
 package result
 
 import (
-	uuid "github.com/vgarvardt/pgx-google-uuid/v5"
+	"github.com/google/uuid"
 	"hamburgueria/internal/modules/product/domain/entity"
-	"hamburgueria/internal/modules/product/domain/valueobject"
 	"time"
 )
 
 type CreateProductResult struct {
-	ID          *uuid.UUID
-	Number      *int
+	Id          uuid.UUID
+	Number      int
 	Name        string
 	Amount      int
 	Description string
-	Category    valueobject.ProductCategory
+	Category    string
 	Menu        bool
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
@@ -21,6 +20,8 @@ type CreateProductResult struct {
 
 func ToCreateProductResultFrom(entity entity.ProductEntity) CreateProductResult {
 	return CreateProductResult{
+		Id:          entity.ID,
+		Number:      entity.Number,
 		Name:        entity.Name,
 		Amount:      entity.Amount,
 		Description: entity.Description,

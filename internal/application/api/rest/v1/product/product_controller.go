@@ -7,7 +7,6 @@ import (
 	"hamburgueria/internal/application/api/rest/v1/product/request"
 	"hamburgueria/internal/modules/product/domain/entity"
 	"hamburgueria/internal/modules/product/ports/input"
-	"hamburgueria/pkg/validation"
 	"net/http"
 )
 
@@ -114,12 +113,6 @@ func (c *Controller) GetProducts(ctx echo.Context) error {
 	var err error
 
 	if category != "" {
-		if !validation.ValidateProductCategory(category) {
-			return ctx.JSON(http.StatusBadRequest, map[string]any{
-				"code":    400,
-				"message": "Invalid category",
-			})
-		}
 		response, err = c.ProductFinderService.FindByCategory(ctx.Request().Context(), category)
 	} else {
 		response, err = c.ProductFinderService.FindAllProducts(ctx.Request().Context())

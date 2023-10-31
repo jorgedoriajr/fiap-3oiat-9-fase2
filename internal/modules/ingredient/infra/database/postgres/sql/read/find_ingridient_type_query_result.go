@@ -5,18 +5,29 @@ import (
 )
 
 type FindIngredientTypeQueryResult struct {
-	Name            string `db: "name"`
-	Optional        string `db: "optional"`
-	Max_QTD         string `db: "max_qtd"`
-	ProductCategory string `db: "product_category"`
+	Name                              string `db:"name"`
+	IngredientsTypePerProductCategory []FindIngredientsTypeProductCategory
+}
+
+type FindIngredientsTypeProductCategory struct {
+	Optional        string `db:"optional"`
+	MaxQtd          string `db:"max_qtd"`
+	ProductCategory string `db:"product_category"`
 }
 
 func (fc FindIngredientTypeQueryResult) ToEntity() *entity.IngredientType {
+	var ingredientsTypePerProductCategory []entity.IngredientTypeProductCategory
+	for _, ingredientTypePerProductCategory := range fc.IngredientsTypePerProductCategory {
+		ingredientsTypePerProductCategory = append(ingredientsTypePerProductCategory, entity.IngredientTypeProductCategory{
+			Optional:        ingredientTypePerProductCategory.Optional,
+			MaxQtd:          ingredientTypePerProductCategory.MaxQtd,
+			ProductCategory: ingredientTypePerProductCategory.ProductCategory,
+		})
+	}
+
 	return &entity.IngredientType{
-		Name:            fc.Name,
-		Optional:        fc.Optional,
-		Max_QTD:         fc.Max_QTD,
-		ProductCategory: fc.ProductCategory,
+		Name:                    fc.Name,
+		ConfigByProductCategory: ingredientsTypePerProductCategory,
 	}
 }
 

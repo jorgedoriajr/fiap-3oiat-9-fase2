@@ -30,8 +30,6 @@ func (cv *EchoValidator) RegisterValidators(customFieldValidations []CustomField
 func GetEchoValidator() *EchoValidator {
 	vld := &EchoValidator{Validator: validator.New()}
 	vld.RegisterValidators([]CustomFieldLevelValidation{
-		{"ingredientType", ValidateIngredientType},
-		{"productCategory", EchoValidateProductCategory},
 		{"cpf", ValidateCPFType},
 	})
 	return vld

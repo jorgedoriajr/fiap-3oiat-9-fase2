@@ -55,7 +55,7 @@ func (c CreateOrderUseCase) AddOrder(
 			productAmount = productCreated.Amount * createProductCommand.Quantity
 			products = append(products, entity.OrderProduct{
 				Id:        uuid.New(),
-				ProductId: productCreated.ID,
+				ProductId: productCreated.Id,
 				OrderId:   orderId,
 				Quantity:  createProductCommand.Quantity,
 				Amount:    productAmount,

@@ -3,21 +3,20 @@ package response
 import (
 	"github.com/google/uuid"
 	"hamburgueria/internal/modules/product/domain/entity"
-	"hamburgueria/internal/modules/product/domain/valueobject"
 	"hamburgueria/internal/modules/product/usecase/result"
 	"time"
 )
 
 type ProductCreatedResponse struct {
-	ID          uuid.UUID                   `json:"id,omitempty"`
-	Number      int                         `json:"number,omitempty"`
-	Name        string                      `json:"name"`
-	Amount      int                         `json:"amount"`
-	Description string                      `json:"description"`
-	Category    valueobject.ProductCategory `json:"category"`
-	Menu        bool                        `json:"menu"`
-	CreatedAt   time.Time                   `json:"created_at"`
-	UpdatedAt   time.Time                   `json:"updated_at"`
+	ID          uuid.UUID `json:"id,omitempty"`
+	Number      int       `json:"number,omitempty"`
+	Name        string    `json:"name"`
+	Amount      int       `json:"amount"`
+	Description string    `json:"description"`
+	Category    string    `json:"category"`
+	Menu        bool      `json:"menu"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 func (pcr ProductCreatedResponse) From(entity entity.ProductEntity) ProductCreatedResponse {

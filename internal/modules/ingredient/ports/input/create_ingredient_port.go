@@ -6,5 +6,5 @@ import (
 )
 
 type IngredientPort interface {
-	AddIngredient(ctx context.Context, ingredient entity.Ingredient) error
+	AddIngredient(ctx context.Context, ingredient entity.IngredientEntity) error
 }

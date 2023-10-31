@@ -6,7 +6,7 @@ import (
 )
 
 type GetIngredientPort interface {
-	GetIngredientById(ctx context.Context, id string) (*entity.Ingredient, error)
-	GetIngredientByName(ctx context.Context, name string) (*entity.Ingredient, error)
-	GetIngredientAll(ctx context.Context) ([]*entity.Ingredient, error)
+	GetIngredientById(ctx context.Context, id string) (*entity.IngredientEntity, error)
+	GetIngredientByName(ctx context.Context, name string) (*entity.IngredientEntity, error)
+	GetIngredientAll(ctx context.Context) ([]*entity.IngredientEntity, error)
 }
