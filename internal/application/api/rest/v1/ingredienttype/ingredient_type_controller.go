@@ -2,9 +2,9 @@ package ingredienttype
 
 import (
 	"github.com/labstack/echo/v4"
+	"hamburgueria/internal/application/api/middleware"
+	"hamburgueria/internal/application/api/rest/v1/ingredienttype/response"
 	"hamburgueria/internal/modules/ingredient/ports/input"
-	"hamburgueria/internal/server/api/middleware"
-	"hamburgueria/internal/server/api/rest/v1/ingredienttype/response"
 	"net/http"
 )
 
