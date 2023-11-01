@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/labstack/echo/v4"
+	"hamburgueria/internal/application/api/middleware"
+	"hamburgueria/internal/application/api/rest/v1/order/request"
+	"hamburgueria/internal/application/api/rest/v1/order/response"
 	"hamburgueria/internal/modules/order/port/input"
 	"hamburgueria/internal/modules/order/usecase/result"
-	"hamburgueria/internal/server/api/middleware"
-	"hamburgueria/internal/server/api/rest/v1/order/request"
-	"hamburgueria/internal/server/api/rest/v1/order/response"
 	"net/http"
 )
 

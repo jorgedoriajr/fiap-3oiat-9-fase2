@@ -28,8 +28,8 @@ SetConfigPath overrides default config path value
 
 Usage:
 
-	server.Initialize(
-	  server.SetConfigPath("path/to/config"), // without config file name
+	application.Initialize(
+	  application.SetConfigPath("path/to/config"), // without config file name
 	)
 
 default: ./config
@@ -46,8 +46,8 @@ SetConfigType overrides default config type value
 
 Usage:
 
-	server.Initialize(
-	  server.SetConfigType("json"),
+	application.Initialize(
+	  application.SetConfigType("json"),
 	)
 
 default: yaml
@@ -64,8 +64,8 @@ SetConfigName overrides default config name value
 
 Usage:
 
-	server.Initialize(
-	  server.SetConfigName("config", "config-prod"), // without extension
+	application.Initialize(
+	  application.SetConfigName("config", "config-prod"), // without extension
 	)
 
 default: ["config"]
@@ -79,16 +79,16 @@ func SetConfigName(configName ...string) opt {
 
 /*
 SetProfileEnv overrides default profile environment value (read from os environment).
-If set, server will try to load config file for given profile.
+If set, application will try to load config file for given profile.
 
 Example:
 
-If config name is set to "config" and profile env evaluates to "dev", server will load config file and append config-dev to configuration source.
+If config name is set to "config" and profile env evaluates to "dev", application will load config file and append config-dev to configuration source.
 
 Usage:
 
-	server.Initialize(
-	  server.SetProfileEnv("ENV_PROFILE"),
+	application.Initialize(
+	  application.SetProfileEnv("ENV_PROFILE"),
 	)
 
 default: GO_PROFILE

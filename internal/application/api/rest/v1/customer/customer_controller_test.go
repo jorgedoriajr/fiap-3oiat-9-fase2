@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"hamburgueria/internal/server/api/rest/v1/customer/response"
+	"hamburgueria/internal/application/api/rest/v1/customer/response"
 	"hamburgueria/tests/mocks"
 	"io"
 	"net/http"

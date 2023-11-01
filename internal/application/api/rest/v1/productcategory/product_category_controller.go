@@ -2,9 +2,9 @@ package productcategory
 
 import (
 	"github.com/labstack/echo/v4"
+	"hamburgueria/internal/application/api/middleware"
+	"hamburgueria/internal/application/api/rest/v1/productcategory/response"
 	"hamburgueria/internal/modules/product/ports/input"
-	"hamburgueria/internal/server/api/middleware"
-	"hamburgueria/internal/server/api/rest/v1/productcategory/response"
 	"net/http"
 )
 

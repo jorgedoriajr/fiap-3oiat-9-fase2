@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   flyway:
-    image: flyway/flyway:10-alpine
+    image: flyway/flyway:7.14-alpine
     platform: linux/amd64
     container_name: hamburgueria-flyway
     command: ["-url=jdbc:postgresql://postgres:5432/hamburgueria", "-schemas=hamburgueria", "-user=hamburgueria-migration", "-password=hamburgueria-migration", "migrate"]
@@ -15,7 +15,7 @@ services:
       - hamburgueria-network
 
   postgres:
-    image: postgres:15-alpine3.16
+    image: postgres:9.6-alpine3.15
     container_name: hamburgueria-postgres
     ports:
       - "5432:5432"
@@ -30,7 +30,7 @@ services:
       retries: 2
     networks:
       - hamburgueria-network
-#
+
   app:
     build: ../../
     container_name: hamburgueria-app

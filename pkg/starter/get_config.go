@@ -4,7 +4,7 @@ import (
 	"hamburgueria/config"
 )
 
-// GetAppConfig return the loaded server config
+// GetAppConfig return the loaded application config
 func GetAppConfig() config.Application {
 	ensureInitialized()
 	return appInstance.configRoot.Application

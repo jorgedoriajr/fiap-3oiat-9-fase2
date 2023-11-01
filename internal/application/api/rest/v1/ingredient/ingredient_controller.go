@@ -3,11 +3,11 @@ package ingredient
 import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"hamburgueria/internal/application/api/middleware"
+	"hamburgueria/internal/application/api/rest/v1/ingredient/request"
+	"hamburgueria/internal/application/api/rest/v1/ingredient/response"
 	"hamburgueria/internal/modules/ingredient/ports/input"
 	"hamburgueria/internal/modules/ingredient/usecase/result"
-	"hamburgueria/internal/server/api/middleware"
-	"hamburgueria/internal/server/api/rest/v1/ingredient/request"
-	"hamburgueria/internal/server/api/rest/v1/ingredient/response"
 
 	"net/http"
 )

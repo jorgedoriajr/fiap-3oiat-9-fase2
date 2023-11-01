@@ -4,7 +4,7 @@ package mocks
 
 import (
 	context "context"
-	"hamburgueria/internal/server/api/rest/v1/customer/response"
+	"hamburgueria/internal/application/api/rest/v1/customer/response"
 
 	mock "github.com/stretchr/testify/mock"
 )

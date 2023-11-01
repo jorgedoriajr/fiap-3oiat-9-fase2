@@ -1,6 +1,13 @@
 package injection
 
 import (
+	"hamburgueria/internal/application/api/rest/v1/customer"
+	"hamburgueria/internal/application/api/rest/v1/ingredient"
+	"hamburgueria/internal/application/api/rest/v1/ingredienttype"
+	"hamburgueria/internal/application/api/rest/v1/order"
+	"hamburgueria/internal/application/api/rest/v1/product"
+	"hamburgueria/internal/application/api/rest/v1/productcategory"
+	"hamburgueria/internal/application/api/swagger"
 	"hamburgueria/internal/modules/customer/infra/database"
 	customerUseCase "hamburgueria/internal/modules/customer/usecase"
 	ingredientPostgres "hamburgueria/internal/modules/ingredient/infra/database/postgres"
@@ -11,13 +18,6 @@ import (
 	"hamburgueria/internal/modules/product/infra/database/postgres"
 	"hamburgueria/internal/modules/product/service"
 	"hamburgueria/internal/modules/product/usecase"
-	"hamburgueria/internal/server/api/rest/v1/customer"
-	"hamburgueria/internal/server/api/rest/v1/ingredient"
-	"hamburgueria/internal/server/api/rest/v1/ingredienttype"
-	"hamburgueria/internal/server/api/rest/v1/order"
-	"hamburgueria/internal/server/api/rest/v1/product"
-	"hamburgueria/internal/server/api/rest/v1/productcategory"
-	"hamburgueria/internal/server/api/swagger"
 	"hamburgueria/pkg/logger"
 	"hamburgueria/pkg/sql"
 )
@@ -82,18 +82,15 @@ func NewDependencyInjection() DependencyInjection {
 
 	deleteProductUseCase := usecase.GetDeleteProductUseCase(productPersistence)
 
-	updateProductUseCase := usecase.NewUpdateProductUseCase(productPersistence)
-
 	return DependencyInjection{
 		CustomerController: &customer.Controller{
 			CreateCustomerUseCase: customerUseCase.GetCreateCustomerUseCase(customerPersistence),
 			GetCustomerUseCase:    customerUseCase.GetGetCustomerUseCase(customerPersistence),
 		},
 		ProductController: &product.Controller{
-			CreateProductUseCase:  productUseCase,
-			ProductFinderService:  service.NewProductFinderService(productPersistence, *ingredientFinderService),
-			DeleteProductUseCase:  deleteProductUseCase,
-			UpdatedProductUseCase: updateProductUseCase,
+			CreateProductUseCase: productUseCase,
+			ProductFinderService: service.NewProductFinderService(productPersistence, *ingredientFinderService),
+			DeleteProductUseCase: deleteProductUseCase,
 		},
 		OrderController: &order.Controller{
 			CreateOrderUseCase: createOrderUseCase,
