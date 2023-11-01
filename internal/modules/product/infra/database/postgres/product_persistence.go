@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"hamburgueria/internal/modules/product/domain/entity"
@@ -113,6 +114,23 @@ func (c ProductRepository) GetByNumber(ctx context.Context, productNumber int) (
 	}
 
 	return result.ToEntity(), nil
+}
+
+func (c ProductRepository) InactiveByNumber(ctx context.Context, productNumber int) error {
+	result, err := c.GetByNumber(ctx, productNumber)
+	if err != nil {
+		return err
+	}
+	if result == nil {
+		return errors.New("product not found")
+	}
+
+	err = sql.NewCommand(ctx, c.readWriteClient, write.InactiveProductById, result.ID.String()).Exec()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func NewProductRepository(

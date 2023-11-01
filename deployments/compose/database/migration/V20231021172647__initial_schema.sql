@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS "customer" (
     email               varchar(255),
     opt_in_promotion    boolean default true,
     created_at          timestamp not null,
-    updated_at          timestamp
+    updated_at          timestamp,
+    active              boolean default true
 );
 
 CREATE TABLE IF NOT EXISTS "product_category" (
@@ -16,7 +17,7 @@ CREATE TABLE IF NOT EXISTS "product_category" (
 );
 
 CREATE TABLE IF NOT EXISTS "ingredient_type" (
-    name                varchar(50) primary key
+    name    varchar(50) primary key
 );
 
 CREATE TABLE IF NOT EXISTS "ingredient_type_product_category" (
@@ -29,9 +30,11 @@ CREATE TABLE IF NOT EXISTS "ingredient_type_product_category" (
 
 CREATE TABLE IF NOT EXISTS "ingredient" (
     id          UUID not null primary key default public.uuid_generate_v4(),
+    number      serial,
     name        varchar(255) unique not null,
     amount      bigint not null,
-    type        varchar(50) references "ingredient_type"(name)
+    type        varchar(50) references "ingredient_type"(name),
+    active      boolean default true
 );
 
 
@@ -45,7 +48,8 @@ CREATE TABLE IF NOT EXISTS "product" (
     menu                    boolean not null,
     img_path                varchar(255) not null,
     created_at              timestamp not null,
-    updated_at              timestamp
+    updated_at              timestamp,
+    active                  boolean default true
 );
 
 CREATE TABLE IF NOT EXISTS "product_ingredient" (
@@ -102,3 +106,6 @@ ALTER TABLE "order" ADD CONSTRAINT fk_order_payment
 
 ALTER TABLE "order_history" ADD CONSTRAINT fk_order_history_order
     FOREIGN KEY (order_id) REFERENCES "order"(id);
+
+CREATE UNIQUE INDEX IF NOT EXISTS product_number_unq_idx ON product(number);
+CREATE UNIQUE INDEX IF NOT EXISTS ingredient_number_unq_idx ON ingredient(number);

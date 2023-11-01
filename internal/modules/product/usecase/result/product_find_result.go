@@ -34,6 +34,7 @@ type FindProductWithIngredientsResult struct {
 
 type FindProductsIngredientsResult struct {
 	ID       uuid.UUID
+	Number   int
 	Name     string
 	Amount   int
 	Type     string

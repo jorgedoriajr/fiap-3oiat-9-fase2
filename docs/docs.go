@@ -179,7 +179,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/result.FindIngredientResult"
+                                "$ref": "#/definitions/response.IngredientResponse"
                             }
                         }
                     },
@@ -230,7 +230,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.IngredientCreatedResponse"
+                            "$ref": "#/definitions/response.IngredientResponse"
                         }
                     },
                     "400": {
@@ -280,7 +280,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/result.FindIngredientResult"
+                            "$ref": "#/definitions/response.IngredientResponse"
                         }
                     },
                     "400": {
@@ -560,6 +560,53 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/products/{number}": {
+            "delete": {
+                "description": "Delete Product by number",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete Product by number",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "number",
+                        "name": "number",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrorResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/products/{productID}": {
             "get": {
                 "description": "Get Product by id",
@@ -786,12 +833,15 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "number": {
+                    "type": "integer"
+                },
                 "quantity": {
                     "type": "integer"
                 }
             }
         },
-        "response.IngredientCreatedResponse": {
+        "response.IngredientResponse": {
             "type": "object",
             "properties": {
                 "amount": {
@@ -799,6 +849,9 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "number": {
+                    "type": "integer"
                 },
                 "type": {
                     "type": "string"
@@ -921,23 +974,6 @@ const docTemplate = `{
                 }
             }
         },
-        "result.FindIngredientResult": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                }
-            }
-        },
         "v1.ErrorResponse": {
             "type": "object",
             "properties": {
@@ -955,8 +991,8 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "https://localhost/8080",
-	BasePath:         "/v1",
+	Host:             "",
+	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "Hamburgueria - Grupo 9",
 	Description:      "Projeto de auto atendimento para hamburgueria",

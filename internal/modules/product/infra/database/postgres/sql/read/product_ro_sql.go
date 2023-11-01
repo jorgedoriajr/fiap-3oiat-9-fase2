@@ -16,7 +16,9 @@ const FindAllProducts = `
 		SELECT
 			` + tableColumns + `
 		FROM product
-		`
+		WHERE active = true
+`
+
 const FindProductByID = `
 		SELECT
 			` + tableColumns + `
@@ -31,19 +33,13 @@ const FindProductByNumber = `
 		WHERE number = $1
 		LIMIT 1`
 
-const FindProductByIDWithIngredients = `
-		SELECT
-			` + tableColumns + `
-		FROM product
-		WHERE id = $1
-		LIMIT 1`
-
 const FindProductByCategory = `
 		SELECT
 			` + tableColumns + `
 		FROM product
 		WHERE category = $1
-		`
+		AND active = true
+`
 
 const FindProductByOrderID = `
 	SELECT

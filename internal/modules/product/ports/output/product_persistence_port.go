@@ -14,4 +14,5 @@ type ProductPersistencePort interface {
 	GetByOrderID(ctx context.Context, productID uuid.UUID) ([]read.FindProductOrderQueryResult, error)
 	GetByNumber(ctx context.Context, productNumber int) (*entity.ProductEntity, error)
 	GetByCategory(ctx context.Context, productID string) ([]entity.ProductEntity, error)
+	InactiveByNumber(ctx context.Context, productNumber int) error
 }

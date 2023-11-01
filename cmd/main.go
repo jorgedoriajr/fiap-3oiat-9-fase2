@@ -13,8 +13,6 @@ import (
 // @title Hamburgueria - Grupo 9
 // @version 1.0
 // @description Projeto de auto atendimento para hamburgueria
-// @host https://localhost:8080
-// @BasePath /v1
 func main() {
 	starter.Initialize()
 
