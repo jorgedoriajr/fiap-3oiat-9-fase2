@@ -14,6 +14,17 @@ const InsertProductRW = `
 		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id
 `
 
+const UpdateProductRW = `
+	UPDATE product
+	SET
+	  name = COALESCE($2, name),
+	  description = COALESCE($3, description),
+	  category = COALESCE($4, category),
+	  menu = COALESCE($5, menu),
+	  img_path = COALESCE($6, img_path)
+	WHERE number = $1
+`
+
 const InsertProductIngredientRW = `
 		INSERT INTO product_ingredient (
 		  id, 

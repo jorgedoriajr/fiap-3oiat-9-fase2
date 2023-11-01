@@ -33,9 +33,9 @@ type HealthChecker interface {
 	Check(context.Context) []Result
 	// GetName name of resource being checked
 	GetName() string
-	// IsCritical indicates when a resource is critical to the application.
-	// If true and healthcheck fails, application should be marked as unhealthy.
-	// Otherwise, application should be marked as healthy regardless healthcheck result
+	// IsCritical indicates when a resource is critical to the server.
+	// If true and healthcheck fails, server should be marked as unhealthy.
+	// Otherwise, server should be marked as healthy regardless healthcheck result
 	IsCritical() bool
 }
 
