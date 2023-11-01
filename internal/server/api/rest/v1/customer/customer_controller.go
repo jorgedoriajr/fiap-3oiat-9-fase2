@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/labstack/echo/v4"
-	"hamburgueria/internal/application/api/middleware"
-	"hamburgueria/internal/application/api/rest/v1/customer/request"
 	"hamburgueria/internal/modules/customer/port/input"
+	"hamburgueria/internal/server/api/middleware"
+	"hamburgueria/internal/server/api/rest/v1/customer/request"
 	"hamburgueria/pkg/validation"
 	"net/http"
 )

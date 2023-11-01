@@ -2,7 +2,7 @@ package starter
 
 import "hamburgueria/config"
 
-// Creates application with default configuration.
+// Creates server with default configuration.
 func ensureCreated() {
 	initOnce.Do(func() {
 		opts = &options{}
@@ -15,12 +15,12 @@ func ensureCreated() {
 
 func ensureNotInitialized() {
 	if isInitialized {
-		panic("application already initialized")
+		panic("server already initialized")
 	}
 }
 
 func ensureInitialized() {
 	if !isInitialized {
-		panic("application must be initialized")
+		panic("server must be initialized")
 	}
 }

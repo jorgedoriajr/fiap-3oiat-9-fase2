@@ -30,3 +30,25 @@ func ToInsertProductQueryMapper(product entity.ProductEntity) InsertProductRWQue
 		UpdatedAt:   product.UpdatedAt,
 	}
 }
+
+type UpdateProductRWQueryMapper struct {
+	Number      int       `position:"0"`
+	Name        *string   `position:"1"`
+	Description *string   `position:"2"`
+	Category    *string   `position:"3"`
+	Menu        *bool     `position:"4"`
+	ImgPath     *string   `position:"5"`
+	UpdatedAt   time.Time `position:"6"`
+}
+
+func ToUpdateProductQueryMapper(product entity.ProductEntity) UpdateProductRWQueryMapper {
+	return UpdateProductRWQueryMapper{
+		Number:      product.Number,
+		Name:        &product.Name,
+		Description: &product.Description,
+		Category:    &product.Category,
+		Menu:        &product.Menu,
+		ImgPath:     &product.ImgPath,
+		UpdatedAt:   product.UpdatedAt,
+	}
+}

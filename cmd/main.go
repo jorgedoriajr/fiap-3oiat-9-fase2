@@ -3,7 +3,7 @@ package main
 import (
 	"hamburgueria/config"
 	_ "hamburgueria/docs"
-	"hamburgueria/internal/application/injection"
+	"hamburgueria/internal/server/injection"
 	"hamburgueria/pkg/httpserver"
 	"hamburgueria/pkg/sql"
 	"hamburgueria/pkg/starter"

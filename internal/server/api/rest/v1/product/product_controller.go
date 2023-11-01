@@ -3,19 +3,20 @@ package product
 import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"hamburgueria/internal/application/api/middleware"
-	"hamburgueria/internal/application/api/rest/v1/product/request"
-	response "hamburgueria/internal/application/api/rest/v1/product/response"
 	"hamburgueria/internal/modules/product/ports/input"
 	"hamburgueria/internal/modules/product/usecase/result"
+	"hamburgueria/internal/server/api/middleware"
+	"hamburgueria/internal/server/api/rest/v1/product/request"
+	"hamburgueria/internal/server/api/rest/v1/product/response"
 	"net/http"
 	"strconv"
 )
 
 type Controller struct {
-	CreateProductUseCase input.CreateProductUseCasePort
-	ProductFinderService input.ProductFinderServicePort
-	DeleteProductUseCase input.DeleteProductUseCasePort
+	CreateProductUseCase  input.CreateProductUseCasePort
+	UpdatedProductUseCase input.UpdateProductUseCasePort
+	ProductFinderService  input.ProductFinderServicePort
+	DeleteProductUseCase  input.DeleteProductUseCasePort
 }
 
 func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
@@ -27,6 +28,8 @@ func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
 	group.Add(http.MethodGet, "", c.GetProducts)
 	group.Add(http.MethodGet, "/:productId", c.GetProductById)
 	group.Add(http.MethodDelete, "/:number", c.InactiveProductByNumber)
+	group.Add(http.MethodPatch, "/:number", c.UpdateProduct)
+
 }
 
 // AddProduct
@@ -62,6 +65,59 @@ func (c *Controller) AddProduct(e echo.Context) error {
 		return e.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return e.JSON(http.StatusOK, response.ProductCreatedResponseFromResult(resultProduct))
+}
+
+// UpdateProduct
+// @Summary     Update Product
+// @Description Update Product
+// @Produce      json
+// @Param 		 request 	   body   request.UpdateProductRequest true "Request Body"
+// @Failure      400 {object} v1.ErrorResponse
+// @Failure      401 {object} v1.ErrorResponse
+// @Failure      404 {object} v1.ErrorResponse
+// @Failure      503 {object} v1.ErrorResponse
+// @Success      200 {object} response.ProductUpdatedResponse
+// @Router       /v1/products/{number} [patch]
+func (c *Controller) UpdateProduct(ctx echo.Context) error {
+
+	numberPathParam := ctx.Param("number")
+	if numberPathParam == "" {
+		return ctx.JSON(http.StatusBadRequest, map[string]any{
+			"code":    400,
+			"message": "number cannot be empty",
+		})
+	}
+	number, err := strconv.Atoi(numberPathParam)
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, map[string]any{
+			"code":    400,
+			"message": "number needs to be a numeric value",
+		})
+	}
+
+	req := new(request.UpdateProductRequest)
+	if err := ctx.Validate(req); err != nil {
+		return ctx.JSON(http.StatusBadRequest, map[string]any{
+			"code":    400,
+			"message": "UNMARSHAL_ERROR",
+		})
+	}
+
+	if errBind := ctx.Bind(req); errBind != nil {
+		return ctx.JSON(http.StatusBadRequest, map[string]any{
+			"code":    400,
+			"message": "UNMARSHAL_ERROR",
+		})
+	}
+
+	resultProduct, err := c.UpdatedProductUseCase.UpdateProduct(
+		ctx.Request().Context(), req.ToCommandWithNumber(number),
+	)
+
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return ctx.JSON(http.StatusOK, response.ProductUpdatedResponseFromResult(resultProduct))
 }
 
 // GetProductById
