@@ -13,6 +13,7 @@ type FindProductWithIngredients struct {
 }
 
 type FindProductsIngredients struct {
+	Number   int
 	Name     string
 	Amount   int
 	Quantity int
@@ -30,6 +31,7 @@ func FromResult(product result.FindProductWithIngredientsResult) FindProductWith
 	var ingredientsResponse []FindProductsIngredients
 	for _, ingredient := range product.Ingredients {
 		ingredientsResponse = append(ingredientsResponse, FindProductsIngredients{
+			Number:   ingredient.Number,
 			Name:     ingredient.Name,
 			Amount:   ingredient.Amount,
 			Quantity: ingredient.Quantity,

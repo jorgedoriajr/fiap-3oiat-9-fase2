@@ -21,6 +21,7 @@ type ProductEntity struct {
 
 type ProductIngredientEntity struct {
 	ID           uuid.UUID
+	Number       int
 	ProductId    uuid.UUID
 	IngredientId uuid.UUID
 	Quantity     int

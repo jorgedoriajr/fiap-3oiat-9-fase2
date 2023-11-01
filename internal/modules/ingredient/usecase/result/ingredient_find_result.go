@@ -7,6 +7,7 @@ import (
 
 type FindIngredientResult struct {
 	ID     uuid.UUID
+	Number int
 	Name   string
 	Amount int
 	Type   string
@@ -15,6 +16,7 @@ type FindIngredientResult struct {
 func FromEntity(ingredient entity.IngredientEntity) FindIngredientResult {
 	return FindIngredientResult{
 		ID:     ingredient.ID,
+		Number: ingredient.Number,
 		Name:   ingredient.Name,
 		Amount: ingredient.Amount,
 		Type:   ingredient.Type,

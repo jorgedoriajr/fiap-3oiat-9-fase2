@@ -9,11 +9,13 @@ import (
 	"hamburgueria/internal/modules/product/ports/input"
 	"hamburgueria/internal/modules/product/usecase/result"
 	"net/http"
+	"strconv"
 )
 
 type Controller struct {
 	CreateProductUseCase input.CreateProductUseCasePort
 	ProductFinderService input.ProductFinderServicePort
+	DeleteProductUseCase input.DeleteProductUseCasePort
 }
 
 func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
@@ -24,6 +26,7 @@ func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
 	group.Add(http.MethodPost, "", c.AddProduct)
 	group.Add(http.MethodGet, "", c.GetProducts)
 	group.Add(http.MethodGet, "/:productId", c.GetProductById)
+	group.Add(http.MethodDelete, "/:number", c.InactiveProductByNumber)
 }
 
 // AddProduct
@@ -94,6 +97,43 @@ func (c *Controller) GetProductById(ctx echo.Context) error {
 	}
 
 	return ctx.JSON(http.StatusOK, response.FromResult(*resultProduct))
+}
+
+// InactiveProductByNumber
+// @Summary     Delete Product by number
+// @Description Delete Product by number
+// @Produce      json
+// @Param        number    path      string  true  "number"
+// @Failure      400 {object} v1.ErrorResponse
+// @Failure      401 {object} v1.ErrorResponse
+// @Failure      404 {object} v1.ErrorResponse
+// @Failure      503 {object} v1.ErrorResponse
+// @Success      200
+// @Router       /v1/products/{number} [delete]
+func (c *Controller) InactiveProductByNumber(ctx echo.Context) error {
+	numberPathParam := ctx.Param("number")
+	if numberPathParam == "" {
+		return ctx.JSON(http.StatusBadRequest, map[string]any{
+			"code":    400,
+			"message": "number cannot be empty",
+		})
+	}
+	number, err := strconv.Atoi(numberPathParam)
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, map[string]any{
+			"code":    400,
+			"message": "number needs to be a numeric value",
+		})
+	}
+	err = c.DeleteProductUseCase.Inactive(ctx.Request().Context(), number)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, map[string]any{
+			"code":    500,
+			"message": err.Error(),
+		})
+	}
+
+	return ctx.JSON(http.StatusOK, nil)
 }
 
 // GetProducts

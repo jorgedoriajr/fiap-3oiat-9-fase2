@@ -1,4 +1,3 @@
-basePath: /v1
 definitions:
   request.CreateCustomer:
     properties:
@@ -111,15 +110,19 @@ definitions:
         type: integer
       name:
         type: string
+      number:
+        type: integer
       quantity:
         type: integer
     type: object
-  response.IngredientCreatedResponse:
+  response.IngredientResponse:
     properties:
       amount:
         type: integer
       name:
         type: string
+      number:
+        type: integer
       type:
         type: string
     type: object
@@ -198,17 +201,6 @@ definitions:
       name:
         type: string
     type: object
-  result.FindIngredientResult:
-    properties:
-      amount:
-        type: integer
-      id:
-        type: string
-      name:
-        type: string
-      type:
-        type: string
-    type: object
   v1.ErrorResponse:
     properties:
       code:
@@ -216,7 +208,6 @@ definitions:
       message:
         type: string
     type: object
-host: https://localhost/8080
 info:
   contact: {}
   description: Projeto de auto atendimento para hamburgueria
@@ -332,7 +323,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/result.FindIngredientResult'
+              $ref: '#/definitions/response.IngredientResponse'
             type: array
         "400":
           description: Bad Request
@@ -366,7 +357,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.IngredientCreatedResponse'
+            $ref: '#/definitions/response.IngredientResponse'
         "400":
           description: Bad Request
           schema:
@@ -399,7 +390,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/result.FindIngredientResult'
+            $ref: '#/definitions/response.IngredientResponse'
         "400":
           description: Bad Request
           schema:
@@ -581,6 +572,37 @@ paths:
           schema:
             $ref: '#/definitions/v1.ErrorResponse'
       summary: Add Product
+  /v1/products/{number}:
+    delete:
+      description: Delete Product by number
+      parameters:
+      - description: number
+        in: path
+        name: number
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+      summary: Delete Product by number
   /v1/products/{productID}:
     get:
       description: Get Product by id

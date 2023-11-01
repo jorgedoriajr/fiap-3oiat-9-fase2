@@ -15,6 +15,7 @@ type FindIngredientQueryResult struct {
 
 type FindProductIngredientQueryResult struct {
 	ID       uuid.UUID `db:"id"`
+	Number   int       `db:"number"`
 	Name     string    `db:"name"`
 	Amount   int       `db:"total_amount"`
 	Type     string    `db:"type"`
@@ -33,6 +34,7 @@ func (fc FindIngredientQueryResult) ToEntity() *entity.IngredientEntity {
 func (fc FindProductIngredientQueryResult) ToResult() result.FindProductsIngredientsResult {
 	return result.FindProductsIngredientsResult{
 		ID:       fc.ID,
+		Number:   fc.Number,
 		Name:     fc.Name,
 		Amount:   fc.Amount,
 		Type:     fc.Type,

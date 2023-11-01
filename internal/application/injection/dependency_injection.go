@@ -80,6 +80,8 @@ func NewDependencyInjection() DependencyInjection {
 
 	getProductCategoryUseCase := usecase.NewGetProductCategoryUseCase(productCategoryPersistence)
 
+	deleteProductUseCase := usecase.GetDeleteProductUseCase(productPersistence)
+
 	return DependencyInjection{
 		CustomerController: &customer.Controller{
 			CreateCustomerUseCase: customerUseCase.GetCreateCustomerUseCase(customerPersistence),
@@ -88,6 +90,7 @@ func NewDependencyInjection() DependencyInjection {
 		ProductController: &product.Controller{
 			CreateProductUseCase: productUseCase,
 			ProductFinderService: service.NewProductFinderService(productPersistence, *ingredientFinderService),
+			DeleteProductUseCase: deleteProductUseCase,
 		},
 		OrderController: &order.Controller{
 			CreateOrderUseCase: createOrderUseCase,

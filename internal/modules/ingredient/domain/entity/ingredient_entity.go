@@ -6,6 +6,7 @@ import (
 
 type IngredientEntity struct {
 	ID     uuid.UUID
+	Number int
 	Name   string
 	Amount int
 	Type   string

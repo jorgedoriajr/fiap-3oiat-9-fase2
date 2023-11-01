@@ -6,8 +6,6 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "https://localhost/8080",
-    "basePath": "/v1",
     "paths": {
         "/v1/customers": {
             "post": {
@@ -173,7 +171,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/result.FindIngredientResult"
+                                "$ref": "#/definitions/response.IngredientResponse"
                             }
                         }
                     },
@@ -224,7 +222,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.IngredientCreatedResponse"
+                            "$ref": "#/definitions/response.IngredientResponse"
                         }
                     },
                     "400": {
@@ -274,7 +272,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/result.FindIngredientResult"
+                            "$ref": "#/definitions/response.IngredientResponse"
                         }
                     },
                     "400": {
@@ -554,6 +552,53 @@
                 }
             }
         },
+        "/v1/products/{number}": {
+            "delete": {
+                "description": "Delete Product by number",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete Product by number",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "number",
+                        "name": "number",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrorResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/products/{productID}": {
             "get": {
                 "description": "Get Product by id",
@@ -780,12 +825,15 @@
                 "name": {
                     "type": "string"
                 },
+                "number": {
+                    "type": "integer"
+                },
                 "quantity": {
                     "type": "integer"
                 }
             }
         },
-        "response.IngredientCreatedResponse": {
+        "response.IngredientResponse": {
             "type": "object",
             "properties": {
                 "amount": {
@@ -793,6 +841,9 @@
                 },
                 "name": {
                     "type": "string"
+                },
+                "number": {
+                    "type": "integer"
                 },
                 "type": {
                     "type": "string"
@@ -911,23 +962,6 @@
                     "type": "boolean"
                 },
                 "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "result.FindIngredientResult": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "type": {
                     "type": "string"
                 }
             }

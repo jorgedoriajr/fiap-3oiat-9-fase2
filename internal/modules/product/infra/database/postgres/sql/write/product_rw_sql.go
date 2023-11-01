@@ -23,3 +23,9 @@ const InsertProductIngredientRW = `
 		  amount
 		) VALUES ($1, $2, $3, $4, $5) RETURNING id
 `
+
+const InactiveProductById = `
+		UPDATE product
+			SET active = false
+			WHERE id = $1
+`
