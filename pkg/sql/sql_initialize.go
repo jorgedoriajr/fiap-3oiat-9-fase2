@@ -39,8 +39,8 @@ Config example (yaml)
 Usage:
 
 	func main() {
-	  //application must be initialized
-	  application.Initialize()
+	  //server must be initialized
+	  server.Initialize()
 
 	  sql.Initialize()
 	}
