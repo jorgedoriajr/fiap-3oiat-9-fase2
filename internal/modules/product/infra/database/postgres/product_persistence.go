@@ -3,6 +3,7 @@ package postgres
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"hamburgueria/internal/modules/product/domain/entity"
@@ -66,6 +67,26 @@ func (c ProductRepository) Create(ctx context.Context, product entity.ProductEnt
 			Err(err).
 			Str("name", product.Name).
 			Msg("Failed to insert product")
+		return err
+	}
+
+	return nil
+}
+
+func (c ProductRepository) Update(ctx context.Context, command querymapper.UpdateQueryCommand) error {
+	
+	query, args := querymapper.GenerateUpdateQuery(command)
+
+	fmt.Println("SQL Query:", query)
+	fmt.Println("Parameter Values:", args)
+
+	insertCommand := sql.NewCommand(ctx, c.readWriteClient, write.UpdateProductRW, args...)
+	err := insertCommand.Exec()
+
+	if err != nil {
+		c.logger.Error().
+			Err(err).
+			Msg("Failed to update product")
 		return err
 	}
 
