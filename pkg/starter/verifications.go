@@ -15,12 +15,12 @@ func ensureCreated() {
 
 func ensureNotInitialized() {
 	if isInitialized {
-		panic("server already initialized")
+		panic("application already initialized")
 	}
 }
 
 func ensureInitialized() {
 	if !isInitialized {
-		panic("server must be initialized")
+		panic("application must be initialized")
 	}
 }

@@ -13,7 +13,7 @@ var (
 	isInitialized = false
 )
 
-// Represents the server options.
+// Represents the Application options.
 type options struct {
 	configOptions *configOptions
 }

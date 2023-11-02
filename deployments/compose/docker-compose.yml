@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 
 services:
   flyway:
@@ -32,13 +32,17 @@ services:
       - hamburgueria-network
 #
   app:
-    build: ../../
+    build:
+      context: ../../
+      dockerfile: ./Dockerfile
     container_name: hamburgueria-app
     ports:
       - "8080:8080"
     depends_on:
       postgres:
         condition: service_healthy
+      flyway:
+        condition: service_completed_successfully
     environment:
       - DB_HOST=postgres
     networks:

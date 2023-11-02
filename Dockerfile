@@ -1,20 +1,27 @@
-FROM golang:1.21-alpine as builder
+FROM golang:1.21-alpine as base
 
 WORKDIR /hamburgueria
 
-COPY ./ ./
+# Download Go modules
+COPY go.mod go.sum ./
+RUN go mod download
 
-RUN go mod tidy && \
-    go build -a -installsuffix cgo -ldflags '-extldflags -s -w' -o ./bin/hamburgueria ./cmd/.
+# BUILDER
+FROM base as builder
 
-# Execution container
-FROM golang:1.21-alpine
+COPY . /hamburgueria
 
-WORKDIR /app/app
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64  go build -ldflags "${LDFLAGS} -s -w" -a -o hamburgueria-app /hamburgueria/cmd/main.go
 
-COPY --from=builder /hamburgueria/config /app/app/config
-COPY --from=builder /hamburgueria/hamburgueria /app/app
+FROM scratch
+
+WORKDIR /hamburgueria
+
+COPY --from=builder /hamburgueria/config /hamburgueria/config
+COPY --from=builder /hamburgueria/hamburgueria-app /hamburgueria
+
 
 EXPOSE 8080 8081
 
-CMD ["/app/app/hamburgueria" ]
+
+CMD ["./hamburgueria-app"]
