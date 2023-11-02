@@ -9,6 +9,9 @@ compile:
 compose:
 	docker compose -f ./deployments/compose/docker-compose.yml up -d
 
+compose-app:
+	docker compose -f ./deployments/compose/docker-compose.yml app up -d
+
 compose-down:
 	docker compose -f ./deployments/compose/docker-compose.yml down
 
