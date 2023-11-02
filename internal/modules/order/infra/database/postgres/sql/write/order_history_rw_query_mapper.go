@@ -18,7 +18,7 @@ func EntityToInsertOrderHistoryQueryMapper(orderHistory entity.OrderHistory) Ins
 	return InsertOrderHistoryRWQueryMapper{
 		Id:        orderHistory.Id,
 		OrderId:   orderHistory.OrderId,
-		Status:    orderHistory.Status,
+		Status:    string(orderHistory.Status),
 		CreatedAt: orderHistory.CreatedAt,
 		ChangeBy:  orderHistory.ChangeBy,
 	}

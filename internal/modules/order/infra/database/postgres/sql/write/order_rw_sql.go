@@ -33,3 +33,11 @@ const InsertOrderHistoryRW = `
 		)
 		VALUES ($1, $2, $3, $4, $5)
 `
+
+const UpdateOrderPayment = `
+		UPDATE "order"
+		SET 
+		    payment_id = $1,
+		    status = $2
+		WHERE id = $3
+`

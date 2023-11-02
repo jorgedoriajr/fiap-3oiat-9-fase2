@@ -3,6 +3,7 @@ package read
 import (
 	"github.com/google/uuid"
 	"hamburgueria/internal/modules/order/domain/entity"
+	"hamburgueria/internal/modules/order/domain/valueobject"
 	"time"
 )
 
@@ -21,7 +22,7 @@ func (fc FindOrderQueryResult) ToEntity() entity.Order {
 		CustomerId: fc.CustomerId,
 		CreatedAt:  fc.CreatedAt,
 		UpdatedAt:  fc.UpdatedAt,
-		Status:     fc.Status,
+		Status:     valueobject.OrderStatus(fc.Status),
 		Amount:     fc.Amount,
 	}
 }

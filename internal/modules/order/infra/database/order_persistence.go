@@ -2,10 +2,13 @@ package database
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"hamburgueria/internal/modules/order/domain/entity"
+	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/order/infra/database/postgres/sql/read"
 	"hamburgueria/internal/modules/order/infra/database/postgres/sql/write"
+	"hamburgueria/internal/modules/payment/usecase/result"
 	"hamburgueria/pkg/querymapper"
 	"hamburgueria/pkg/sql"
 	"sync"
@@ -77,6 +80,44 @@ func (c OrderRepository) FindByStatus(ctx context.Context, status string) ([]ent
 		orders = append(orders, order.ToEntity())
 	}
 	return orders, nil
+}
+
+func (c OrderRepository) SavePaymentReference(ctx context.Context, payment result.PaymentProcessed) error {
+	err := sql.NewCommand(
+		ctx,
+		c.readWriteClient,
+		write.UpdateOrderPayment,
+		payment.PaymentId,
+		string(valueobject.PaymentCreated),
+		payment.OrderReference,
+	).Exec()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c OrderRepository) FindById(ctx context.Context, orderId uuid.UUID) (*entity.Order, error) {
+	order, err := sql.NewQuery[*read.FindOrderQueryResult](
+		ctx,
+		c.readOnlyClient,
+		read.FindOrderById,
+		orderId.String(),
+	).One()
+
+	if err != nil {
+		c.logger.Error().
+			Err(err).
+			Msg("Failed to get orders by status")
+		return nil, err
+	}
+
+	if order == nil {
+		return nil, nil
+	}
+	orderEntity := order.ToEntity()
+	return &orderEntity, nil
 }
 
 var (

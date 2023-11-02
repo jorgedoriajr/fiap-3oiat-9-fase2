@@ -8,6 +8,7 @@ import (
 	ingredientUsecase "hamburgueria/internal/modules/ingredient/usecase"
 	orderDatabase "hamburgueria/internal/modules/order/infra/database"
 	orderUsecase "hamburgueria/internal/modules/order/usecase"
+	paymentUseCase "hamburgueria/internal/modules/payment/usecase"
 	"hamburgueria/internal/modules/product/infra/database/postgres"
 	"hamburgueria/internal/modules/product/service"
 	"hamburgueria/internal/modules/product/usecase"
@@ -71,11 +72,14 @@ func NewDependencyInjection() DependencyInjection {
 	orderProductPersistence := orderDatabase.GetOrderProductPersistence(readWriteClient, logger.Get())
 	orderPersistence := orderDatabase.GetOrderPersistence(readWriteClient, readOnlyClient, logger.Get())
 
+	processPaymentUseCase := paymentUseCase.GetProcessPaymentUseCase(orderPersistence, orderHistoryPersistence)
+
 	createOrderUseCase := orderUsecase.GetCreateOrderUseCase(
 		*productFinder,
 		orderPersistence,
 		orderHistoryPersistence,
 		orderProductPersistence,
+		processPaymentUseCase,
 	)
 
 	getProductCategoryUseCase := usecase.NewGetProductCategoryUseCase(productCategoryPersistence)

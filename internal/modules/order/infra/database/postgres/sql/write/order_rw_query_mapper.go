@@ -20,7 +20,7 @@ func EntityToInsertOrderQueryMapper(order entity.Order) InsertOrderRWQueryMapper
 		Id:               order.Id,
 		CustomerDocument: order.CustomerId,
 		Amount:           order.Amount,
-		Status:           order.Status,
+		Status:           string(order.Status),
 		CreatedAt:        order.CreatedAt,
 		UpdatedAt:        order.UpdatedAt,
 	}

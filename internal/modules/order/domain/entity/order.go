@@ -2,6 +2,7 @@ package entity
 
 import (
 	"github.com/google/uuid"
+	"hamburgueria/internal/modules/order/domain/valueobject"
 	"time"
 )
 
@@ -11,6 +12,6 @@ type Order struct {
 	Products   []OrderProduct
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
-	Status     string
+	Status     valueobject.OrderStatus
 	Amount     int
 }

@@ -60,20 +60,10 @@ CREATE TABLE IF NOT EXISTS "product_ingredient" (
     amount                  bigint not null
 );
 
-CREATE TABLE IF NOT EXISTS "payment" (
-    id                  UUID not null primary key default public.uuid_generate_v4(),
-    payment_method      varchar(50) not null ,
-    status              varchar(50) not null ,
-    amount              bigint not null,
-    external_reference  varchar(255),
-    created_at          timestamp not null,
-    updated_at          timestamp
-);
-
 CREATE TABLE IF NOT EXISTS "order" (
     id              UUID not null primary key default public.uuid_generate_v4(),
     customer_id     varchar(14) references "customer"(cpf),
-    payment_id      UUID references "payment"(id),
+    payment_id      UUID,
     takeAway        boolean not null default false,
     amount          bigint not null,
     status          varchar(50) not null ,
@@ -100,9 +90,6 @@ CREATE TABLE IF NOT EXISTS "order_history" (
 
 ALTER TABLE "order" ADD CONSTRAINT fk_order_customer
     FOREIGN KEY (customer_id) REFERENCES "customer"(cpf);
-
-ALTER TABLE "order" ADD CONSTRAINT fk_order_payment
-    FOREIGN KEY (payment_id) REFERENCES "payment"(id);
 
 ALTER TABLE "order_history" ADD CONSTRAINT fk_order_history_order
     FOREIGN KEY (order_id) REFERENCES "order"(id);

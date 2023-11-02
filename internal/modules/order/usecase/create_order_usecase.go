@@ -5,9 +5,11 @@ import (
 	"errors"
 	"github.com/google/uuid"
 	"hamburgueria/internal/modules/order/domain/entity"
+	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/order/port/output"
 	"hamburgueria/internal/modules/order/usecase/command"
 	"hamburgueria/internal/modules/order/usecase/result"
+	"hamburgueria/internal/modules/payment/port/input"
 	"hamburgueria/internal/modules/product/service"
 	"sync"
 	"time"
@@ -18,6 +20,7 @@ type CreateOrderUseCase struct {
 	orderPersistence        output.OrderPersistencePort
 	orderHistoryPersistence output.OrderHistoryPersistencePort
 	orderProductPersistence output.OrderProductPersistencePort
+	processPaymentUseCase   input.ProcessPaymentPort
 }
 
 func (c CreateOrderUseCase) AddOrder(
@@ -58,7 +61,7 @@ func (c CreateOrderUseCase) AddOrder(
 		Products:   products,
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
-		Status:     "CREATED",
+		Status:     valueobject.Created,
 		Amount:     amount,
 	}
 
@@ -67,11 +70,14 @@ func (c CreateOrderUseCase) AddOrder(
 		return nil, err
 	}
 
-	//TODO start event order-created to request payment
+	paymentProcessed, err := c.processPaymentUseCase.ProcessPayment(ctx, orderId)
+	if err != nil {
+		return nil, err
+	}
 
 	return &result.CreateOrderResult{
 		Amount:      amount,
-		PaymentData: "not implemented",
+		PaymentData: paymentProcessed.PaymentData,
 	}, err
 }
 
@@ -130,6 +136,7 @@ func GetCreateOrderUseCase(
 	orderPersistence output.OrderPersistencePort,
 	orderHistoryPersistence output.OrderHistoryPersistencePort,
 	orderProductPersistence output.OrderProductPersistencePort,
+	processPaymentUseCase input.ProcessPaymentPort,
 ) CreateOrderUseCase {
 	createOrderUseCaseOnce.Do(func() {
 		createOrderUseCaseInstance = CreateOrderUseCase{
@@ -137,6 +144,7 @@ func GetCreateOrderUseCase(
 			orderPersistence:        orderPersistence,
 			orderHistoryPersistence: orderHistoryPersistence,
 			orderProductPersistence: orderProductPersistence,
+			processPaymentUseCase:   processPaymentUseCase,
 		}
 	})
 	return createOrderUseCaseInstance

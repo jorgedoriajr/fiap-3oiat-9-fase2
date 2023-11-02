@@ -27,7 +27,7 @@ func (c ListOrderUseCase) FindAllOrders(ctx context.Context) ([]result.ListOrder
 		}
 		resultOrders = append(resultOrders, result.ListOrderResult{
 			OrderId:    order.Id,
-			Status:     order.Status,
+			Status:     string(order.Status),
 			Amount:     order.Amount,
 			CustomerId: order.CustomerId,
 			CreatedAt:  order.CreatedAt,
@@ -51,7 +51,7 @@ func (c ListOrderUseCase) FindByStatus(ctx context.Context, status string) ([]re
 		}
 		resultOrders = append(resultOrders, result.ListOrderResult{
 			OrderId:    order.Id,
-			Status:     order.Status,
+			Status:     string(order.Status),
 			Amount:     order.Amount,
 			CustomerId: order.CustomerId,
 			CreatedAt:  order.CreatedAt,

@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "5394d963-f08a-491d-9cfc-eec9ffbedc4a",
-		"name": "Hamburgueria",
+		"name": "Hamburgeria",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "1387781",
 		"_collection_link": "https://speeding-satellite-389884.postman.co/workspace/FIAP~a5908487-1af3-4c36-9322-3f81f3503acb/collection/1387781-5394d963-f08a-491d-9cfc-eec9ffbedc4a?action=share&source=collection_link&creator=1387781"
@@ -217,7 +217,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/v1/products?category=Bebida",
+					"raw": "http://localhost:8080/v1/products?category=Lanche",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -230,7 +230,7 @@
 					"query": [
 						{
 							"key": "category",
-							"value": "Bebida"
+							"value": "Lanche"
 						}
 					]
 				}
@@ -288,6 +288,78 @@
 					"path": [
 						"v1",
 						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Product] Update",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Name\": \"Burger Vegano 2\",\n    \"Description\": \"Burguer blend de 220g vegano\",\n    \"menu\": true\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/products/:productNumber",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"products",
+						":productNumber"
+					],
+					"variable": [
+						{
+							"key": "productNumber",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Product] Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/products/:number",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"products",
+						":number"
+					],
+					"variable": [
+						{
+							"key": "number",
+							"value": "7"
+						}
 					]
 				}
 			},
