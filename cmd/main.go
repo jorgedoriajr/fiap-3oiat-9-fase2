@@ -4,6 +4,7 @@ import (
 	"hamburgueria/config"
 	_ "hamburgueria/docs"
 	"hamburgueria/internal/server/injection"
+	"hamburgueria/pkg/gorm"
 	"hamburgueria/pkg/httpserver"
 	"hamburgueria/pkg/sql"
 	"hamburgueria/pkg/starter"
@@ -24,6 +25,7 @@ func main() {
 	config.SetConfig(serviceConfig)
 
 	sql.Initialize()
+	gorm.Initialize()
 
 	dependencyInjection := injection.NewDependencyInjection()
 

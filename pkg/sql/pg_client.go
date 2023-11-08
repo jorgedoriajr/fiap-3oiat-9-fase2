@@ -45,7 +45,7 @@ func appendExtraProperty(extra string, property string) string {
 }
 
 func getConnString(conf Config) (string, error) {
-	if err := validateConfig(conf); err != nil {
+	if err := ValidateConfig(conf); err != nil {
 		return "", err
 	}
 

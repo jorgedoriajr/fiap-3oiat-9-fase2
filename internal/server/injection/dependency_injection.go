@@ -19,6 +19,7 @@ import (
 	"hamburgueria/internal/server/api/rest/v1/product"
 	"hamburgueria/internal/server/api/rest/v1/productcategory"
 	"hamburgueria/internal/server/api/swagger"
+	"hamburgueria/pkg/gorm"
 	"hamburgueria/pkg/logger"
 	"hamburgueria/pkg/sql"
 )
@@ -36,8 +37,9 @@ type DependencyInjection struct {
 func NewDependencyInjection() DependencyInjection {
 
 	readWriteClient, readOnlyClient := sql.GetClient("readWrite"), sql.GetClient("readOnly")
+	gormReadWriteClient, gormReadOnlyClient := gorm.GetClient("readWrite"), gorm.GetClient("readOnly")
 
-	customerPersistence := database.GetCustomerPersistence(readWriteClient, readOnlyClient, logger.Get())
+	customerPersistence := database.GetCustomerPersistence(gormReadWriteClient, gormReadOnlyClient, logger.Get())
 
 	productPersistence := postgres.NewProductRepository(
 		readWriteClient,

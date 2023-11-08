@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"context"
-	"hamburgueria/internal/modules/customer/domain/entity"
+	"hamburgueria/internal/modules/customer/domain"
 	"hamburgueria/internal/modules/customer/port/output"
 	"hamburgueria/internal/modules/customer/usecase/command"
 	"sync"
@@ -16,7 +16,7 @@ type CreateCustomerUseCase struct {
 func (c CreateCustomerUseCase) AddCustomer(ctx context.Context, customer command.CreateCustomerCommand) error {
 	return c.customerPersistence.Create(
 		ctx,
-		entity.Customer{
+		domain.Customer{
 			Document:       customer.Document,
 			Name:           customer.Name,
 			Phone:          customer.Phone,

@@ -2,10 +2,10 @@ package output
 
 import (
 	"context"
-	"hamburgueria/internal/modules/customer/domain/entity"
+	"hamburgueria/internal/modules/customer/domain"
 )
 
 type CustomerPersistencePort interface {
-	Create(ctx context.Context, customer entity.Customer) error
-	Get(ctx context.Context, document string) (customerResult *entity.Customer, err error)
+	Create(ctx context.Context, customer domain.Customer) error
+	Get(ctx context.Context, document string) (customerResult *domain.Customer, err error)
 }

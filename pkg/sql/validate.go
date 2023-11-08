@@ -10,7 +10,7 @@ func (str missingRequiredConfigError) Error() string {
 	return fmt.Sprintf("missing required configuration: %q", string(str))
 }
 
-func validateConfig(conf Config) error {
+func ValidateConfig(conf Config) error {
 	if conf.Host == "" {
 		return missingRequiredConfigError("database.host")
 	}
