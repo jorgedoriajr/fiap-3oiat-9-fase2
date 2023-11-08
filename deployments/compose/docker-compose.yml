@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  flyway:
+    image: flyway/flyway:10-alpine
+    platform: linux/amd64
+    container_name: hamburgueria-flyway
+    command: ["-url=jdbc:postgresql://postgres:5432/hamburgueria", "-schemas=hamburgueria", "-user=hamburgueria-migration", "-password=hamburgueria-migration", "migrate"]
+    volumes:
+      - ./database/migration:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - hamburgueria-network
+
+  postgres:
+    image: postgres:15-alpine3.16
+    container_name: hamburgueria-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: "secret"
+    volumes:
+      - ./database/setup-postgresql-databases.sh:/docker-entrypoint-initdb.d/setup-postgresql-databases.sh
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-U", "postgres"]
+      interval: 5s
+      timeout: 1s
+      retries: 2
+    networks:
+      - hamburgueria-network
+#
+  app:
+    build:
+      context: ../../
+      dockerfile: ./Dockerfile
+    container_name: hamburgueria-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      flyway:
+        condition: service_completed_successfully
+    environment:
+      - DB_HOST=postgres
+    networks:
+      - hamburgueria-network
+
+networks:
+  hamburgueria-network:
+    driver: bridge

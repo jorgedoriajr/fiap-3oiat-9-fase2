@@ -1,0 +1,444 @@
+{
+	"info": {
+		"_postman_id": "5394d963-f08a-491d-9cfc-eec9ffbedc4a",
+		"name": "Hamburgeria",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1387781",
+		"_collection_link": "https://speeding-satellite-389884.postman.co/workspace/FIAP~a5908487-1af3-4c36-9322-3f81f3503acb/collection/1387781-5394d963-f08a-491d-9cfc-eec9ffbedc4a?action=share&source=collection_link&creator=1387781"
+	},
+	"item": [
+		{
+			"name": "[Customer] Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"document\": \"21709085606\",\n    \"phone\": \"119999999999\",\n    \"name\": \"Amanda\",\n    \"email\": \"teste@email.com\",\n    \"optInPromotion\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/customers/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"customers",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Customer] Get by Document",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/customers/:document",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"customers",
+						":document"
+					],
+					"variable": [
+						{
+							"key": "document",
+							"value": "21709085606"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Ingredient-Type] Find All",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/ingredient-types",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"ingredient-types"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Ingredient] Find All",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/ingredients",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"ingredients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Ingredient] Find by Category",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/ingredients?type=Molho",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"ingredients"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "Molho"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Ingredient] Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Chimichuri\",\n    \"amount\": 500,\n    \"type\": \"Molho\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/ingredients",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"ingredients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Product-Category] Find All",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/product-categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"product-categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Product] Find All",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Product] Find by Category",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/products?category=Lanche",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"products"
+					],
+					"query": [
+						{
+							"key": "category",
+							"value": "Lanche"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Product] Find by Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/products/:productId",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"products",
+						":productId"
+					],
+					"variable": [
+						{
+							"key": "productId",
+							"value": "787b1e5d-c5d8-4ed4-9554-ec0e6555c8f1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Product] Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Lanche mais legal 2\",\n    \"description\": \"O melhor lanche do cardápio\",\n    \"category\": \"Lanche\",\n    \"menu\": true,\n    \"imgPath\": \"https://embudasartes.net/wp-content/uploads/2021/01/Captura-de-Tela-2021-01-07-a%CC%80s-01.01.31.png\",\n    \"ingredients\": [\n        {\n            \"id\": \"ba97de21-2721-40cc-a326-f3bfebedf862\",\n            \"quantity\": 1\n        },\n        {\n            \"id\": \"ef045802-2937-4b0d-a2c5-938b140ba4c3\",\n            \"quantity\": 2\n        },\n        {\n            \"id\": \"6adddd70-ab19-4fc2-a50e-cefc5ab7605b\",\n            \"quantity\": 1\n        },\n        {\n            \"id\": \"ea7c6b6a-f8b5-4305-89d3-d6d22d85f9b0\",\n            \"quantity\": 1\n        },\n        {\n            \"id\": \"d4d14983-d431-48aa-9e2c-8a14e704101d\",\n            \"quantity\": 1\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Product] Update",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Name\": \"Burger Vegano 2\",\n    \"Description\": \"Burguer blend de 220g vegano\",\n    \"menu\": true\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/products/:productNumber",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"products",
+						":productNumber"
+					],
+					"variable": [
+						{
+							"key": "productNumber",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Product] Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/products/:number",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"products",
+						":number"
+					],
+					"variable": [
+						{
+							"key": "number",
+							"value": "7"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Order] Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"customerDocument\": \"21709085606\",\n    \"products\": [\n        {\n            \"number\": 1,\n            \"type\": \"default\",\n            \"quantity\": 2\n        },\n        {\n            \"number\": 4,\n            \"type\": \"default\",\n            \"quantity\": 2\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Order] Find All",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Order] Find By Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/orders?status=CREATED",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"orders"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "CREATED"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

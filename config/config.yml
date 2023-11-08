@@ -1,0 +1,30 @@
+application:
+  name: hamburgueria
+  logLevel: info
+
+httpServer:
+  port: 8080
+  management:
+    port: 8081
+    healthCheck:
+      enabled: true
+      livenessPath: /liveness
+      readinessPath: /readiness
+
+databases:
+  readOnly:
+    host: ${DB_HOST:localhost}
+    port: 5432
+    databaseName: hamburgueria
+    user: hamburgueria-app-read
+    password: hamburgueria-app-read
+    maxPoolSize: 5
+
+  readWrite:
+    host: ${DB_HOST:localhost}
+    port: 5432
+    databaseName: hamburgueria
+    user: hamburgueria-app-write
+    password: hamburgueria-app-write
+    maxPoolSize: 5
+
