@@ -4,82 +4,75 @@ import (
 	"context"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
+	"gorm.io/gorm"
 	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
-	"hamburgueria/internal/modules/order/infra/database/postgres/sql/read"
-	"hamburgueria/internal/modules/order/infra/database/postgres/sql/write"
+	"hamburgueria/internal/modules/order/infra/database/model"
 	"hamburgueria/internal/modules/payment/usecase/result"
-	"hamburgueria/pkg/querymapper"
 	"hamburgueria/pkg/sql"
 	"sync"
 )
 
 type OrderRepository struct {
-	readWriteClient sql.Client
-	readOnlyClient  sql.Client
+	readWriteClient *gorm.DB
+	readOnlyClient  *gorm.DB
 	logger          zerolog.Logger
 }
 
 func (c OrderRepository) Create(ctx context.Context, order domain.Order) error {
-
-	mapper := write.EntityToInsertOrderQueryMapper(order)
-	args := querymapper.GetArrayOfPropertiesFrom(mapper)
-
-	insertCommand := sql.NewCommand(ctx, c.readWriteClient, write.InsertOrderRW, args...)
-	err := insertCommand.Exec()
-
+	err := c.readWriteClient.
+		Create(model.FromDomain(order)).Error
 	if err != nil {
 		c.logger.Error().
+			Ctx(ctx).
 			Err(err).
-			Str("orderId", order.Id.String()).
 			Msg("Failed to insert order")
 		return err
 	}
-
 	return nil
 }
 
 func (c OrderRepository) FindAll(ctx context.Context) ([]domain.Order, error) {
-	allOrders, err := sql.NewQuery[read.FindOrderQueryResult](
-		ctx,
-		c.readOnlyClient,
-		read.FindAllOrders,
-	).Many()
-
-	if err != nil {
+	var orders []model.Order
+	tx := c.readOnlyClient.
+		Preload("Products").
+		Find(&orders)
+	if tx.Error != nil {
 		c.logger.Error().
-			Err(err).
-			Msg("Failed to get orders")
-		return nil, err
+			Ctx(ctx).
+			Err(tx.Error).
+			Msg("Failed to find all orders")
+		return nil, tx.Error
 	}
 
-	var orders []domain.Order
-	for _, order := range allOrders {
-		orders = append(orders, order.ToEntity())
+	var domainOrders []domain.Order
+	for _, order := range orders {
+		domainOrders = append(domainOrders, *order.ToDomain())
 	}
-	return orders, nil
+
+	return domainOrders, nil
 }
 
 func (c OrderRepository) FindByStatus(ctx context.Context, status string) ([]domain.Order, error) {
-	ordersByStatus, err := sql.NewQuery[read.FindOrderQueryResult](
-		ctx,
-		c.readOnlyClient,
-		read.FindOrderByStatus,
-		status,
-	).Many()
-
-	if err != nil {
+	var orders []model.Order
+	tx := c.readOnlyClient.
+		Preload("Products").
+		Where("status = ?", status).
+		Find(&orders)
+	if tx.Error != nil {
 		c.logger.Error().
-			Err(err).
-			Msg("Failed to get orders by status")
-		return nil, err
+			Ctx(ctx).
+			Err(tx.Error).
+			Msg("Failed to find orders by status")
+		return nil, tx.Error
 	}
 
-	var orders []domain.Order
-	for _, order := range ordersByStatus {
-		orders = append(orders, order.ToEntity())
+	var domainOrders []domain.Order
+	for _, order := range orders {
+		domainOrders = append(domainOrders, *order.ToDomain())
 	}
-	return orders, nil
+
+	return domainOrders, nil
 }
 
 func (c OrderRepository) SavePaymentReference(ctx context.Context, payment result.PaymentProcessed) error {
@@ -126,8 +119,8 @@ var (
 )
 
 func GetOrderPersistence(
-	readWriteClient sql.Client,
-	readOnlyClient sql.Client,
+	readWriteClient *gorm.DB,
+	readOnlyClient *gorm.DB,
 	logger zerolog.Logger,
 ) OrderRepository {
 	orderRepositoryOnce.Do(func() {

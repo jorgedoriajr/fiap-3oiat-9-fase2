@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
+	customerOutput "hamburgueria/internal/modules/customer/port/output"
 	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/order/port/output"
@@ -17,6 +18,7 @@ import (
 )
 
 type CreateOrderUseCase struct {
+	customerPersistence   customerOutput.CustomerPersistencePort
 	productPersistence    productOutput.ProductPersistencePort
 	orderPersistence      output.OrderPersistencePort
 	processPaymentUseCase input.ProcessPaymentPort
@@ -26,6 +28,15 @@ func (c CreateOrderUseCase) AddOrder(
 	ctx context.Context,
 	createOrderCommand command.CreateOrderCommand,
 ) (*result.CreateOrderResult, error) {
+
+	customer, err := c.customerPersistence.Get(ctx, createOrderCommand.CustomerDocument)
+	if err != nil {
+		return nil, err
+	}
+
+	if customer == nil {
+		return nil, errors.New("customer not found")
+	}
 
 	var amount int
 	var products []domain.OrderProduct
@@ -67,7 +78,7 @@ func (c CreateOrderUseCase) AddOrder(
 		Amount:     amount,
 	}
 
-	err := c.orderPersistence.Create(ctx, order)
+	err = c.orderPersistence.Create(ctx, order)
 	if err != nil {
 		return nil, err
 	}
@@ -92,12 +103,14 @@ func GetCreateOrderUseCase(
 	productPersistence productOutput.ProductPersistencePort,
 	orderPersistence output.OrderPersistencePort,
 	processPaymentUseCase input.ProcessPaymentPort,
+	customerPersistence customerOutput.CustomerPersistencePort,
 ) CreateOrderUseCase {
 	createOrderUseCaseOnce.Do(func() {
 		createOrderUseCaseInstance = CreateOrderUseCase{
 			productPersistence:    productPersistence,
 			orderPersistence:      orderPersistence,
 			processPaymentUseCase: processPaymentUseCase,
+			customerPersistence:   customerPersistence,
 		}
 	})
 	return createOrderUseCaseInstance

@@ -60,6 +60,7 @@ func NewDependencyInjection() DependencyInjection {
 		productPersistence,
 		orderPersistence,
 		processPaymentUseCase,
+		customerPersistence,
 	)
 
 	return DependencyInjection{
