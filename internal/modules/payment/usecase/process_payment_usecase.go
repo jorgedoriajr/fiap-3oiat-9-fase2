@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/google/uuid"
-	"hamburgueria/internal/modules/order/domain/entity"
+	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/order/port/output"
 	"hamburgueria/internal/modules/payment/port/input"
@@ -35,7 +35,7 @@ func (p ProcessPaymentUseCase) ProcessPayment(ctx context.Context, orderReferenc
 	if err != nil {
 		return nil, err
 	}
-	err = p.orderHistoryPersistence.Create(ctx, entity.OrderHistory{
+	err = p.orderHistoryPersistence.Create(ctx, domain.OrderHistory{
 		Id:        uuid.New(),
 		OrderId:   orderEntity.Id,
 		Status:    valueobject.PaymentCreated,

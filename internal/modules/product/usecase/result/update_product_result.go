@@ -2,7 +2,7 @@ package result
 
 import (
 	"github.com/google/uuid"
-	"hamburgueria/internal/modules/product/domain/entity"
+	"hamburgueria/internal/modules/product/domain"
 	"time"
 )
 
@@ -18,7 +18,7 @@ type UpdateProductResult struct {
 	UpdatedAt   time.Time
 }
 
-func UpdateProductResultFromEntity(entity entity.ProductEntity) UpdateProductResult {
+func UpdateProductResultFromEntity(entity domain.Product) UpdateProductResult {
 	return UpdateProductResult{
 		Id:          entity.ID,
 		Number:      entity.Number,

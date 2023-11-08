@@ -1,10 +1,10 @@
-package entity
+package domain
 
 import (
 	"github.com/google/uuid"
 )
 
-type IngredientEntity struct {
+type Ingredient struct {
 	ID     uuid.UUID
 	Number int
 	Name   string

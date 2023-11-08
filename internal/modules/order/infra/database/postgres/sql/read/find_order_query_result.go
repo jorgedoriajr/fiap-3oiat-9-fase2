@@ -2,7 +2,7 @@ package read
 
 import (
 	"github.com/google/uuid"
-	"hamburgueria/internal/modules/order/domain/entity"
+	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
 	"time"
 )
@@ -16,8 +16,8 @@ type FindOrderQueryResult struct {
 	Amount     int
 }
 
-func (fc FindOrderQueryResult) ToEntity() entity.Order {
-	return entity.Order{
+func (fc FindOrderQueryResult) ToEntity() domain.Order {
+	return domain.Order{
 		Id:         fc.Id,
 		CustomerId: fc.CustomerId,
 		CreatedAt:  fc.CreatedAt,

@@ -2,7 +2,7 @@ package write
 
 import (
 	"github.com/google/uuid"
-	"hamburgueria/internal/modules/order/domain/entity"
+	"hamburgueria/internal/modules/order/domain"
 	"time"
 )
 
@@ -14,7 +14,7 @@ type InsertOrderHistoryRWQueryMapper struct {
 	ChangeBy  string    `position:"4"`
 }
 
-func EntityToInsertOrderHistoryQueryMapper(orderHistory entity.OrderHistory) InsertOrderHistoryRWQueryMapper {
+func EntityToInsertOrderHistoryQueryMapper(orderHistory domain.OrderHistory) InsertOrderHistoryRWQueryMapper {
 	return InsertOrderHistoryRWQueryMapper{
 		Id:        orderHistory.Id,
 		OrderId:   orderHistory.OrderId,

@@ -3,14 +3,12 @@ package injection
 import (
 	"hamburgueria/internal/modules/customer/infra/database"
 	customerUseCase "hamburgueria/internal/modules/customer/usecase"
-	ingredientPostgres "hamburgueria/internal/modules/ingredient/infra/database/postgres"
-	ingredientService "hamburgueria/internal/modules/ingredient/service"
+	ingredientDatabase "hamburgueria/internal/modules/ingredient/infra/database"
 	ingredientUsecase "hamburgueria/internal/modules/ingredient/usecase"
 	orderDatabase "hamburgueria/internal/modules/order/infra/database"
 	orderUsecase "hamburgueria/internal/modules/order/usecase"
 	paymentUseCase "hamburgueria/internal/modules/payment/usecase"
-	"hamburgueria/internal/modules/product/infra/database/postgres"
-	"hamburgueria/internal/modules/product/service"
+	productDatabase "hamburgueria/internal/modules/product/infra/database"
 	"hamburgueria/internal/modules/product/usecase"
 	"hamburgueria/internal/server/api/rest/v1/customer"
 	"hamburgueria/internal/server/api/rest/v1/ingredient"
@@ -37,58 +35,32 @@ type DependencyInjection struct {
 func NewDependencyInjection() DependencyInjection {
 
 	readWriteClient, readOnlyClient := sql.GetClient("readWrite"), sql.GetClient("readOnly")
-	gormReadWriteClient, gormReadOnlyClient := gorm.GetClient("readWrite"), gorm.GetClient("readOnly")
+	readWriteDB, readOnlyDB := gorm.GetClient("readWrite"), gorm.GetClient("readOnly")
 
-	customerPersistence := database.GetCustomerPersistence(gormReadWriteClient, gormReadOnlyClient, logger.Get())
+	customerPersistence := database.GetCustomerPersistence(readWriteDB, readOnlyDB, logger.Get())
 
-	productPersistence := postgres.NewProductRepository(
-		readWriteClient,
-		readOnlyClient,
-		logger.Get(),
-	)
+	ingredientTypePersistence := ingredientDatabase.GetIngredientTypeRepository(readWriteDB, readOnlyDB, logger.Get())
+	ingredientPersistence := ingredientDatabase.GetIngredientRepository(readWriteDB, readOnlyDB, logger.Get())
 
-	ingredientPersistence := ingredientPostgres.NewIngredientRepository(
-		readWriteClient,
-		readOnlyClient,
-		logger.Get(),
-	)
+	productCategoryPersistence := productDatabase.GetProductCategoryRepository(readWriteDB, readOnlyDB, logger.Get())
 
-	ingredientFinderService := ingredientService.NewIngredientFinderService(ingredientPersistence)
-
-	ingredientTypePersistence := ingredientPostgres.NewIngredientTypeRepository(
-		readWriteClient,
-		readOnlyClient,
-		logger.Get(),
-	)
-
-	productIngredientPersistence := postgres.NewProductIngredientRepository(readWriteClient, readOnlyClient, logger.Get())
-	productCategoryPersistence := postgres.NewProductCategoryRepository(readWriteClient, readOnlyClient, logger.Get())
-
-	ingredientFinder := ingredientService.NewIngredientFinderService(ingredientPersistence)
-	ingredientTypeFinder := ingredientService.GetIngredientTypeFinderService(ingredientTypePersistence)
-
-	productUseCase := usecase.NewCreateProductUseCase(productPersistence, *ingredientFinder, productIngredientPersistence)
-	productFinder := service.NewProductFinderService(productPersistence, *ingredientFinderService)
+	productPersistence := productDatabase.GetProductRepository(readWriteDB, readOnlyDB, logger.Get())
+	findProductCategoryUseCase := usecase.NewGetProductCategoryUseCase(productCategoryPersistence)
+	createProductUseCase := usecase.NewCreateProductUseCase(productPersistence, ingredientPersistence)
+	deleteProductUseCase := usecase.GetDeleteProductUseCase(productPersistence)
+	updateProductUseCase := usecase.NewUpdateProductUseCase(productPersistence)
+	findProductUseCase := usecase.NewFindProductUseCase(productPersistence)
 
 	orderHistoryPersistence := orderDatabase.GetOrderHistoryPersistence(readWriteClient, logger.Get())
-	orderProductPersistence := orderDatabase.GetOrderProductPersistence(readWriteClient, logger.Get())
 	orderPersistence := orderDatabase.GetOrderPersistence(readWriteClient, readOnlyClient, logger.Get())
 
 	processPaymentUseCase := paymentUseCase.GetProcessPaymentUseCase(orderPersistence, orderHistoryPersistence)
 
 	createOrderUseCase := orderUsecase.GetCreateOrderUseCase(
-		*productFinder,
+		productPersistence,
 		orderPersistence,
-		orderHistoryPersistence,
-		orderProductPersistence,
 		processPaymentUseCase,
 	)
-
-	getProductCategoryUseCase := usecase.NewGetProductCategoryUseCase(productCategoryPersistence)
-
-	deleteProductUseCase := usecase.GetDeleteProductUseCase(productPersistence)
-
-	updateProductUseCase := usecase.NewUpdateProductUseCase(productPersistence)
 
 	return DependencyInjection{
 		CustomerController: &customer.Controller{
@@ -96,21 +68,23 @@ func NewDependencyInjection() DependencyInjection {
 			GetCustomerUseCase:    customerUseCase.GetGetCustomerUseCase(customerPersistence),
 		},
 		ProductController: &product.Controller{
-			CreateProductUseCase:  productUseCase,
-			ProductFinderService:  service.NewProductFinderService(productPersistence, *ingredientFinderService),
+			CreateProductUseCase:  createProductUseCase,
+			FindProductUseCase:    findProductUseCase,
 			DeleteProductUseCase:  deleteProductUseCase,
 			UpdatedProductUseCase: updateProductUseCase,
 		},
 		OrderController: &order.Controller{
 			CreateOrderUseCase: createOrderUseCase,
-			ListOrderUseCase:   orderUsecase.GetListOrderUseCase(orderPersistence, productFinder),
+			ListOrderUseCase:   orderUsecase.GetListOrderUseCase(orderPersistence),
 		},
 		IngredientController: &ingredient.Controller{
 			CreateIngredientUseCase: ingredientUsecase.NewCreateIngredientUseCase(ingredientPersistence),
-			IngredientFinderService: ingredientFinder,
+			FindIngredientUseCase:   ingredientUsecase.NewFindIngredientUseCase(ingredientPersistence),
 		},
-		ProductCategoryController: &productcategory.Controller{GetProductCategoryUseCase: getProductCategoryUseCase},
-		IngredientTypeController:  &ingredienttype.Controller{IngredientTypeFinderService: ingredientTypeFinder},
-		Swagger:                   &swagger.Swagger{},
+		ProductCategoryController: &productcategory.Controller{GetProductCategoryUseCase: findProductCategoryUseCase},
+		IngredientTypeController: &ingredienttype.Controller{
+			FindIngredientTypeUseCase: ingredientUsecase.GetIngredientTypeUseCase(ingredientTypePersistence),
+		},
+		Swagger: &swagger.Swagger{},
 	}
 }

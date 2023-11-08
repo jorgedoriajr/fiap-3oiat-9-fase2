@@ -19,15 +19,15 @@ type FindProductsIngredients struct {
 	Quantity int
 }
 
-func FromResultList(productResult []*result.FindProductWithIngredientsResult) []FindProductWithIngredients {
+func FromResultList(productResult []result.FindProductResult) []FindProductWithIngredients {
 	var productsResponse []FindProductWithIngredients
 	for _, product := range productResult {
-		productsResponse = append(productsResponse, FromResult(*product))
+		productsResponse = append(productsResponse, FromResult(product))
 	}
 	return productsResponse
 }
 
-func FromResult(product result.FindProductWithIngredientsResult) FindProductWithIngredients {
+func FromResult(product result.FindProductResult) FindProductWithIngredients {
 	var ingredientsResponse []FindProductsIngredients
 	for _, ingredient := range product.Ingredients {
 		ingredientsResponse = append(ingredientsResponse, FindProductsIngredients{

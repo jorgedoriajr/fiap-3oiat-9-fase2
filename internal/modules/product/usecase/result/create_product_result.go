@@ -2,7 +2,7 @@ package result
 
 import (
 	"github.com/google/uuid"
-	"hamburgueria/internal/modules/product/domain/entity"
+	"hamburgueria/internal/modules/product/domain"
 	"time"
 )
 
@@ -18,13 +18,13 @@ type CreateProductResult struct {
 	UpdatedAt   time.Time
 }
 
-func FromEntity(entity entity.ProductEntity) CreateProductResult {
+func FromDomain(entity domain.Product) CreateProductResult {
 	return CreateProductResult{
 		Id:          entity.ID,
 		Name:        entity.Name,
 		Amount:      entity.Amount,
 		Description: entity.Description,
-		Category:    entity.Category,
+		Category:    entity.Category.Name,
 		Menu:        entity.Menu,
 		ImgPath:     entity.ImgPath,
 		CreatedAt:   entity.CreatedAt,

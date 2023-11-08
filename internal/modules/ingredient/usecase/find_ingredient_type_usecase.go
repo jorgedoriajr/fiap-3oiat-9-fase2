@@ -1,22 +1,23 @@
-package service
+package usecase
 
 import (
 	"context"
+	"hamburgueria/internal/modules/ingredient/ports/input"
 	"hamburgueria/internal/modules/ingredient/ports/output"
 	"hamburgueria/internal/modules/ingredient/usecase/result"
 	"sync"
 )
 
 var (
-	ingredientTypeFinderServiceInstance IngredientTypeFinderService
-	ingredientTypeFinderServiceOnce     sync.Once
+	findIngredientTypeUseCaseInstance input.FindIngredientTypeUseCasePort
+	findIngredientTypeUseCaseOnce     sync.Once
 )
 
-type IngredientTypeFinderService struct {
+type FindIngredientTypeUseCase struct {
 	ingredientTypePersistence output.IngredientTypePersistencePort
 }
 
-func (p IngredientTypeFinderService) FindAllIngredientType(ctx context.Context) ([]result.IngredientTypeResult, error) {
+func (p FindIngredientTypeUseCase) FindAll(ctx context.Context) ([]result.IngredientTypeResult, error) {
 	ingredients, err := p.ingredientTypePersistence.GetAll(ctx)
 	if err != nil {
 		return nil, err
@@ -30,11 +31,11 @@ func (p IngredientTypeFinderService) FindAllIngredientType(ctx context.Context) 
 	return ingredientTypeResult, nil
 }
 
-func GetIngredientTypeFinderService(IngredientTypePersistence output.IngredientTypePersistencePort) IngredientTypeFinderService {
-	ingredientTypeFinderServiceOnce.Do(func() {
-		ingredientTypeFinderServiceInstance = IngredientTypeFinderService{
+func GetIngredientTypeUseCase(IngredientTypePersistence output.IngredientTypePersistencePort) input.FindIngredientTypeUseCasePort {
+	findIngredientTypeUseCaseOnce.Do(func() {
+		findIngredientTypeUseCaseInstance = FindIngredientTypeUseCase{
 			ingredientTypePersistence: IngredientTypePersistence,
 		}
 	})
-	return ingredientTypeFinderServiceInstance
+	return findIngredientTypeUseCaseInstance
 }

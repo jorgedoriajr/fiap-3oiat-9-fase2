@@ -4,13 +4,12 @@ import (
 	"context"
 	"hamburgueria/internal/modules/order/port/output"
 	"hamburgueria/internal/modules/order/usecase/result"
-	"hamburgueria/internal/modules/product/ports/input"
+	productResult "hamburgueria/internal/modules/product/usecase/result"
 	"sync"
 )
 
 type ListOrderUseCase struct {
 	orderPersistence output.OrderPersistencePort
-	productFinder    input.ProductFinderServicePort
 }
 
 func (c ListOrderUseCase) FindAllOrders(ctx context.Context) ([]result.ListOrderResult, error) {
@@ -21,7 +20,10 @@ func (c ListOrderUseCase) FindAllOrders(ctx context.Context) ([]result.ListOrder
 
 	var resultOrders []result.ListOrderResult
 	for _, order := range orders {
-		products, err := c.productFinder.FindByOrderID(ctx, order.Id)
+		var products []productResult.FindProductResult
+		for _, product := range order.Products {
+			products = append(products, productResult.FromProductDomain(product.Product))
+		}
 		if err != nil {
 			return nil, err
 		}
@@ -45,7 +47,10 @@ func (c ListOrderUseCase) FindByStatus(ctx context.Context, status string) ([]re
 
 	var resultOrders []result.ListOrderResult
 	for _, order := range orders {
-		products, err := c.productFinder.FindByOrderID(ctx, order.Id)
+		var products []productResult.FindProductResult
+		for _, product := range order.Products {
+			products = append(products, productResult.FromProductDomain(product.Product))
+		}
 		if err != nil {
 			return nil, err
 		}
@@ -68,12 +73,10 @@ var (
 
 func GetListOrderUseCase(
 	orderPersistence output.OrderPersistencePort,
-	productFinder input.ProductFinderServicePort,
 ) ListOrderUseCase {
 	listOrderUseCaseOnce.Do(func() {
 		listOrderUseCaseInstance = ListOrderUseCase{
 			orderPersistence: orderPersistence,
-			productFinder:    productFinder,
 		}
 	})
 	return listOrderUseCaseInstance

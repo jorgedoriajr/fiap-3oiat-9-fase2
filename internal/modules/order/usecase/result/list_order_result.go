@@ -12,5 +12,5 @@ type ListOrderResult struct {
 	Amount     int
 	CustomerId string
 	CreatedAt  time.Time
-	Products   []*result.FindProductWithIngredientsResult
+	Products   []result.FindProductResult
 }

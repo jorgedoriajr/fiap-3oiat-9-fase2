@@ -3,7 +3,7 @@ package database
 import (
 	"context"
 	"github.com/rs/zerolog"
-	"hamburgueria/internal/modules/order/domain/entity"
+	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/infra/database/postgres/sql/write"
 	"hamburgueria/pkg/querymapper"
 	"hamburgueria/pkg/sql"
@@ -15,7 +15,7 @@ type OrderProductRepository struct {
 	Logger          zerolog.Logger
 }
 
-func (c OrderProductRepository) Create(ctx context.Context, orderProduct entity.OrderProduct) error {
+func (c OrderProductRepository) Create(ctx context.Context, orderProduct domain.OrderProduct) error {
 
 	mapper := write.EntityToInsertOrderProductQueryMapper(orderProduct)
 	args := querymapper.GetArrayOfPropertiesFrom(mapper)

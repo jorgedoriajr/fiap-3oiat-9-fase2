@@ -3,24 +3,23 @@ package usecase
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/google/uuid"
-	"hamburgueria/internal/modules/order/domain/entity"
+	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/order/port/output"
 	"hamburgueria/internal/modules/order/usecase/command"
 	"hamburgueria/internal/modules/order/usecase/result"
 	"hamburgueria/internal/modules/payment/port/input"
-	"hamburgueria/internal/modules/product/service"
+	productOutput "hamburgueria/internal/modules/product/ports/output"
 	"sync"
 	"time"
 )
 
 type CreateOrderUseCase struct {
-	productFinderService    service.ProductFinderService
-	orderPersistence        output.OrderPersistencePort
-	orderHistoryPersistence output.OrderHistoryPersistencePort
-	orderProductPersistence output.OrderProductPersistencePort
-	processPaymentUseCase   input.ProcessPaymentPort
+	productPersistence    productOutput.ProductPersistencePort
+	orderPersistence      output.OrderPersistencePort
+	processPaymentUseCase input.ProcessPaymentPort
 }
 
 func (c CreateOrderUseCase) AddOrder(
@@ -29,23 +28,26 @@ func (c CreateOrderUseCase) AddOrder(
 ) (*result.CreateOrderResult, error) {
 
 	var amount int
-	var products []entity.OrderProduct
+	var products []domain.OrderProduct
 	orderId := uuid.New()
 
 	for _, createProductCommand := range createOrderCommand.Products {
 		var productAmount int
 		if createProductCommand.Type == "default" {
-			product, err := c.productFinderService.FindByNumber(ctx, createProductCommand.Number)
+			product, err := c.productPersistence.GetByNumber(ctx, createProductCommand.Number)
 			if err != nil {
 				return nil, err
 			}
+			if product == nil {
+				return nil, errors.New(fmt.Sprintf("product %d not found", createProductCommand.Number))
+			}
 			productAmount = product.Amount * createProductCommand.Quantity
-			products = append(products, entity.OrderProduct{
-				Id:        uuid.New(),
-				ProductId: product.ID,
-				OrderId:   orderId,
-				Quantity:  createProductCommand.Quantity,
-				Amount:    productAmount,
+			products = append(products, domain.OrderProduct{
+				Id:       uuid.New(),
+				Product:  *product,
+				OrderId:  orderId,
+				Quantity: createProductCommand.Quantity,
+				Amount:   productAmount,
 			})
 		} else {
 			return nil, errors.New("not implemented")
@@ -55,7 +57,7 @@ func (c CreateOrderUseCase) AddOrder(
 
 	}
 
-	order := entity.Order{
+	order := domain.Order{
 		Id:         orderId,
 		CustomerId: createOrderCommand.CustomerDocument,
 		Products:   products,
@@ -65,7 +67,7 @@ func (c CreateOrderUseCase) AddOrder(
 		Amount:     amount,
 	}
 
-	err := c.createOrder(ctx, order)
+	err := c.orderPersistence.Create(ctx, order)
 	if err != nil {
 		return nil, err
 	}
@@ -81,70 +83,21 @@ func (c CreateOrderUseCase) AddOrder(
 	}, err
 }
 
-// TODO need to create transaction
-func (c CreateOrderUseCase) createOrder(ctx context.Context, order entity.Order) error {
-	err := c.orderPersistence.Create(ctx, order)
-	if err != nil {
-		return err
-	}
-
-	err = c.createOrderHistory(ctx, order)
-	if err != nil {
-		return err
-	}
-
-	err = c.createOrderProducts(ctx, order)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c CreateOrderUseCase) createOrderProducts(ctx context.Context, order entity.Order) error {
-	for _, product := range order.Products {
-		err := c.orderProductPersistence.Create(ctx, entity.OrderProduct{
-			Id:        uuid.New(),
-			ProductId: product.ProductId,
-			OrderId:   order.Id,
-			Quantity:  product.Quantity,
-			Amount:    product.Amount,
-		})
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func (c CreateOrderUseCase) createOrderHistory(ctx context.Context, order entity.Order) error {
-	return c.orderHistoryPersistence.Create(ctx, entity.OrderHistory{
-		Id:        uuid.New(),
-		OrderId:   order.Id,
-		Status:    order.Status,
-		ChangeBy:  "user",
-		CreatedAt: order.CreatedAt,
-	})
-}
-
 var (
 	createOrderUseCaseInstance CreateOrderUseCase
 	createOrderUseCaseOnce     sync.Once
 )
 
 func GetCreateOrderUseCase(
-	productFinderService service.ProductFinderService,
+	productPersistence productOutput.ProductPersistencePort,
 	orderPersistence output.OrderPersistencePort,
-	orderHistoryPersistence output.OrderHistoryPersistencePort,
-	orderProductPersistence output.OrderProductPersistencePort,
 	processPaymentUseCase input.ProcessPaymentPort,
 ) CreateOrderUseCase {
 	createOrderUseCaseOnce.Do(func() {
 		createOrderUseCaseInstance = CreateOrderUseCase{
-			productFinderService:    productFinderService,
-			orderPersistence:        orderPersistence,
-			orderHistoryPersistence: orderHistoryPersistence,
-			orderProductPersistence: orderProductPersistence,
-			processPaymentUseCase:   processPaymentUseCase,
+			productPersistence:    productPersistence,
+			orderPersistence:      orderPersistence,
+			processPaymentUseCase: processPaymentUseCase,
 		}
 	})
 	return createOrderUseCaseInstance

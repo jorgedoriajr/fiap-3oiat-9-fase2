@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
-	"hamburgueria/internal/modules/order/domain/entity"
+	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/order/infra/database/postgres/sql/read"
 	"hamburgueria/internal/modules/order/infra/database/postgres/sql/write"
@@ -20,7 +20,7 @@ type OrderRepository struct {
 	logger          zerolog.Logger
 }
 
-func (c OrderRepository) Create(ctx context.Context, order entity.Order) error {
+func (c OrderRepository) Create(ctx context.Context, order domain.Order) error {
 
 	mapper := write.EntityToInsertOrderQueryMapper(order)
 	args := querymapper.GetArrayOfPropertiesFrom(mapper)
@@ -39,7 +39,7 @@ func (c OrderRepository) Create(ctx context.Context, order entity.Order) error {
 	return nil
 }
 
-func (c OrderRepository) FindAll(ctx context.Context) ([]entity.Order, error) {
+func (c OrderRepository) FindAll(ctx context.Context) ([]domain.Order, error) {
 	allOrders, err := sql.NewQuery[read.FindOrderQueryResult](
 		ctx,
 		c.readOnlyClient,
@@ -53,14 +53,14 @@ func (c OrderRepository) FindAll(ctx context.Context) ([]entity.Order, error) {
 		return nil, err
 	}
 
-	var orders []entity.Order
+	var orders []domain.Order
 	for _, order := range allOrders {
 		orders = append(orders, order.ToEntity())
 	}
 	return orders, nil
 }
 
-func (c OrderRepository) FindByStatus(ctx context.Context, status string) ([]entity.Order, error) {
+func (c OrderRepository) FindByStatus(ctx context.Context, status string) ([]domain.Order, error) {
 	ordersByStatus, err := sql.NewQuery[read.FindOrderQueryResult](
 		ctx,
 		c.readOnlyClient,
@@ -75,7 +75,7 @@ func (c OrderRepository) FindByStatus(ctx context.Context, status string) ([]ent
 		return nil, err
 	}
 
-	var orders []entity.Order
+	var orders []domain.Order
 	for _, order := range ordersByStatus {
 		orders = append(orders, order.ToEntity())
 	}
@@ -98,7 +98,7 @@ func (c OrderRepository) SavePaymentReference(ctx context.Context, payment resul
 	return nil
 }
 
-func (c OrderRepository) FindById(ctx context.Context, orderId uuid.UUID) (*entity.Order, error) {
+func (c OrderRepository) FindById(ctx context.Context, orderId uuid.UUID) (*domain.Order, error) {
 	order, err := sql.NewQuery[*read.FindOrderQueryResult](
 		ctx,
 		c.readOnlyClient,
