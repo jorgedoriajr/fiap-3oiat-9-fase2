@@ -69,7 +69,7 @@
 					"variable": [
 						{
 							"key": "document",
-							"value": "21709085606"
+							"value": "62313658597"
 						}
 					]
 				}
@@ -271,7 +271,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"Lanche mais legal 2\",\n    \"description\": \"O melhor lanche do cardápio\",\n    \"category\": \"Lanche\",\n    \"menu\": true,\n    \"imgPath\": \"https://embudasartes.net/wp-content/uploads/2021/01/Captura-de-Tela-2021-01-07-a%CC%80s-01.01.31.png\",\n    \"ingredients\": [\n        {\n            \"id\": \"ba97de21-2721-40cc-a326-f3bfebedf862\",\n            \"quantity\": 1\n        },\n        {\n            \"id\": \"ef045802-2937-4b0d-a2c5-938b140ba4c3\",\n            \"quantity\": 2\n        },\n        {\n            \"id\": \"6adddd70-ab19-4fc2-a50e-cefc5ab7605b\",\n            \"quantity\": 1\n        },\n        {\n            \"id\": \"ea7c6b6a-f8b5-4305-89d3-d6d22d85f9b0\",\n            \"quantity\": 1\n        },\n        {\n            \"id\": \"d4d14983-d431-48aa-9e2c-8a14e704101d\",\n            \"quantity\": 1\n        }\n    ]\n}",
+					"raw": "{\n    \"name\": \"Lanche mais legal\",\n    \"description\": \"O melhor lanche do cardápio\",\n    \"category\": \"Lanche\",\n    \"menu\": true,\n    \"imgPath\": \"https://embudasartes.net/wp-content/uploads/2021/01/Captura-de-Tela-2021-01-07-a%CC%80s-01.01.31.png\",\n    \"ingredients\": [\n        {\n            \"number\": 1,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 3,\n            \"quantity\": 2\n        },\n        {\n            \"number\": 7,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 5,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 9,\n            \"quantity\": 1\n        }\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -305,7 +305,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"Name\": \"Burger Vegano 2\",\n    \"Description\": \"Burguer blend de 220g vegano\",\n    \"menu\": true\n}"
+					"raw": "{\n    \"name\": \"Lanche mais legal ainda\",\n    \"description\": \"O melhor lanche do cardápio\",\n    \"category\": \"Lanche\",\n    \"menu\": true,\n    \"imgPath\": \"https://embudasartes.net/wp-content/uploads/2021/01/Captura-de-Tela-2021-01-07-a%CC%80s-01.01.31.png\",\n    \"ingredients\": [\n        {\n            \"number\": 1,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 3,\n            \"quantity\": 2\n        },\n        {\n            \"number\": 7,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 5,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 9,\n            \"quantity\": 2\n        }\n    ]\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/v1/products/:productNumber",
@@ -420,7 +420,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/v1/orders?status=CREATED",
+					"raw": "http://localhost:8080/v1/orders?status=WAITING_PAYMENT",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -433,7 +433,7 @@
 					"query": [
 						{
 							"key": "status",
-							"value": "CREATED"
+							"value": "WAITING_PAYMENT"
 						}
 					]
 				}

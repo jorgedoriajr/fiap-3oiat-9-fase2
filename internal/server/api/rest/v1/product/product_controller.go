@@ -76,7 +76,7 @@ func (c *Controller) AddProduct(e echo.Context) error {
 // @Failure      401 {object} v1.ErrorResponse
 // @Failure      404 {object} v1.ErrorResponse
 // @Failure      503 {object} v1.ErrorResponse
-// @Success      200 {object} response.ProductUpdatedResponse
+// @Success      200
 // @Router       /v1/products/{number} [patch]
 func (c *Controller) UpdateProduct(ctx echo.Context) error {
 

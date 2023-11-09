@@ -50,7 +50,14 @@ definitions:
       type:
         type: string
     type: object
-  request.CreateProductRequest:
+  request.IngredientRequest:
+    properties:
+      number:
+        type: integer
+      quantity:
+        type: integer
+    type: object
+  request.ProductRequest:
     properties:
       category:
         type: string
@@ -67,23 +74,31 @@ definitions:
       name:
         type: string
     type: object
-  request.IngredientRequest:
+  request.UpdateIngredientRequest:
     properties:
-      id:
-        type: string
+      number:
+        type: integer
       quantity:
         type: integer
     type: object
   request.UpdateProductRequest:
     properties:
+      category:
+        type: string
       description:
         type: string
       imgPath:
         type: string
+      ingredients:
+        items:
+          $ref: '#/definitions/request.UpdateIngredientRequest'
+        type: array
       menu:
         type: boolean
       name:
         type: string
+      number:
+        type: integer
     type: object
   response.Customer:
     properties:
@@ -154,6 +169,8 @@ definitions:
         type: string
       number:
         type: integer
+      quantity:
+        type: integer
     type: object
   response.ListOrderProductsIngredients:
     properties:
@@ -212,27 +229,6 @@ definitions:
       name:
         type: string
     type: object
-  response.ProductUpdatedResponse:
-    properties:
-      amount:
-        type: integer
-      category:
-        type: string
-      description:
-        type: string
-      id:
-        type: string
-      img_path:
-        type: string
-      menu:
-        type: boolean
-      name:
-        type: string
-      number:
-        type: integer
-      updated_at:
-        type: string
-    type: object
   v1.ErrorResponse:
     properties:
       code:
@@ -257,7 +253,7 @@ paths:
         schema:
           $ref: '#/definitions/request.CreateCustomer'
       produces:
-      - server/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -288,7 +284,7 @@ paths:
         required: true
         type: string
       produces:
-      - server/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -315,7 +311,7 @@ paths:
     get:
       description: Get Ingredient types
       produces:
-      - server/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -349,7 +345,7 @@ paths:
         name: type
         type: string
       produces:
-      - server/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -384,7 +380,7 @@ paths:
         schema:
           $ref: '#/definitions/request.CreateIngredientRequest'
       produces:
-      - server/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -407,17 +403,17 @@ paths:
           schema:
             $ref: '#/definitions/v1.ErrorResponse'
       summary: Add Ingredient
-  /v1/ingredients/{ingredientID}:
+  /v1/ingredients/{number}:
     get:
-      description: Get Ingredient by id
+      description: Get Ingredient by number
       parameters:
-      - description: id
+      - description: number
         in: path
-        name: id
+        name: number
         required: true
         type: string
       produces:
-      - server/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -439,7 +435,7 @@ paths:
           description: Service Unavailable
           schema:
             $ref: '#/definitions/v1.ErrorResponse'
-      summary: Get Ingredient by id
+      summary: Get Ingredient by number
   /v1/orders:
     post:
       description: Add order
@@ -451,7 +447,7 @@ paths:
         schema:
           $ref: '#/definitions/request.CreateOrder'
       produces:
-      - server/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -483,7 +479,7 @@ paths:
         name: status
         type: string
       produces:
-      - server/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -512,7 +508,7 @@ paths:
     get:
       description: Get Product Categories
       produces:
-      - server/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -546,7 +542,7 @@ paths:
         name: category
         type: string
       produces:
-      - server/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -579,9 +575,9 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/request.CreateProductRequest'
+          $ref: '#/definitions/request.ProductRequest'
       produces:
-      - server/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -614,7 +610,7 @@ paths:
         required: true
         type: string
       produces:
-      - server/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -645,12 +641,10 @@ paths:
         schema:
           $ref: '#/definitions/request.UpdateProductRequest'
       produces:
-      - server/json
+      - application/json
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/response.ProductUpdatedResponse'
         "400":
           description: Bad Request
           schema:
@@ -678,7 +672,7 @@ paths:
         required: true
         type: string
       produces:
-      - server/json
+      - application/json
       responses:
         "200":
           description: OK
