@@ -11,6 +11,22 @@ import (
 	"time"
 )
 
+type Client interface {
+	Ping(ctx context.Context) error
+}
+
+type sqlClient struct {
+	conn *gorm.DB
+}
+
+func (c sqlClient) Ping(ctx context.Context) error {
+	sqlDB, err := c.conn.DB()
+	if err != nil {
+		panic("error to get DB connection")
+	}
+	return sqlDB.Ping()
+}
+
 func appendExtraProperty(extra string, property string) string {
 	var value string
 	if len(extra) > 0 {

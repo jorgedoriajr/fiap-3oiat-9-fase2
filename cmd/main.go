@@ -29,6 +29,7 @@ func main() {
 
 	server := httpserver.Builder().
 		WithConfig(starter.GetHttpServerConfig()).
+		WithHealthCheck(sql.GetHealthChecker()).
 		WithControllers(injection.GetAllControllers(dependencyInjection)...).
 		WithValidator(validation.GetEchoValidator()).
 		Build()
