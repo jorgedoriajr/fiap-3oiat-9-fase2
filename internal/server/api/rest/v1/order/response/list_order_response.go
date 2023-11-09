@@ -19,6 +19,7 @@ type ListOrderProducts struct {
 	Name        string                         `json:"name"`
 	Number      int                            `json:"number"`
 	Amount      int                            `json:"amount"`
+	Quantity    int                            `json:"quantity"`
 	Ingredients []ListOrderProductsIngredients `json:"ingredients"`
 }
 
@@ -45,6 +46,7 @@ func FromResult(resultOrders []result.ListOrderResult) []ListOrderResponse {
 				Name:        product.Name,
 				Number:      product.Number,
 				Amount:      product.Amount,
+				Quantity:    product.Quantity,
 				Ingredients: ingredientsResponse,
 			})
 		}

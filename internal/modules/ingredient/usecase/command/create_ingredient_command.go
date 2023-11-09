@@ -2,7 +2,7 @@ package command
 
 import (
 	"github.com/google/uuid"
-	"hamburgueria/internal/modules/ingredient/domain/entity"
+	"hamburgueria/internal/modules/ingredient/domain"
 )
 
 type CreateIngredientCommand struct {
@@ -11,8 +11,8 @@ type CreateIngredientCommand struct {
 	Type   string
 }
 
-func (c CreateIngredientCommand) ToIngredientEntity() *entity.IngredientEntity {
-	return &entity.IngredientEntity{
+func (c CreateIngredientCommand) ToIngredientEntity() *domain.Ingredient {
+	return &domain.Ingredient{
 		ID:     uuid.New(),
 		Name:   c.Name,
 		Amount: c.Amount,

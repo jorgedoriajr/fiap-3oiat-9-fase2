@@ -17,7 +17,7 @@ type GetProductCategoryUseCase struct {
 }
 
 func (c GetProductCategoryUseCase) FindAll(ctx context.Context) ([]result.FindProductCategoryResult, error) {
-	productCategories, err := c.productCategoryPersistencePort.GetAllProductCategories(ctx)
+	productCategories, err := c.productCategoryPersistencePort.GetAll(ctx)
 	if err != nil {
 		return nil, err
 	}

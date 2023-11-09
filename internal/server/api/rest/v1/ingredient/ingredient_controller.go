@@ -1,20 +1,20 @@
 package ingredient
 
 import (
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"hamburgueria/internal/modules/ingredient/ports/input"
 	"hamburgueria/internal/modules/ingredient/usecase/result"
 	"hamburgueria/internal/server/api/middleware"
 	"hamburgueria/internal/server/api/rest/v1/ingredient/request"
 	"hamburgueria/internal/server/api/rest/v1/ingredient/response"
+	"strconv"
 
 	"net/http"
 )
 
 type Controller struct {
 	CreateIngredientUseCase input.CreateIngredientUseCasePort
-	IngredientFinderService input.IngredientFinderServicePort
+	FindIngredientUseCase   input.FindIngredientUseCasePort
 }
 
 func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
@@ -24,7 +24,7 @@ func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
 	)
 	group.Add(http.MethodPost, "", c.AddIngredient)
 	group.Add(http.MethodGet, "", c.GetIngredients)
-	group.Add(http.MethodGet, "/:ingredientID", c.GetIngredientByID)
+	group.Add(http.MethodGet, "/:number", c.GetIngredientByNumber)
 }
 
 // AddIngredient
@@ -62,30 +62,38 @@ func (c *Controller) AddIngredient(e echo.Context) error {
 	return e.JSON(http.StatusOK, response.FromCreateIngredientResult(resultIngredient))
 }
 
-// GetIngredientByID
-// @Summary     Get Ingredient by id
-// @Description Get Ingredient by id
+// GetIngredientByNumber
+// @Summary     Get Ingredient by number
+// @Description Get Ingredient by number
 // @Produce      json
-// @Param        id    path      string  true  "id"
+// @Param        number    path      string  true  "number"
 // @Failure      400 {object} v1.ErrorResponse
 // @Failure      401 {object} v1.ErrorResponse
 // @Failure      404 {object} v1.ErrorResponse
 // @Failure      503 {object} v1.ErrorResponse
 // @Success      200 {object} response.IngredientResponse
-// @Router       /v1/ingredients/{ingredientID} [get]
-func (c *Controller) GetIngredientByID(ctx echo.Context) error {
-	id := ctx.Param("ingredientID")
-	if id == "" {
+// @Router       /v1/ingredients/{number} [get]
+func (c *Controller) GetIngredientByNumber(ctx echo.Context) error {
+	numberParam := ctx.Param("number")
+	if numberParam == "" {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
 			"code":    400,
-			"message": "id cannot be empty",
+			"message": "number cannot be empty",
 		})
 	}
-	ingredientID := uuid.MustParse(id)
-	ingredientResult, err := c.IngredientFinderService.FindIngredientByID(ctx.Request().Context(), ingredientID)
+
+	number, err := strconv.Atoi(numberParam)
 	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
 			"code":    400,
+			"message": "number needs to be a numeric value",
+		})
+	}
+
+	ingredientResult, err := c.FindIngredientUseCase.FindIngredientByNumber(ctx.Request().Context(), number)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, map[string]any{
+			"code":    500,
 			"message": err.Error(),
 		})
 	}
@@ -115,9 +123,9 @@ func (c *Controller) GetIngredients(ctx echo.Context) error {
 	var err error
 
 	if ingredientType != "" {
-		resultIngredients, err = c.IngredientFinderService.FindIngredientByType(ctx.Request().Context(), ingredientType)
+		resultIngredients, err = c.FindIngredientUseCase.FindIngredientByType(ctx.Request().Context(), ingredientType)
 	} else {
-		resultIngredients, err = c.IngredientFinderService.FindAllIngredients(ctx.Request().Context())
+		resultIngredients, err = c.FindIngredientUseCase.FindAllIngredients(ctx.Request().Context())
 	}
 
 	if err != nil {

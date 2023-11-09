@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
-	"hamburgueria/internal/modules/ingredient/domain/entity"
+	"hamburgueria/internal/modules/ingredient/domain"
 	"hamburgueria/internal/modules/ingredient/infra/database/postgres/sql/read"
 	"hamburgueria/internal/modules/ingredient/infra/database/postgres/sql/write"
 	"hamburgueria/pkg/querymapper"
@@ -17,8 +17,8 @@ type IngredientRepository struct {
 	logger          zerolog.Logger
 }
 
-func (c IngredientRepository) GetAll(ctx context.Context) ([]entity.IngredientEntity, error) {
-	allIngredients, allIngredientsErr := sql.NewQuery[entity.IngredientEntity](
+func (c IngredientRepository) GetAll(ctx context.Context) ([]domain.Ingredient, error) {
+	allIngredients, allIngredientsErr := sql.NewQuery[domain.Ingredient](
 		ctx,
 		c.readOnlyClient,
 		read.FindAllIngredients,
@@ -28,14 +28,14 @@ func (c IngredientRepository) GetAll(ctx context.Context) ([]entity.IngredientEn
 		c.logger.Error().
 			Err(allIngredientsErr).
 			Msg("Failed to get ingredients")
-		return []entity.IngredientEntity{}, allIngredientsErr
+		return []domain.Ingredient{}, allIngredientsErr
 	}
 
 	return allIngredients, nil
 }
 
-func (c IngredientRepository) GetByType(ctx context.Context, ingredientType string) ([]entity.IngredientEntity, error) {
-	ingredientsByType, ingredientsByTypeErr := sql.NewQuery[entity.IngredientEntity](
+func (c IngredientRepository) GetByType(ctx context.Context, ingredientType string) ([]domain.Ingredient, error) {
+	ingredientsByType, ingredientsByTypeErr := sql.NewQuery[domain.Ingredient](
 		ctx,
 		c.readOnlyClient,
 		read.FindIngredientsByType,
@@ -52,7 +52,7 @@ func (c IngredientRepository) GetByType(ctx context.Context, ingredientType stri
 	return ingredientsByType, nil
 }
 
-func (c IngredientRepository) Create(ctx context.Context, ingredient entity.IngredientEntity) error {
+func (c IngredientRepository) Create(ctx context.Context, ingredient domain.Ingredient) error {
 
 	mapper := write.ToInsertIngredientQueryMapper(ingredient)
 	args := querymapper.GetArrayOfPropertiesFrom(mapper)
@@ -71,7 +71,7 @@ func (c IngredientRepository) Create(ctx context.Context, ingredient entity.Ingr
 	return nil
 }
 
-func (c IngredientRepository) GetByID(ctx context.Context, ingredientId uuid.UUID) (*entity.IngredientEntity, error) {
+func (c IngredientRepository) GetByID(ctx context.Context, ingredientId uuid.UUID) (*domain.Ingredient, error) {
 
 	result, err := sql.NewQuery[read.FindIngredientQueryResult](ctx, c.readOnlyClient, read.FindIngredientByID, ingredientId).One()
 

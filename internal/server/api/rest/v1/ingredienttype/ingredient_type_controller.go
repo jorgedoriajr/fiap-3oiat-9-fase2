@@ -9,7 +9,7 @@ import (
 )
 
 type Controller struct {
-	IngredientTypeFinderService input.IngredientTypeFinderServicePort
+	FindIngredientTypeUseCase input.FindIngredientTypeUseCasePort
 }
 
 func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
@@ -32,7 +32,7 @@ func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
 // @Router       /v1/ingredient-types [get]
 func (c *Controller) GetIngredientTypes(ctx echo.Context) error {
 
-	result, err := c.IngredientTypeFinderService.FindAllIngredientType(ctx.Request().Context())
+	result, err := c.FindIngredientTypeUseCase.FindAll(ctx.Request().Context())
 
 	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{

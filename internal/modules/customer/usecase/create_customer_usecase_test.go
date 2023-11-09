@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"hamburgueria/internal/modules/customer/domain/entity"
+	"hamburgueria/internal/modules/customer/domain"
 	"hamburgueria/internal/modules/customer/usecase/command"
 	"hamburgueria/tests/mocks"
 	"testing"
@@ -25,7 +25,7 @@ func TestCreateCustomerUseCase(t *testing.T) {
 			Phone:    "11999999999",
 		}
 
-		repositoryMock.On("Create", mock.Anything, mock.MatchedBy(func(c entity.Customer) bool {
+		repositoryMock.On("Create", mock.Anything, mock.MatchedBy(func(c domain.Customer) bool {
 			return c.Document == "58642725826" &&
 				c.Name == "Name" &&
 				c.Phone == "11999999999"

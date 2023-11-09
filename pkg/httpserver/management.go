@@ -34,7 +34,7 @@ func (s *server) configureManagementServer() {
 	if s.builder.serverConfig.Management.HealthCheck.Enabled {
 		s.managementInstance.GET(
 			s.builder.serverConfig.Management.HealthCheck.LivenessPath,
-			livenessCheck(),
+			livenessCheck(s.builder.healthCheckers...),
 		)
 
 		s.managementInstance.GET(

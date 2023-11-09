@@ -2,7 +2,7 @@ package result
 
 import (
 	"github.com/google/uuid"
-	"hamburgueria/internal/modules/ingredient/domain/entity"
+	"hamburgueria/internal/modules/ingredient/domain"
 )
 
 type FindIngredientResult struct {
@@ -13,7 +13,7 @@ type FindIngredientResult struct {
 	Type   string
 }
 
-func FromEntity(ingredient entity.IngredientEntity) FindIngredientResult {
+func FromDomain(ingredient domain.Ingredient) FindIngredientResult {
 	return FindIngredientResult{
 		ID:     ingredient.ID,
 		Number: ingredient.Number,

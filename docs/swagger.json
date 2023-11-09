@@ -252,18 +252,18 @@
                 }
             }
         },
-        "/v1/ingredients/{ingredientID}": {
+        "/v1/ingredients/{number}": {
             "get": {
-                "description": "Get Ingredient by id",
+                "description": "Get Ingredient by number",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get Ingredient by id",
+                "summary": "Get Ingredient by number",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "id",
-                        "name": "id",
+                        "description": "number",
+                        "name": "number",
                         "in": "path",
                         "required": true
                     }
@@ -514,7 +514,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.CreateProductRequest"
+                            "$ref": "#/definitions/request.ProductRequest"
                         }
                     }
                 ],
@@ -617,10 +617,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.ProductUpdatedResponse"
-                        }
+                        "description": "OK"
                     },
                     "400": {
                         "description": "Bad Request",
@@ -783,7 +780,18 @@
                 }
             }
         },
-        "request.CreateProductRequest": {
+        "request.IngredientRequest": {
+            "type": "object",
+            "properties": {
+                "number": {
+                    "type": "integer"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "request.ProductRequest": {
             "type": "object",
             "properties": {
                 "category": {
@@ -809,11 +817,11 @@
                 }
             }
         },
-        "request.IngredientRequest": {
+        "request.UpdateIngredientRequest": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "string"
+                "number": {
+                    "type": "integer"
                 },
                 "quantity": {
                     "type": "integer"
@@ -823,17 +831,29 @@
         "request.UpdateProductRequest": {
             "type": "object",
             "properties": {
+                "category": {
+                    "type": "string"
+                },
                 "description": {
                     "type": "string"
                 },
                 "imgPath": {
                     "type": "string"
                 },
+                "ingredients": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/request.UpdateIngredientRequest"
+                    }
+                },
                 "menu": {
                     "type": "boolean"
                 },
                 "name": {
                     "type": "string"
+                },
+                "number": {
+                    "type": "integer"
                 }
             }
         },
@@ -942,6 +962,9 @@
                 },
                 "number": {
                     "type": "integer"
+                },
+                "quantity": {
+                    "type": "integer"
                 }
             }
         },
@@ -1029,38 +1052,6 @@
                     "type": "boolean"
                 },
                 "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "response.ProductUpdatedResponse": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "integer"
-                },
-                "category": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "img_path": {
-                    "type": "string"
-                },
-                "menu": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "number": {
-                    "type": "integer"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }

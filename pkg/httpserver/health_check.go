@@ -6,14 +6,15 @@ import (
 	"net/http"
 )
 
-func livenessCheck() func(c echo.Context) error {
+func livenessCheck(checkers ...healthcheck.HealthChecker) func(c echo.Context) error {
 	return func(c echo.Context) error {
-		return c.JSON(http.StatusOK, healthcheck.Result{Status: "UP"})
+		resultStatus, _ := healthcheck.Check(checkers...)
+
+		return c.JSON(statusCode(resultStatus), result(resultStatus))
 	}
 }
 
 func readinessCheck(checkers ...healthcheck.HealthChecker) func(c echo.Context) error {
-
 	return func(c echo.Context) error {
 		resultStatus, result := healthcheck.Check(checkers...)
 		return c.JSON(statusCode(resultStatus), result)
@@ -26,4 +27,12 @@ func statusCode(r healthcheck.HealthStatus) int {
 	}
 
 	return http.StatusServiceUnavailable
+}
+
+func result(r healthcheck.HealthStatus) healthcheck.Result {
+	if r == healthcheck.StatusUp {
+		return healthcheck.Result{Status: "UP"}
+	}
+
+	return healthcheck.Result{Status: "DOWN"}
 }

@@ -7,11 +7,27 @@ type UpdateProductCommand struct {
 	Category    *string
 	Menu        *bool
 	ImgPath     *string
+	Ingredients []Ingredient
 }
 
-func NewUpdateProductCommand(number int, name *string, description *string, category *string, menu *bool, imgPath *string,
-) UpdateProductCommand {
-	return UpdateProductCommand{
-		Number: number, Name: name, Description: description, Category: category, Menu: menu, ImgPath: imgPath,
+func NewUpdateProductCommand(
+	Number int,
+	Name *string,
+	Description *string,
+	Category *string,
+	Menu *bool,
+	Ingredients []Ingredient,
+	ImgPath *string,
+) *UpdateProductCommand {
+
+	cmd := &UpdateProductCommand{
+		Number:      Number,
+		Name:        Name,
+		Description: Description,
+		Category:    Category,
+		Menu:        Menu,
+		ImgPath:     ImgPath,
+		Ingredients: Ingredients,
 	}
+	return cmd
 }
