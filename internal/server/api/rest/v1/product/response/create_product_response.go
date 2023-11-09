@@ -6,13 +6,13 @@ import (
 )
 
 type ProductCreatedResponse struct {
-	Id          uuid.UUID
-	Name        string
-	Amount      int
-	Description string
-	Category    string
-	Menu        bool
-	ImgPath     string
+	Id          uuid.UUID `json:"id"`
+	Name        string    `json:"name"`
+	Amount      int       `json:"amount"`
+	Description string    `json:"description"`
+	Category    string    `json:"category"`
+	Menu        bool      `json:"menu"`
+	ImgPath     string    `json:"imgPath"`
 }
 
 func ProductCreatedResponseFromResult(result result.ProductResult) ProductCreatedResponse {
