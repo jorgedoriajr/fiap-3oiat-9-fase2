@@ -1,4 +1,4 @@
-package gorm
+package sql
 
 import (
 	"gorm.io/gorm"

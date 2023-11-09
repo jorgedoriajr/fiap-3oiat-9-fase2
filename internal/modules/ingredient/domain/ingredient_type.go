@@ -6,6 +6,7 @@ type IngredientType struct {
 }
 
 type IngredientTypeProductCategory struct {
+	IngredientType  string
 	Optional        string
 	MaxQtd          string
 	ProductCategory string

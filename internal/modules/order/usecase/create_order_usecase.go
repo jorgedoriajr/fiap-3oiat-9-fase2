@@ -8,10 +8,10 @@ import (
 	customerOutput "hamburgueria/internal/modules/customer/port/output"
 	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
+	paymentInput "hamburgueria/internal/modules/order/port/input"
 	"hamburgueria/internal/modules/order/port/output"
 	"hamburgueria/internal/modules/order/usecase/command"
 	"hamburgueria/internal/modules/order/usecase/result"
-	"hamburgueria/internal/modules/payment/port/input"
 	productOutput "hamburgueria/internal/modules/product/ports/output"
 	"sync"
 	"time"
@@ -21,7 +21,7 @@ type CreateOrderUseCase struct {
 	customerPersistence   customerOutput.CustomerPersistencePort
 	productPersistence    productOutput.ProductPersistencePort
 	orderPersistence      output.OrderPersistencePort
-	processPaymentUseCase input.ProcessPaymentPort
+	processPaymentUseCase paymentInput.ProcessPaymentUseCasePort
 }
 
 func (c CreateOrderUseCase) AddOrder(
@@ -83,7 +83,7 @@ func (c CreateOrderUseCase) AddOrder(
 		return nil, err
 	}
 
-	paymentProcessed, err := c.processPaymentUseCase.ProcessPayment(ctx, orderId)
+	paymentProcessed, err := c.processPaymentUseCase.ProcessPayment(ctx, order)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +102,7 @@ var (
 func GetCreateOrderUseCase(
 	productPersistence productOutput.ProductPersistencePort,
 	orderPersistence output.OrderPersistencePort,
-	processPaymentUseCase input.ProcessPaymentPort,
+	processPaymentUseCase paymentInput.ProcessPaymentUseCasePort,
 	customerPersistence customerOutput.CustomerPersistencePort,
 ) CreateOrderUseCase {
 	createOrderUseCaseOnce.Do(func() {

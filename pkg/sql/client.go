@@ -1,4 +1,4 @@
-package gorm
+package sql
 
 import (
 	"context"
@@ -8,7 +8,6 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 	"hamburgueria/config"
-	"hamburgueria/pkg/sql"
 	"time"
 )
 
@@ -21,8 +20,8 @@ func appendExtraProperty(extra string, property string) string {
 	return fmt.Sprintf("%s%s%s", extra, value, property)
 }
 
-func getDsn(conf sql.Config) (string, error) {
-	if err := sql.ValidateConfig(conf); err != nil {
+func getDsn(conf Config) (string, error) {
+	if err := ValidateConfig(conf); err != nil {
 		return "", err
 	}
 
@@ -47,7 +46,7 @@ func getDsn(conf sql.Config) (string, error) {
 }
 
 func NewClient(conf config.DatabaseConfig) (*gorm.DB, error) {
-	dsn, err := getDsn(sql.Config(conf))
+	dsn, err := getDsn(Config(conf))
 	if err != nil {
 		return nil, err
 	}

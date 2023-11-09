@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	ingredientOutput "hamburgueria/internal/modules/ingredient/ports/output"
 	"hamburgueria/internal/modules/product/domain"
+	"hamburgueria/internal/modules/product/ports/input"
 	"hamburgueria/internal/modules/product/ports/output"
 	"hamburgueria/internal/modules/product/usecase/command"
 	"hamburgueria/internal/modules/product/usecase/result"
@@ -14,7 +15,7 @@ import (
 )
 
 var (
-	createProductUseCaseInstance *CreateProductUseCase
+	createProductUseCaseInstance input.CreateProductUseCasePort
 	createProductUseCaseOnce     sync.Once
 )
 
@@ -23,23 +24,30 @@ type CreateProductUseCase struct {
 	ingredientPersistencePort ingredientOutput.IngredientPersistencePort
 }
 
-func (c CreateProductUseCase) AddProduct(ctx context.Context, command command.CreateProductCommand) (result.CreateProductResult, error) {
-	productId := uuid.New()
-	amount, productIngredients, err := c.buildIngredients(ctx, command, productId)
+func (c CreateProductUseCase) AddProduct(
+	ctx context.Context,
+	command command.CreateProductCommand,
+) (*result.ProductResult, error) {
+	productID := uuid.New()
+	amount, productIngredients, err := c.buildIngredients(ctx, command, productID)
 	if err != nil {
-		return result.CreateProductResult{}, err
+		return nil, err
 	}
 
-	product := command.ToProductDomain(productId, productIngredients, amount)
+	product := command.ToProductDomain(productIngredients, amount, productID)
 	err = c.productPersistencePort.Create(ctx, product)
 	if err != nil {
-		return result.CreateProductResult{}, err
+		return nil, err
 	}
 
 	return result.FromDomain(product), nil
 }
 
-func (c CreateProductUseCase) buildIngredients(ctx context.Context, command command.CreateProductCommand, productId uuid.UUID) (int, []domain.ProductIngredient, error) {
+func (c CreateProductUseCase) buildIngredients(
+	ctx context.Context,
+	command command.CreateProductCommand,
+	productID uuid.UUID,
+) (int, []domain.ProductIngredient, error) {
 	var amount int
 	var productIngredients []domain.ProductIngredient
 	for _, ingredient := range command.Ingredients {
@@ -53,7 +61,7 @@ func (c CreateProductUseCase) buildIngredients(ctx context.Context, command comm
 
 		productIngredients = append(productIngredients, domain.ProductIngredient{
 			ID:         uuid.New(),
-			ProductId:  productId,
+			ProductId:  productID,
 			Ingredient: *ingredientDomain,
 			Quantity:   ingredient.Quantity,
 			Amount:     ingredientDomain.Amount * ingredient.Quantity,
@@ -64,12 +72,12 @@ func (c CreateProductUseCase) buildIngredients(ctx context.Context, command comm
 	return amount, productIngredients, nil
 }
 
-func NewCreateProductUseCase(
+func GetCreateProductUseCase(
 	productPersistence output.ProductPersistencePort,
 	ingredientPersistencePort ingredientOutput.IngredientPersistencePort,
-) *CreateProductUseCase {
+) input.CreateProductUseCasePort {
 	createProductUseCaseOnce.Do(func() {
-		createProductUseCaseInstance = &CreateProductUseCase{
+		createProductUseCaseInstance = CreateProductUseCase{
 			productPersistencePort:    productPersistence,
 			ingredientPersistencePort: ingredientPersistencePort,
 		}

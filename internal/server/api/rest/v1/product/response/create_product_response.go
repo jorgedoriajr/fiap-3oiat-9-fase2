@@ -15,7 +15,7 @@ type ProductCreatedResponse struct {
 	ImgPath     string
 }
 
-func ProductCreatedResponseFromResult(result result.CreateProductResult) ProductCreatedResponse {
+func ProductCreatedResponseFromResult(result result.ProductResult) ProductCreatedResponse {
 	return ProductCreatedResponse{
 		Id:          result.Id,
 		Name:        result.Name,

@@ -16,6 +16,8 @@ type Order struct {
 	UpdatedAt  time.Time
 	Status     string
 	Amount     int
+	History    []OrderHistory
+	PaymentId  uuid.UUID
 }
 
 type OrderProduct struct {
@@ -31,6 +33,10 @@ func (o Order) ToDomain() *domain.Order {
 	for _, orderProduct := range o.Products {
 		products = append(products, *orderProduct.ToDomain())
 	}
+	var orderHistory []domain.OrderHistory
+	for _, history := range o.History {
+		orderHistory = append(orderHistory, history.ToDomain())
+	}
 	return &domain.Order{
 		Id:         o.ID,
 		CustomerId: o.CustomerId,
@@ -39,6 +45,8 @@ func (o Order) ToDomain() *domain.Order {
 		UpdatedAt:  o.UpdatedAt,
 		Status:     valueobject.OrderStatus(o.Status),
 		Amount:     o.Amount,
+		History:    orderHistory,
+		PaymentId:  o.PaymentId,
 	}
 }
 
@@ -65,6 +73,7 @@ func FromDomain(order domain.Order) *Order {
 		UpdatedAt:  order.UpdatedAt,
 		Status:     string(order.Status),
 		Amount:     order.Amount,
+		PaymentId:  order.PaymentId,
 	}
 }
 

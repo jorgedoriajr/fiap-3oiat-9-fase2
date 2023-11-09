@@ -15,6 +15,8 @@ type Order struct {
 	UpdatedAt  time.Time
 	Status     valueobject.OrderStatus
 	Amount     int
+	History    []OrderHistory
+	PaymentId  uuid.UUID
 }
 
 type OrderProduct struct {

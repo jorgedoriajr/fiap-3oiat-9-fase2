@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"hamburgueria/internal/modules/ingredient/domain"
 	"hamburgueria/internal/modules/ingredient/infra/database/model"
 	"hamburgueria/internal/modules/ingredient/ports/output"
@@ -20,7 +21,7 @@ type IngredientRepository struct {
 
 func (c IngredientRepository) GetAll(ctx context.Context) ([]domain.Ingredient, error) {
 	var ingredients []model.Ingredient
-	err := c.readOnlyClient.Find(&ingredients).Error
+	err := c.readOnlyClient.Preload(clause.Associations).Find(&ingredients).Error
 	if err != nil {
 		c.logger.Error().
 			Ctx(ctx).
@@ -39,7 +40,7 @@ func (c IngredientRepository) GetAll(ctx context.Context) ([]domain.Ingredient, 
 
 func (c IngredientRepository) GetByType(ctx context.Context, ingredientType string) ([]domain.Ingredient, error) {
 	var ingredients []model.Ingredient
-	err := c.readOnlyClient.Joins("Type").Where("type.name = ?", ingredientType).Find(&ingredients).Error
+	err := c.readOnlyClient.Preload(clause.Associations).Joins("Type").Where("type.name = ?", ingredientType).Find(&ingredients).Error
 	if err != nil {
 		c.logger.Error().
 			Ctx(ctx).
@@ -82,7 +83,7 @@ func (c IngredientRepository) Create(ctx context.Context, ingredient domain.Ingr
 
 func (c IngredientRepository) GetByID(ctx context.Context, ingredientId uuid.UUID) (*domain.Ingredient, error) {
 	var ingredient model.Ingredient
-	err := c.readOnlyClient.First(&ingredient, ingredientId).Error
+	err := c.readOnlyClient.Preload(clause.Associations).First(&ingredient, ingredientId).Error
 	if err != nil {
 		c.logger.Error().
 			Ctx(ctx).
@@ -97,7 +98,7 @@ func (c IngredientRepository) GetByID(ctx context.Context, ingredientId uuid.UUI
 
 func (c IngredientRepository) GetByNumber(ctx context.Context, number int) (*domain.Ingredient, error) {
 	var ingredient model.Ingredient
-	err := c.readOnlyClient.Where("number = ?", number).First(&ingredient).Error
+	err := c.readOnlyClient.Preload(clause.Associations).Where("number = ?", number).First(&ingredient).Error
 	if err != nil {
 		c.logger.Error().
 			Ctx(ctx).

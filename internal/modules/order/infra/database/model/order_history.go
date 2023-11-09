@@ -24,3 +24,13 @@ func (o OrderHistory) ToDomain() domain.OrderHistory {
 		CreatedAt: o.CreatedAt,
 	}
 }
+
+func OrderHistoryFromDomain(history domain.OrderHistory) OrderHistory {
+	return OrderHistory{
+		ID:        history.Id,
+		OrderId:   history.OrderId,
+		Status:    string(history.Status),
+		ChangeBy:  history.ChangeBy,
+		CreatedAt: history.CreatedAt,
+	}
+}

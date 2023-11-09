@@ -14,7 +14,7 @@ type Product struct {
 	Name        string
 	Amount      int
 	Description string
-	Category    ProductCategory
+	Category    ProductCategory `gorm:"foreignKey:Name"`
 	Menu        bool
 	ImgPath     string
 	CreatedAt   time.Time

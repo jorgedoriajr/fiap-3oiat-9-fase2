@@ -41,12 +41,12 @@ func NewCreateProductCommand(
 }
 
 func (cmd CreateProductCommand) ToProductDomain(
-	productId uuid.UUID,
 	ingredients []domain.ProductIngredient,
 	amount int,
+	productID uuid.UUID,
 ) domain.Product {
 	return domain.Product{
-		ID:          productId,
+		ID:          productID,
 		Name:        cmd.Name,
 		Amount:      amount,
 		Description: cmd.Description,

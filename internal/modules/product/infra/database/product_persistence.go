@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"hamburgueria/internal/modules/product/domain"
 	"hamburgueria/internal/modules/product/infra/database/model"
 	"hamburgueria/internal/modules/product/ports/output"
@@ -20,7 +21,7 @@ type ProductRepository struct {
 
 func (c ProductRepository) GetAll(ctx context.Context) ([]domain.Product, error) {
 	var products []model.Product
-	tx := c.readOnlyClient.Preload("Ingredients").Find(&products)
+	tx := c.readOnlyClient.Preload(clause.Associations).Find(&products)
 	if tx.Error != nil {
 		c.logger.Error().
 			Ctx(ctx).
@@ -40,7 +41,7 @@ func (c ProductRepository) GetAll(ctx context.Context) ([]domain.Product, error)
 func (c ProductRepository) GetByCategory(ctx context.Context, category string) ([]domain.Product, error) {
 	var products []model.Product
 	tx := c.readOnlyClient.
-		Preload("Ingredients").
+		Preload(clause.Associations).
 		Joins("Category").
 		Where("category.name = ?", category).
 		Find(&products)
@@ -120,7 +121,8 @@ func (c ProductRepository) Update(ctx context.Context, product domain.Product) e
 
 func (c ProductRepository) GetByID(ctx context.Context, productID uuid.UUID) (*domain.Product, error) {
 	var product model.Product
-	err := c.readOnlyClient.Preload("Ingredients").
+	err := c.readOnlyClient.
+		Preload(clause.Associations).
 		First(&product, productID).
 		Error
 	if err != nil {
@@ -136,7 +138,8 @@ func (c ProductRepository) GetByID(ctx context.Context, productID uuid.UUID) (*d
 
 func (c ProductRepository) GetByNumber(ctx context.Context, productNumber int) (*domain.Product, error) {
 	var product model.Product
-	err := c.readOnlyClient.Preload("Ingredients").
+	err := c.readOnlyClient.
+		Preload(clause.Associations).
 		Where("number = ?", productNumber).
 		First(&product).
 		Error
@@ -154,7 +157,7 @@ func (c ProductRepository) GetByNumber(ctx context.Context, productNumber int) (
 func (c ProductRepository) InactiveByNumber(ctx context.Context, productNumber int) error {
 	err := c.readOnlyClient.
 		Update("active", false).
-		Where("number", productNumber).
+		Where("number = ?", productNumber).
 		Error
 	if err != nil {
 		c.logger.Error().

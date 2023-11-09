@@ -17,7 +17,6 @@ import (
 	"hamburgueria/internal/server/api/rest/v1/product"
 	"hamburgueria/internal/server/api/rest/v1/productcategory"
 	"hamburgueria/internal/server/api/swagger"
-	"hamburgueria/pkg/gorm"
 	"hamburgueria/pkg/logger"
 	"hamburgueria/pkg/sql"
 )
@@ -34,8 +33,7 @@ type DependencyInjection struct {
 
 func NewDependencyInjection() DependencyInjection {
 
-	readWriteClient, readOnlyClient := sql.GetClient("readWrite"), sql.GetClient("readOnly")
-	readWriteDB, readOnlyDB := gorm.GetClient("readWrite"), gorm.GetClient("readOnly")
+	readWriteDB, readOnlyDB := sql.GetClient("readWrite"), sql.GetClient("readOnly")
 
 	customerPersistence := database.GetCustomerPersistence(readWriteDB, readOnlyDB, logger.Get())
 
@@ -46,15 +44,15 @@ func NewDependencyInjection() DependencyInjection {
 
 	productPersistence := productDatabase.GetProductRepository(readWriteDB, readOnlyDB, logger.Get())
 	findProductCategoryUseCase := usecase.NewGetProductCategoryUseCase(productCategoryPersistence)
-	createProductUseCase := usecase.NewCreateProductUseCase(productPersistence, ingredientPersistence)
+	createProductUseCase := usecase.GetCreateProductUseCase(productPersistence, ingredientPersistence)
 	deleteProductUseCase := usecase.GetDeleteProductUseCase(productPersistence)
-	updateProductUseCase := usecase.NewUpdateProductUseCase(productPersistence)
+	updateProductUseCase := usecase.GetUpdateProductUseCase(productPersistence, ingredientPersistence)
 	findProductUseCase := usecase.NewFindProductUseCase(productPersistence)
 
-	orderHistoryPersistence := orderDatabase.GetOrderHistoryPersistence(readWriteClient, logger.Get())
-	orderPersistence := orderDatabase.GetOrderPersistence(readWriteClient, readOnlyClient, logger.Get())
+	orderPersistence := orderDatabase.GetOrderPersistence(readWriteDB, readOnlyDB, logger.Get())
 
-	processPaymentUseCase := paymentUseCase.GetProcessPaymentUseCase(orderPersistence, orderHistoryPersistence)
+	createPaymentUseCase := paymentUseCase.GetCreatePaymentUseCase()
+	processPaymentUseCase := orderUsecase.GetProcessPaymentUseCase(orderPersistence, createPaymentUseCase)
 
 	createOrderUseCase := orderUsecase.GetCreateOrderUseCase(
 		productPersistence,

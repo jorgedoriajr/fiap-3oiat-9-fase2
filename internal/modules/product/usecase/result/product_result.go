@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type CreateProductResult struct {
+type ProductResult struct {
 	Id          uuid.UUID
 	Name        string
 	Amount      int
@@ -18,8 +18,8 @@ type CreateProductResult struct {
 	UpdatedAt   time.Time
 }
 
-func FromDomain(entity domain.Product) CreateProductResult {
-	return CreateProductResult{
+func FromDomain(entity domain.Product) *ProductResult {
+	return &ProductResult{
 		Id:          entity.ID,
 		Name:        entity.Name,
 		Amount:      entity.Amount,
