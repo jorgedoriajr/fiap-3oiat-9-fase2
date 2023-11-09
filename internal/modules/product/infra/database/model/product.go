@@ -21,6 +21,7 @@ type Product struct {
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
 	Ingredients     []ProductIngredient `gorm:"foreignKey:ProductId"`
+	Active          bool
 }
 
 type ProductIngredient struct {
@@ -54,6 +55,7 @@ func (p Product) ToDomain() *domain.Product {
 		CreatedAt:   p.CreatedAt,
 		UpdatedAt:   p.UpdatedAt,
 		Ingredients: ingredients,
+		Active:      p.Active,
 	}
 }
 

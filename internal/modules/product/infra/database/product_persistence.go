@@ -23,7 +23,7 @@ func (c ProductRepository) GetAll(ctx context.Context) ([]domain.Product, error)
 	var products []model.Product
 	tx := c.readOnlyClient.
 		Preload(clause.Associations).
-		Preload("Ingredients.Ingredient").
+		Preload("Ingredients.Ingredient.IngredientType").
 		Find(&products)
 	if tx.Error != nil {
 		c.logger.Error().
@@ -43,19 +43,19 @@ func (c ProductRepository) GetAll(ctx context.Context) ([]domain.Product, error)
 
 func (c ProductRepository) GetByCategory(ctx context.Context, category string) ([]domain.Product, error) {
 	var products []model.Product
-	tx := c.readOnlyClient.
+	err := c.readOnlyClient.
 		Preload(clause.Associations).
-		Preload("Ingredients.Ingredient").
-		Joins("Category").
-		Where("category.name = ?", category).
-		Find(&products)
-	if tx.Error != nil {
+		Preload("Ingredients.Ingredient.IngredientType").
+		Joins("ProductCategory", c.readOnlyClient.Where(&model.ProductCategory{Name: category})).
+		Find(&products).Error
+
+	if err != nil {
 		c.logger.Error().
 			Ctx(ctx).
-			Err(tx.Error).
+			Err(err).
 			Str("category", category).
 			Msg("Failed to find products by category")
-		return nil, tx.Error
+		return nil, err
 	}
 
 	var domainProducts []domain.Product
@@ -126,7 +126,7 @@ func (c ProductRepository) GetByID(ctx context.Context, productID uuid.UUID) (*d
 	var product model.Product
 	err := c.readOnlyClient.
 		Preload(clause.Associations).
-		Preload("Ingredients.Ingredient").
+		Preload("Ingredients.Ingredient.IngredientType").
 		First(&product, productID).
 		Error
 	if err != nil {
@@ -144,7 +144,7 @@ func (c ProductRepository) GetByNumber(ctx context.Context, productNumber int) (
 	var product model.Product
 	err := c.readOnlyClient.
 		Preload(clause.Associations).
-		Preload("Ingredients.Ingredient").
+		Preload("Ingredients.Ingredient.IngredientType").
 		Where("number = ?", productNumber).
 		First(&product).
 		Error
@@ -157,21 +157,6 @@ func (c ProductRepository) GetByNumber(ctx context.Context, productNumber int) (
 		return nil, err
 	}
 	return product.ToDomain(), nil
-}
-
-func (c ProductRepository) InactiveByNumber(ctx context.Context, productNumber int) error {
-	err := c.readOnlyClient.
-		Update("active", false).
-		Where("number = ?", productNumber).
-		Error
-	if err != nil {
-		c.logger.Error().
-			Ctx(ctx).
-			Err(err).
-			Msg("Failed to find product by number")
-		return err
-	}
-	return nil
 }
 
 var (

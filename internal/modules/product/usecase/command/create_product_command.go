@@ -57,5 +57,6 @@ func (cmd CreateProductCommand) ToProductDomain(
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
 		Ingredients: ingredients,
+		Active:      true,
 	}
 }

@@ -18,6 +18,7 @@ type Product struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	Ingredients []ProductIngredient
+	Active      bool
 }
 
 type ProductIngredient struct {
