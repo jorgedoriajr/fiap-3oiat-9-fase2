@@ -23,7 +23,7 @@ func (c OrderRepository) Create(ctx context.Context, order domain.Order) error {
 		ID:        uuid.New(),
 		OrderId:   orderModel.ID,
 		Status:    orderModel.Status,
-		ChangeBy:  "SYSTEM",
+		ChangeBy:  "USER",
 		CreatedAt: orderModel.CreatedAt,
 	}}
 	err := c.readWriteClient.

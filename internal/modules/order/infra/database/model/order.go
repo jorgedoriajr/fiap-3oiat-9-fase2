@@ -66,6 +66,11 @@ func FromDomain(order domain.Order) *Order {
 	for _, product := range order.Products {
 		orderProducts = append(orderProducts, OrderProductFromDomain(product))
 	}
+
+	var orderHistory []OrderHistory
+	for _, history := range order.History {
+		orderHistory = append(orderHistory, OrderHistoryFromDomain(history))
+	}
 	return &Order{
 		ID:         order.Id,
 		CustomerId: order.CustomerId,
@@ -75,6 +80,7 @@ func FromDomain(order domain.Order) *Order {
 		Status:     string(order.Status),
 		Amount:     order.Amount,
 		PaymentId:  order.PaymentId,
+		History:    orderHistory,
 	}
 }
 
