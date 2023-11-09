@@ -21,11 +21,12 @@ type Order struct {
 }
 
 type OrderProduct struct {
-	ID       uuid.UUID
-	Product  model.Product `gorm:"foreignKey:ID"`
-	OrderId  uuid.UUID
-	Quantity int
-	Amount   int
+	ID        uuid.UUID
+	ProductId uuid.UUID
+	Product   model.Product `gorm:"foreignKey:ProductId;references:ID"`
+	OrderId   uuid.UUID
+	Quantity  int
+	Amount    int
 }
 
 func (o Order) ToDomain() *domain.Order {

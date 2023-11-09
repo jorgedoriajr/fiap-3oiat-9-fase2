@@ -44,7 +44,7 @@ func NewDependencyInjection() DependencyInjection {
 
 	productPersistence := productDatabase.GetProductRepository(readWriteDB, readOnlyDB, logger.Get())
 	findProductCategoryUseCase := usecase.NewGetProductCategoryUseCase(productCategoryPersistence)
-	createProductUseCase := usecase.GetCreateProductUseCase(productPersistence, ingredientPersistence)
+	createProductUseCase := usecase.GetCreateProductUseCase(productPersistence, ingredientPersistence, productCategoryPersistence)
 	deleteProductUseCase := usecase.GetDeleteProductUseCase(productPersistence)
 	updateProductUseCase := usecase.GetUpdateProductUseCase(productPersistence, ingredientPersistence)
 	findProductUseCase := usecase.NewFindProductUseCase(productPersistence)

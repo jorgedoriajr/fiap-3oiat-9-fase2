@@ -44,13 +44,14 @@ func (cmd CreateProductCommand) ToProductDomain(
 	ingredients []domain.ProductIngredient,
 	amount int,
 	productID uuid.UUID,
+	category domain.ProductCategory,
 ) domain.Product {
 	return domain.Product{
 		ID:          productID,
 		Name:        cmd.Name,
 		Amount:      amount,
 		Description: cmd.Description,
-		Category:    domain.ProductCategory{Name: cmd.Category},
+		Category:    category,
 		Menu:        cmd.Menu,
 		ImgPath:     cmd.ImgPath,
 		CreatedAt:   time.Now(),

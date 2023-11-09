@@ -42,6 +42,7 @@ func (c OrderRepository) FindAll(ctx context.Context) ([]domain.Order, error) {
 	var orders []model.Order
 	err := c.readOnlyClient.
 		Preload(clause.Associations).
+		Preload("Products.Product.Ingredients.Ingredient").
 		Find(&orders).Error
 	if err != nil {
 		c.logger.Error().
@@ -63,6 +64,7 @@ func (c OrderRepository) FindByStatus(ctx context.Context, status string) ([]dom
 	var orders []model.Order
 	err := c.readOnlyClient.
 		Preload(clause.Associations).
+		Preload("Products.Product.Ingredients.Ingredient").
 		Where("status = ?", status).
 		Find(&orders).Error
 	if err != nil {
@@ -102,8 +104,8 @@ func (c OrderRepository) Update(ctx context.Context, order domain.Order) error {
 func (c OrderRepository) FindById(ctx context.Context, orderId uuid.UUID) (*domain.Order, error) {
 	var order model.Order
 	tx := c.readOnlyClient.
-		Preload("Products").
-		Preload("History").
+		Preload(clause.Associations).
+		Preload("Products.Product.Ingredients.Ingredient").
 		Find(&order, orderId)
 	if tx.Error != nil {
 		c.logger.Error().

@@ -6,11 +6,12 @@ import (
 )
 
 type Ingredient struct {
-	ID     uuid.UUID
-	Number int `gorm:"autoIncrement:true;unique"`
-	Name   string
-	Amount int
-	Type   IngredientType `gorm:"foreignKey:Name"`
+	ID             uuid.UUID
+	Number         int `gorm:"autoIncrement:true;unique"`
+	Name           string
+	Amount         int
+	Type           string
+	IngredientType IngredientType `gorm:"foreignKey:Type;references:Name"`
 }
 
 func (i Ingredient) ToDomain() *domain.Ingredient {
@@ -19,6 +20,6 @@ func (i Ingredient) ToDomain() *domain.Ingredient {
 		Number: i.Number,
 		Name:   i.Name,
 		Amount: i.Amount,
-		Type:   i.Type.Name,
+		Type:   i.IngredientType.Name,
 	}
 }

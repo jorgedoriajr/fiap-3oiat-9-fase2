@@ -37,7 +37,7 @@ func (c ProductCategoryRepository) GetAll(ctx context.Context) ([]domain.Product
 
 func (c ProductCategoryRepository) GetByName(ctx context.Context, name string) (*domain.ProductCategory, error) {
 	var category model.ProductCategory
-	err := c.readOnlyClient.Find(&category, name).Error
+	err := c.readOnlyClient.Where("name = ?", name).Find(&category).Error
 	if err != nil {
 		c.logger.Error().
 			Ctx(ctx).

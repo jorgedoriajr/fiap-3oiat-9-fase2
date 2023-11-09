@@ -21,7 +21,10 @@ type ProductRepository struct {
 
 func (c ProductRepository) GetAll(ctx context.Context) ([]domain.Product, error) {
 	var products []model.Product
-	tx := c.readOnlyClient.Preload(clause.Associations).Find(&products)
+	tx := c.readOnlyClient.
+		Preload(clause.Associations).
+		Preload("Ingredients.Ingredient").
+		Find(&products)
 	if tx.Error != nil {
 		c.logger.Error().
 			Ctx(ctx).
@@ -42,6 +45,7 @@ func (c ProductRepository) GetByCategory(ctx context.Context, category string) (
 	var products []model.Product
 	tx := c.readOnlyClient.
 		Preload(clause.Associations).
+		Preload("Ingredients.Ingredient").
 		Joins("Category").
 		Where("category.name = ?", category).
 		Find(&products)
@@ -70,14 +74,13 @@ func (c ProductRepository) Create(ctx context.Context, product domain.Product) e
 	}
 
 	err := c.readWriteClient.
-		Omit("Category").
 		Create(&model.Product{
 			ID:          product.ID,
 			Number:      product.Number,
 			Name:        product.Name,
 			Amount:      product.Amount,
 			Description: product.Description,
-			Category: model.ProductCategory{
+			ProductCategory: model.ProductCategory{
 				Name:         product.Category.Name,
 				AcceptCustom: product.Category.AcceptCustom,
 			},
@@ -123,6 +126,7 @@ func (c ProductRepository) GetByID(ctx context.Context, productID uuid.UUID) (*d
 	var product model.Product
 	err := c.readOnlyClient.
 		Preload(clause.Associations).
+		Preload("Ingredients.Ingredient").
 		First(&product, productID).
 		Error
 	if err != nil {
@@ -140,6 +144,7 @@ func (c ProductRepository) GetByNumber(ctx context.Context, productNumber int) (
 	var product model.Product
 	err := c.readOnlyClient.
 		Preload(clause.Associations).
+		Preload("Ingredients.Ingredient").
 		Where("number = ?", productNumber).
 		First(&product).
 		Error

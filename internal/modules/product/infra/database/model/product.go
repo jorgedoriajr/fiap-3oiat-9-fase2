@@ -9,25 +9,27 @@ import (
 )
 
 type Product struct {
-	ID          uuid.UUID
-	Number      int `gorm:"autoIncrement:true;unique"`
-	Name        string
-	Amount      int
-	Description string
-	Category    ProductCategory `gorm:"foreignKey:Name"`
-	Menu        bool
-	ImgPath     string
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	Ingredients []ProductIngredient `gorm:"foreignKey:ProductId"`
+	ID              uuid.UUID
+	Number          int `gorm:"autoIncrement:true;unique"`
+	Name            string
+	Amount          int
+	Description     string
+	Category        string
+	ProductCategory ProductCategory `gorm:"foreignKey:Category;references:Name"`
+	Menu            bool
+	ImgPath         string
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
+	Ingredients     []ProductIngredient `gorm:"foreignKey:ProductId"`
 }
 
 type ProductIngredient struct {
-	ID         uuid.UUID
-	ProductId  uuid.UUID
-	Ingredient model.Ingredient `gorm:"foreignKey:ID"`
-	Quantity   int
-	Amount     int
+	ID           uuid.UUID
+	ProductId    uuid.UUID
+	IngredientId uuid.UUID
+	Ingredient   model.Ingredient `gorm:"foreignKey:IngredientId;references:ID"`
+	Quantity     int
+	Amount       int
 }
 
 func (p Product) ToDomain() *domain.Product {
@@ -44,8 +46,8 @@ func (p Product) ToDomain() *domain.Product {
 		Amount:      p.Amount,
 		Description: p.Description,
 		Category: domain.ProductCategory{
-			Name:         p.Category.Name,
-			AcceptCustom: p.Category.AcceptCustom,
+			Name:         p.ProductCategory.Name,
+			AcceptCustom: p.ProductCategory.AcceptCustom,
 		},
 		Menu:        p.Menu,
 		ImgPath:     p.ImgPath,
@@ -66,7 +68,7 @@ func ProductFromDomain(product domain.Product) Product {
 		Name:        product.Name,
 		Amount:      product.Amount,
 		Description: product.Description,
-		Category: ProductCategory{
+		ProductCategory: ProductCategory{
 			Name:         product.Category.Name,
 			AcceptCustom: product.Category.AcceptCustom,
 		},
@@ -87,7 +89,7 @@ func (pi ProductIngredient) ToDomain() domain.ProductIngredient {
 			Number: pi.Ingredient.Number,
 			Name:   pi.Ingredient.Name,
 			Amount: pi.Ingredient.Amount,
-			Type:   pi.Ingredient.Type.Name,
+			Type:   pi.Ingredient.IngredientType.Name,
 		},
 		Quantity: pi.Quantity,
 		Amount:   pi.Amount,
@@ -99,11 +101,11 @@ func ProductIngredientFromDomain(productIngredient domain.ProductIngredient) Pro
 		ID:        productIngredient.ID,
 		ProductId: productIngredient.ProductId,
 		Ingredient: model.Ingredient{
-			ID:     productIngredient.Ingredient.ID,
-			Number: productIngredient.Ingredient.Number,
-			Name:   productIngredient.Ingredient.Name,
-			Amount: productIngredient.Ingredient.Amount,
-			Type:   model.IngredientType{Name: productIngredient.Ingredient.Type},
+			ID:             productIngredient.Ingredient.ID,
+			Number:         productIngredient.Ingredient.Number,
+			Name:           productIngredient.Ingredient.Name,
+			Amount:         productIngredient.Ingredient.Amount,
+			IngredientType: model.IngredientType{Name: productIngredient.Ingredient.Type},
 		},
 		Quantity: productIngredient.Quantity,
 		Amount:   productIngredient.Amount,

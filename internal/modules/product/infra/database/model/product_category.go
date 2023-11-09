@@ -3,7 +3,7 @@ package model
 import "hamburgueria/internal/modules/product/domain"
 
 type ProductCategory struct {
-	Name         string
+	Name         string `gorm:"primarykey"`
 	AcceptCustom bool
 }
 

@@ -40,7 +40,10 @@ func (c IngredientRepository) GetAll(ctx context.Context) ([]domain.Ingredient, 
 
 func (c IngredientRepository) GetByType(ctx context.Context, ingredientType string) ([]domain.Ingredient, error) {
 	var ingredients []model.Ingredient
-	err := c.readOnlyClient.Preload(clause.Associations).Joins("Type").Where("type.name = ?", ingredientType).Find(&ingredients).Error
+	err := c.readOnlyClient.
+		Preload(clause.Associations).
+		Joins("IngredientType", c.readOnlyClient.Where(&model.IngredientType{Name: ingredientType})).
+		Find(&ingredients).Error
 	if err != nil {
 		c.logger.Error().
 			Ctx(ctx).
@@ -66,7 +69,7 @@ func (c IngredientRepository) Create(ctx context.Context, ingredient domain.Ingr
 			Number: ingredient.Number,
 			Name:   ingredient.Name,
 			Amount: ingredient.Amount,
-			Type: model.IngredientType{
+			IngredientType: model.IngredientType{
 				Name: ingredient.Name,
 			},
 		}).Error

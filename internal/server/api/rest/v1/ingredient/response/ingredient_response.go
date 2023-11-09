@@ -13,6 +13,7 @@ func FromFindIngredientsResult(result []result.FindIngredientResult) []Ingredien
 	var ingredients []IngredientResponse
 	for _, ingredient := range result {
 		ingredients = append(ingredients, IngredientResponse{
+			Number: ingredient.Number,
 			Name:   ingredient.Name,
 			Amount: ingredient.Amount,
 			Type:   ingredient.Type,
@@ -23,6 +24,7 @@ func FromFindIngredientsResult(result []result.FindIngredientResult) []Ingredien
 
 func FromFindIngredientResult(ingredient result.FindIngredientResult) IngredientResponse {
 	return IngredientResponse{
+		Number: ingredient.Number,
 		Name:   ingredient.Name,
 		Amount: ingredient.Amount,
 		Type:   ingredient.Type,

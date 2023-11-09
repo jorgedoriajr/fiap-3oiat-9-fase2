@@ -21,6 +21,7 @@ var (
 
 type CreateProductUseCase struct {
 	productPersistencePort    output.ProductPersistencePort
+	productCategoryPort       output.ProductCategoryPersistencePort
 	ingredientPersistencePort ingredientOutput.IngredientPersistencePort
 }
 
@@ -29,12 +30,21 @@ func (c CreateProductUseCase) AddProduct(
 	command command.CreateProductCommand,
 ) (*result.ProductResult, error) {
 	productID := uuid.New()
+
+	category, err := c.productCategoryPort.GetByName(ctx, command.Category)
+	if err != nil {
+		return nil, err
+	}
+	if category == nil {
+		return nil, errors.New("category not found")
+	}
+
 	amount, productIngredients, err := c.buildIngredients(ctx, command, productID)
 	if err != nil {
 		return nil, err
 	}
 
-	product := command.ToProductDomain(productIngredients, amount, productID)
+	product := command.ToProductDomain(productIngredients, amount, productID, *category)
 	err = c.productPersistencePort.Create(ctx, product)
 	if err != nil {
 		return nil, err
@@ -75,11 +85,13 @@ func (c CreateProductUseCase) buildIngredients(
 func GetCreateProductUseCase(
 	productPersistence output.ProductPersistencePort,
 	ingredientPersistencePort ingredientOutput.IngredientPersistencePort,
+	productCategoryPort output.ProductCategoryPersistencePort,
 ) input.CreateProductUseCasePort {
 	createProductUseCaseOnce.Do(func() {
 		createProductUseCaseInstance = CreateProductUseCase{
 			productPersistencePort:    productPersistence,
 			ingredientPersistencePort: ingredientPersistencePort,
+			productCategoryPort:       productCategoryPort,
 		}
 	})
 	return createProductUseCaseInstance

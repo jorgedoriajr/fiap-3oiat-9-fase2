@@ -18,7 +18,7 @@ type IngredientTypeRepository struct {
 
 func (c IngredientTypeRepository) GetByName(ctx context.Context, name string) (*domain.IngredientType, error) {
 	var ingredientType model.IngredientType
-	err := c.readOnlyClient.Preload("ConfigByProductCategory").Find(&ingredientType, name).Error
+	err := c.readOnlyClient.Preload("ConfigByProductCategory").Where("name = ?", name).Find(&ingredientType).Error
 	if err != nil {
 		c.logger.Error().
 			Ctx(ctx).
