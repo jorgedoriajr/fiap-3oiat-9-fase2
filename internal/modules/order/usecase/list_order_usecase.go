@@ -4,7 +4,6 @@ import (
 	"context"
 	"hamburgueria/internal/modules/order/port/output"
 	"hamburgueria/internal/modules/order/usecase/result"
-	productResult "hamburgueria/internal/modules/product/usecase/result"
 	"sync"
 )
 
@@ -20,9 +19,9 @@ func (c ListOrderUseCase) FindAllOrders(ctx context.Context) ([]result.ListOrder
 
 	var resultOrders []result.ListOrderResult
 	for _, order := range orders {
-		var products []productResult.FindProductResult
+		var products []result.OrderProductResult
 		for _, product := range order.Products {
-			products = append(products, productResult.FromProductDomain(product.Product))
+			products = append(products, result.OrderProductResultFromDomain(product))
 		}
 		if err != nil {
 			return nil, err
@@ -47,9 +46,9 @@ func (c ListOrderUseCase) FindByStatus(ctx context.Context, status string) ([]re
 
 	var resultOrders []result.ListOrderResult
 	for _, order := range orders {
-		var products []productResult.FindProductResult
+		var products []result.OrderProductResult
 		for _, product := range order.Products {
-			products = append(products, productResult.FromProductDomain(product.Product))
+			products = append(products, result.OrderProductResultFromDomain(product))
 		}
 		if err != nil {
 			return nil, err

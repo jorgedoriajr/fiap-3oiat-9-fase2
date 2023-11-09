@@ -22,7 +22,6 @@ type Product struct {
 
 type ProductIngredient struct {
 	ID         uuid.UUID
-	Number     int
 	ProductId  uuid.UUID
 	Ingredient domain.Ingredient
 	Quantity   int

@@ -11,18 +11,18 @@ import (
 type Order struct {
 	ID         uuid.UUID
 	CustomerId string
-	Products   []OrderProduct
+	Products   []OrderProduct `gorm:"foreignKey:OrderId"`
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 	Status     string
 	Amount     int
-	History    []OrderHistory
+	History    []OrderHistory `gorm:"foreignKey:OrderId"`
 	PaymentId  uuid.UUID
 }
 
 type OrderProduct struct {
 	ID       uuid.UUID
-	Product  model.Product
+	Product  model.Product `gorm:"foreignKey:ID"`
 	OrderId  uuid.UUID
 	Quantity int
 	Amount   int

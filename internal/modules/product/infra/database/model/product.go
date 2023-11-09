@@ -19,14 +19,13 @@ type Product struct {
 	ImgPath     string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-	Ingredients []ProductIngredient
+	Ingredients []ProductIngredient `gorm:"foreignKey:ProductId"`
 }
 
 type ProductIngredient struct {
 	ID         uuid.UUID
-	Number     int
 	ProductId  uuid.UUID
-	Ingredient model.Ingredient
+	Ingredient model.Ingredient `gorm:"foreignKey:ID"`
 	Quantity   int
 	Amount     int
 }
@@ -82,7 +81,6 @@ func ProductFromDomain(product domain.Product) Product {
 func (pi ProductIngredient) ToDomain() domain.ProductIngredient {
 	return domain.ProductIngredient{
 		ID:        pi.ID,
-		Number:    pi.Number,
 		ProductId: pi.ProductId,
 		Ingredient: ingredientDomain.Ingredient{
 			ID:     pi.Ingredient.ID,
@@ -99,7 +97,6 @@ func (pi ProductIngredient) ToDomain() domain.ProductIngredient {
 func ProductIngredientFromDomain(productIngredient domain.ProductIngredient) ProductIngredient {
 	return ProductIngredient{
 		ID:        productIngredient.ID,
-		Number:    productIngredient.Number,
 		ProductId: productIngredient.ProductId,
 		Ingredient: model.Ingredient{
 			ID:     productIngredient.Ingredient.ID,
