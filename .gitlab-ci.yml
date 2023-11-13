@@ -1,0 +1,15 @@
+include:
+  - '.ci-tasks.yml'
+
+stages:
+  - docker
+
+variables:
+  APPLICATION_NAME: hamburgueria-app
+
+before_script:
+  - export BUILD_VERSION="${BUILD_VERSION_MAJOR}.${CI_PIPELINE_IID}"
+
+.docker:
+  extends: .push_docker-image
+  stage: docker
