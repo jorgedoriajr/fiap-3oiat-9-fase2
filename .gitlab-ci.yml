@@ -14,7 +14,7 @@ push_docker-image:
   services:
     - docker:dind
   before_script:
-    - docker login -u "$DOCKER_HUB_USER" --password-stdin $DOCKER_HUB_PASS
+    - docker login --username "$DOCKER_HUB_USER" --password-stdin $DOCKER_HUB_PASS
   script:
     - DOCKER_IMAGE=grupo9fiap/${APPLICATION_NAME}:${BUILD_VERSION}
     - docker build -t ${DOCKER_IMAGE} .
