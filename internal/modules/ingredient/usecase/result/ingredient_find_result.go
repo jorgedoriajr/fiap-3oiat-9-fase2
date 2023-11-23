@@ -19,6 +19,6 @@ func FromDomain(ingredient domain.Ingredient) FindIngredientResult {
 		Number: ingredient.Number,
 		Name:   ingredient.Name,
 		Amount: ingredient.Amount,
-		Type:   ingredient.Type,
+		Type:   ingredient.Type.Name,
 	}
 }

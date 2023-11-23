@@ -159,6 +159,38 @@ func (c ProductRepository) GetByNumber(ctx context.Context, productNumber int) (
 	return product.ToDomain(), nil
 }
 
+func (c ProductRepository) ProductAlreadyExists(ctx context.Context, product domain.Product) (bool, error) {
+	var count int64
+	query := "product.name = ?"
+	args := []interface{}{product.Name}
+
+	for _, ingredient := range product.Ingredients {
+
+		query += `
+			AND EXISTS (
+				SELECT 1 FROM product_ingredient JOIN ingredient ON product_ingredient.ingredient_id = ingredient.id 
+				WHERE product.id = product_ingredient.product_id AND ingredient.name = ? AND product_ingredient.quantity = ?)
+			)
+		`
+		args = append(args, ingredient.Ingredient.Name, ingredient.Quantity)
+	}
+
+	err := c.readOnlyClient.Table("product").
+		Where(query, args...).
+		Count(&count).Error
+
+	if err != nil {
+		c.logger.Error().
+			Ctx(ctx).
+			Err(err).
+			Str("productName", product.Name).
+			Msg("Failed to find if product already exists")
+		return false, err
+	}
+
+	return count > 0, nil
+}
+
 var (
 	productRepositoryInstance output.ProductPersistencePort
 	productRepositoryOnce     sync.Once

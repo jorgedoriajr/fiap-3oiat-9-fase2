@@ -15,24 +15,35 @@ var (
 )
 
 type CreateIngredientUseCase struct {
-	ingredientPersistence output.IngredientPersistencePort
+	ingredientPersistence     output.IngredientPersistencePort
+	ingredientTypePersistence output.IngredientTypePersistencePort
 }
 
 func (c CreateIngredientUseCase) AddIngredient(ctx context.Context, command command.CreateIngredientCommand) (result.CreateIngredientResult, error) {
-	ingredient := command.ToIngredientEntity()
+	ingredientType, err := c.ingredientTypePersistence.GetByName(ctx, command.Type)
+
+	if err != nil {
+		return result.CreateIngredientResult{}, err
+	}
+
+	ingredient := command.ToIngredientEntity(*ingredientType)
 
 	fmt.Printf("creating new ingredient: [%v]", ingredient)
-	err := c.ingredientPersistence.Create(ctx, *ingredient)
+	err = c.ingredientPersistence.Create(ctx, *ingredient)
 	if err != nil {
 		return result.CreateIngredientResult{}, err
 	}
 	return result.ToCreateIngredientResultFrom(*ingredient), nil
 }
 
-func NewCreateIngredientUseCase(ingredientPersistence output.IngredientPersistencePort) *CreateIngredientUseCase {
+func NewCreateIngredientUseCase(
+	ingredientPersistence output.IngredientPersistencePort,
+	ingredientTypePersistence output.IngredientTypePersistencePort,
+) *CreateIngredientUseCase {
 	createIngredientUseCaseOnce.Do(func() {
 		createIngredientUseCaseInstance = &CreateIngredientUseCase{
-			ingredientPersistence: ingredientPersistence,
+			ingredientPersistence:     ingredientPersistence,
+			ingredientTypePersistence: ingredientTypePersistence,
 		}
 	})
 	return createIngredientUseCaseInstance

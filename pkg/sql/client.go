@@ -6,6 +6,7 @@ import (
 	"github.com/joomcode/errorx"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"hamburgueria/config"
 	"time"
@@ -75,6 +76,7 @@ func connect(dsn string) (*gorm.DB, error) {
 	defer cancel()
 	conn, errConn := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{SingularTable: true},
+		Logger:         logger.Default.LogMode(logger.Info),
 	})
 	if errConn != nil {
 		return nil, errorx.Decorate(errConn, "Failed to connect to database")

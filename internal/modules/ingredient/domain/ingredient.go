@@ -9,5 +9,5 @@ type Ingredient struct {
 	Number int
 	Name   string
 	Amount int
-	Type   string
+	Type   IngredientType
 }

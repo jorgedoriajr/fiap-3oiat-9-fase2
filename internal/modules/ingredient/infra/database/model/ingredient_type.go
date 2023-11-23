@@ -33,3 +33,22 @@ func (i IngredientType) ToDomain() *domain.IngredientType {
 		ConfigByProductCategory: configByProductCategory,
 	}
 }
+
+func FromIngredientTypeDomain(ingredientType domain.IngredientType) IngredientType {
+	var configByProductCategory []IngredientTypeProductCategory
+
+	for _, config := range ingredientType.ConfigByProductCategory {
+		configByProductCategory = append(configByProductCategory, IngredientTypeProductCategory{
+			ID:              config.Id,
+			IngredientType:  config.IngredientType,
+			Optional:        config.Optional,
+			MaxQtd:          config.MaxQtd,
+			ProductCategory: config.ProductCategory,
+		})
+	}
+
+	return IngredientType{
+		Name:                    ingredientType.Name,
+		ConfigByProductCategory: configByProductCategory,
+	}
+}

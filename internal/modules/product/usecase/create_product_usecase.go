@@ -45,6 +45,16 @@ func (c CreateProductUseCase) AddProduct(
 	}
 
 	product := command.ToProductDomain(productIngredients, amount, productID, *category)
+
+	alreadyExists, err := c.productPersistencePort.ProductAlreadyExists(ctx, product)
+
+	if alreadyExists {
+		return nil, errors.New("product already exists")
+	}
+	if err != nil {
+		return nil, err
+	}
+
 	err = c.productPersistencePort.Create(ctx, product)
 	if err != nil {
 		return nil, err

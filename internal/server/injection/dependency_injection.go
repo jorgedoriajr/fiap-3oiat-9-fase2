@@ -77,7 +77,7 @@ func NewDependencyInjection() DependencyInjection {
 			ListOrderUseCase:   orderUsecase.GetListOrderUseCase(orderPersistence),
 		},
 		IngredientController: &ingredient.Controller{
-			CreateIngredientUseCase: ingredientUsecase.NewCreateIngredientUseCase(ingredientPersistence),
+			CreateIngredientUseCase: ingredientUsecase.NewCreateIngredientUseCase(ingredientPersistence, ingredientTypePersistence),
 			FindIngredientUseCase:   ingredientUsecase.NewFindIngredientUseCase(ingredientPersistence),
 		},
 		ProductCategoryController: &productcategory.Controller{GetProductCategoryUseCase: findProductCategoryUseCase},

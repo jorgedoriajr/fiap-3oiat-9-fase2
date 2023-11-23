@@ -17,6 +17,6 @@ func ToCreateIngredientResultFrom(entity domain.Ingredient) CreateIngredientResu
 		ID:     entity.ID,
 		Name:   entity.Name,
 		Amount: entity.Amount,
-		Type:   entity.Type,
+		Type:   entity.Type.Name,
 	}
 }

@@ -20,6 +20,6 @@ func (i Ingredient) ToDomain() *domain.Ingredient {
 		Number: i.Number,
 		Name:   i.Name,
 		Amount: i.Amount,
-		Type:   i.IngredientType.Name,
+		Type:   *i.IngredientType.ToDomain(),
 	}
 }
