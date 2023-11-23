@@ -2,7 +2,7 @@ package command
 
 import (
 	"github.com/google/uuid"
-	"hamburgueria/internal/modules/product/domain/entity"
+	"hamburgueria/internal/modules/product/domain"
 	"time"
 )
 
@@ -16,7 +16,7 @@ type CreateProductCommand struct {
 }
 
 type Ingredient struct {
-	ID       string
+	Number   int
 	Quantity int
 }
 
@@ -40,21 +40,23 @@ func NewCreateProductCommand(
 	return cmd
 }
 
-func (cmd CreateProductCommand) ToProductEntity(
-	productId uuid.UUID,
-	ingredients []entity.ProductIngredientEntity,
+func (cmd CreateProductCommand) ToProductDomain(
+	ingredients []domain.ProductIngredient,
 	amount int,
-) entity.ProductEntity {
-	return entity.ProductEntity{
-		ID:          productId,
+	productID uuid.UUID,
+	category domain.ProductCategory,
+) domain.Product {
+	return domain.Product{
+		ID:          productID,
 		Name:        cmd.Name,
 		Amount:      amount,
 		Description: cmd.Description,
-		Category:    cmd.Category,
+		Category:    category,
 		Menu:        cmd.Menu,
 		ImgPath:     cmd.ImgPath,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
 		Ingredients: ingredients,
+		Active:      true,
 	}
 }

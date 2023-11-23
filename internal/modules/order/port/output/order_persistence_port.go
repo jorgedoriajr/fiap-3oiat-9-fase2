@@ -3,14 +3,13 @@ package output
 import (
 	"context"
 	"github.com/google/uuid"
-	"hamburgueria/internal/modules/order/domain/entity"
-	"hamburgueria/internal/modules/payment/usecase/result"
+	"hamburgueria/internal/modules/order/domain"
 )
 
 type OrderPersistencePort interface {
-	Create(ctx context.Context, order entity.Order) error
-	FindAll(ctx context.Context) ([]entity.Order, error)
-	FindByStatus(ctx context.Context, status string) ([]entity.Order, error)
-	FindById(ctx context.Context, orderId uuid.UUID) (*entity.Order, error)
-	SavePaymentReference(ctx context.Context, payment result.PaymentProcessed) error
+	Create(ctx context.Context, order domain.Order) error
+	FindAll(ctx context.Context) ([]domain.Order, error)
+	FindByStatus(ctx context.Context, status string) ([]domain.Order, error)
+	FindById(ctx context.Context, orderId uuid.UUID) (*domain.Order, error)
+	Update(ctx context.Context, order domain.Order) error
 }

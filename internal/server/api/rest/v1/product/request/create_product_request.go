@@ -4,7 +4,7 @@ import (
 	"hamburgueria/internal/modules/product/usecase/command"
 )
 
-type CreateProductRequest struct {
+type ProductRequest struct {
 	Name        string              `json:"name" validator:"required"`
 	Description string              `json:"description" validator:"required"`
 	Category    string              `json:"category" validator:"required"`
@@ -14,11 +14,11 @@ type CreateProductRequest struct {
 }
 
 type IngredientRequest struct {
-	ID       string `json:"id"`
-	Quantity int    `json:"quantity" validator:"required"`
+	Number   int `json:"number"`
+	Quantity int `json:"quantity" validator:"required"`
 }
 
-func (cp CreateProductRequest) ToCommand() command.CreateProductCommand {
+func (cp ProductRequest) ToCommand() command.CreateProductCommand {
 	return *command.NewCreateProductCommand(
 		cp.Name, cp.Description, cp.Category, cp.Menu, toIngredients(cp.Ingredients), cp.ImgPath,
 	)
@@ -28,7 +28,7 @@ func toIngredients(ingredients []IngredientRequest) []command.Ingredient {
 	var ingredientsCmd []command.Ingredient
 	for _, ingredient := range ingredients {
 		ingredientsCmd = append(ingredientsCmd, command.Ingredient{
-			ID:       ingredient.ID,
+			Number:   ingredient.Number,
 			Quantity: ingredient.Quantity,
 		})
 	}

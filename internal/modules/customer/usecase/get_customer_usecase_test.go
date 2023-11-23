@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"hamburgueria/internal/modules/customer/domain/entity"
+	"hamburgueria/internal/modules/customer/domain"
 	"hamburgueria/tests/mocks"
 	"testing"
 	"time"
@@ -21,7 +21,7 @@ func TestGetCustomerUseCase(t *testing.T) {
 
 		document := "58642725826"
 
-		response := entity.Customer{
+		response := domain.Customer{
 			Document:  "58642725826",
 			Name:      "Name",
 			Phone:     "11999999999",

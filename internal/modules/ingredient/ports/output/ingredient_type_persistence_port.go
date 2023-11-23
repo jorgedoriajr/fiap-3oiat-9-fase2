@@ -2,10 +2,10 @@ package output
 
 import (
 	"context"
-	"hamburgueria/internal/modules/ingredient/domain/entity"
+	"hamburgueria/internal/modules/ingredient/domain"
 )
 
 type IngredientTypePersistencePort interface {
-	GetTypeByName(ctx context.Context, name string) (*entity.IngredientType, error)
-	GetAll(ctx context.Context) ([]entity.IngredientType, error)
+	GetByName(ctx context.Context, name string) (*domain.IngredientType, error)
+	GetAll(ctx context.Context) ([]domain.IngredientType, error)
 }

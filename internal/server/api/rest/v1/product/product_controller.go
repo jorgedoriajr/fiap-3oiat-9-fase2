@@ -15,7 +15,7 @@ import (
 type Controller struct {
 	CreateProductUseCase  input.CreateProductUseCasePort
 	UpdatedProductUseCase input.UpdateProductUseCasePort
-	ProductFinderService  input.ProductFinderServicePort
+	FindProductUseCase    input.FindProductUseCasePort
 	DeleteProductUseCase  input.DeleteProductUseCasePort
 }
 
@@ -36,7 +36,7 @@ func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
 // @Summary     Add Product
 // @Description Add Product
 // @Produce      json
-// @Param 		 request 	   body   request.CreateProductRequest true "Request Body"
+// @Param 		 request 	   body   request.ProductRequest true "Request Body"
 // @Failure      400 {object} v1.ErrorResponse
 // @Failure      401 {object} v1.ErrorResponse
 // @Failure      404 {object} v1.ErrorResponse
@@ -44,7 +44,7 @@ func (c *Controller) RegisterEchoRoutes(e *echo.Echo) {
 // @Success      200 {object} response.ProductCreatedResponse
 // @Router       /v1/products [post]
 func (c *Controller) AddProduct(e echo.Context) error {
-	req := new(request.CreateProductRequest)
+	req := new(request.ProductRequest)
 
 	if err := e.Validate(req); err != nil {
 		return e.JSON(http.StatusBadRequest, map[string]any{
@@ -64,7 +64,7 @@ func (c *Controller) AddProduct(e echo.Context) error {
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return e.JSON(http.StatusOK, response.ProductCreatedResponseFromResult(resultProduct))
+	return e.JSON(http.StatusOK, response.ProductCreatedResponseFromResult(*resultProduct))
 }
 
 // UpdateProduct
@@ -76,7 +76,7 @@ func (c *Controller) AddProduct(e echo.Context) error {
 // @Failure      401 {object} v1.ErrorResponse
 // @Failure      404 {object} v1.ErrorResponse
 // @Failure      503 {object} v1.ErrorResponse
-// @Success      200 {object} response.ProductUpdatedResponse
+// @Success      200
 // @Router       /v1/products/{number} [patch]
 func (c *Controller) UpdateProduct(ctx echo.Context) error {
 
@@ -110,14 +110,16 @@ func (c *Controller) UpdateProduct(ctx echo.Context) error {
 		})
 	}
 
-	resultProduct, err := c.UpdatedProductUseCase.UpdateProduct(
-		ctx.Request().Context(), req.ToCommandWithNumber(number),
+	req.Number = number
+
+	err = c.UpdatedProductUseCase.UpdateProduct(
+		ctx.Request().Context(), req.ToCommand(),
 	)
 
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return ctx.JSON(http.StatusOK, response.ProductUpdatedResponseFromResult(resultProduct))
+	return ctx.JSON(http.StatusOK, nil)
 }
 
 // GetProductById
@@ -140,7 +142,7 @@ func (c *Controller) GetProductById(ctx echo.Context) error {
 		})
 	}
 	productID := uuid.MustParse(id)
-	resultProduct, err := c.ProductFinderService.FindByIDWithIngredients(ctx.Request().Context(), productID)
+	resultProduct, err := c.FindProductUseCase.FindByID(ctx.Request().Context(), productID)
 	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
 			"code":    400,
@@ -206,13 +208,13 @@ func (c *Controller) InactiveProductByNumber(ctx echo.Context) error {
 func (c *Controller) GetProducts(ctx echo.Context) error {
 	category := ctx.QueryParam("category")
 
-	var resultProducts []*result.FindProductWithIngredientsResult
+	var resultProducts []result.FindProductResult
 	var err error
 
 	if category != "" {
-		resultProducts, err = c.ProductFinderService.FindByCategory(ctx.Request().Context(), category)
+		resultProducts, err = c.FindProductUseCase.FindByCategory(ctx.Request().Context(), category)
 	} else {
-		resultProducts, err = c.ProductFinderService.FindAllProducts(ctx.Request().Context())
+		resultProducts, err = c.FindProductUseCase.FindAllProducts(ctx.Request().Context())
 	}
 
 	if err != nil {

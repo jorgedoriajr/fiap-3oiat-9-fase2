@@ -3,31 +3,31 @@ package response
 import "hamburgueria/internal/modules/product/usecase/result"
 
 type FindProductWithIngredients struct {
-	Name        string
-	Number      int
-	Amount      int
-	Description string
-	Category    string
-	ImgPath     string
-	Ingredients []FindProductsIngredients
+	Name        string                    `json:"name"`
+	Number      int                       `json:"number"`
+	Amount      int                       `json:"amount"`
+	Description string                    `json:"description"`
+	Category    string                    `json:"category"`
+	ImgPath     string                    `json:"imgPath"`
+	Ingredients []FindProductsIngredients `json:"ingredients"`
 }
 
 type FindProductsIngredients struct {
-	Number   int
-	Name     string
-	Amount   int
-	Quantity int
+	Number   int    `json:"number"`
+	Name     string `json:"name"`
+	Amount   int    `json:"amount"`
+	Quantity int    `json:"quantity"`
 }
 
-func FromResultList(productResult []*result.FindProductWithIngredientsResult) []FindProductWithIngredients {
+func FromResultList(productResult []result.FindProductResult) []FindProductWithIngredients {
 	var productsResponse []FindProductWithIngredients
 	for _, product := range productResult {
-		productsResponse = append(productsResponse, FromResult(*product))
+		productsResponse = append(productsResponse, FromResult(product))
 	}
 	return productsResponse
 }
 
-func FromResult(product result.FindProductWithIngredientsResult) FindProductWithIngredients {
+func FromResult(product result.FindProductResult) FindProductWithIngredients {
 	var ingredientsResponse []FindProductsIngredients
 	for _, ingredient := range product.Ingredients {
 		ingredientsResponse = append(ingredientsResponse, FindProductsIngredients{

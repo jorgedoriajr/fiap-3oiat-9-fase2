@@ -1,12 +1,10 @@
 package result
 
 import (
-	"github.com/google/uuid"
-	"time"
+	"hamburgueria/internal/modules/product/domain"
 )
 
 type FindProductResult struct {
-	ID          uuid.UUID
 	Name        string
 	Number      int
 	Amount      int
@@ -14,29 +12,42 @@ type FindProductResult struct {
 	Category    string
 	Menu        bool
 	ImgPath     string
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	Ingredients []ProductIngredientsResult
 }
 
-type FindProductWithIngredientsResult struct {
-	ID          uuid.UUID
-	Name        string
-	Number      int
-	Amount      int
-	Description string
-	Category    string
-	Menu        bool
-	ImgPath     string
-	Ingredients []FindProductsIngredientsResult
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-}
-
-type FindProductsIngredientsResult struct {
-	ID       uuid.UUID
+type ProductIngredientsResult struct {
 	Number   int
 	Name     string
 	Amount   int
 	Type     string
 	Quantity int
+}
+
+func FromProductDomain(product domain.Product) FindProductResult {
+	var ingredients []ProductIngredientsResult
+
+	for _, productIngredient := range product.Ingredients {
+		ingredients = append(ingredients, FromProductIngredientDomain(productIngredient))
+	}
+
+	return FindProductResult{
+		Name:        product.Name,
+		Number:      product.Number,
+		Amount:      product.Amount,
+		Description: product.Description,
+		Category:    product.Category.Name,
+		Menu:        product.Menu,
+		ImgPath:     product.ImgPath,
+		Ingredients: ingredients,
+	}
+}
+
+func FromProductIngredientDomain(productIngredient domain.ProductIngredient) ProductIngredientsResult {
+	return ProductIngredientsResult{
+		Number:   productIngredient.Ingredient.Number,
+		Name:     productIngredient.Ingredient.Name,
+		Amount:   productIngredient.Amount,
+		Type:     productIngredient.Ingredient.Type,
+		Quantity: productIngredient.Quantity,
+	}
 }

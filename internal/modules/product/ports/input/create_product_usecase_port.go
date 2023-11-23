@@ -7,5 +7,5 @@ import (
 )
 
 type CreateProductUseCasePort interface {
-	AddProduct(ctx context.Context, command command.CreateProductCommand) (result.CreateProductResult, error)
+	AddProduct(ctx context.Context, command command.CreateProductCommand) (*result.ProductResult, error)
 }
