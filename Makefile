@@ -15,6 +15,8 @@ compose-app:
 compose-down:
 	docker compose -f ./deployments/compose/docker-compose.yml down
 
+compose-db:
+	docker compose -f ./deployments/compose/docker-compose.yml postgres flyway up -d
 
 validate: vet tests
 
