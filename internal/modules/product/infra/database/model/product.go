@@ -10,8 +10,8 @@ import (
 
 type Product struct {
 	ID              uuid.UUID
-	Number          int `gorm:"autoIncrement:true;unique"`
-	Name            string
+	Number          int    `gorm:"autoIncrement:true;unique"`
+	Name            string `gorm:"unique"`
 	Amount          int
 	Description     string
 	Category        string

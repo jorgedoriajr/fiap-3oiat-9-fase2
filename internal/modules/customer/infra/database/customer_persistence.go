@@ -2,10 +2,12 @@ package database
 
 import (
 	"context"
+	"errors"
 	"github.com/rs/zerolog"
 	"gorm.io/gorm"
 	"hamburgueria/internal/modules/customer/domain"
 	"hamburgueria/internal/modules/customer/infra/database/model"
+	"hamburgueria/internal/modules/customer/port/output"
 	"sync"
 	"time"
 )
@@ -37,18 +39,21 @@ func (c CustomerRepository) Create(ctx context.Context, customer domain.Customer
 	return nil
 }
 
-func (c CustomerRepository) Get(ctx context.Context, document string) (customerResult *domain.Customer, err error) {
+func (c CustomerRepository) Get(ctx context.Context, document string) (*domain.Customer, error) {
 
 	var customer model.Customer
-	tx := c.readOnlyClient.First(&customer, document)
+	err := c.readOnlyClient.First(&customer, document).Error
 
-	if tx.Error != nil {
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		c.logger.Error().
 			Ctx(ctx).
-			Err(tx.Error).
+			Err(err).
 			Str("document", customer.Cpf).
-			Msg("Failed to insert customer")
-		return nil, tx.Error
+			Msg("Failed to get customer by document")
+		return nil, err
 	}
 
 	if customer.Cpf == "" {
@@ -58,7 +63,7 @@ func (c CustomerRepository) Get(ctx context.Context, document string) (customerR
 }
 
 var (
-	customerRepositoryInstance CustomerRepository
+	customerRepositoryInstance output.CustomerPersistencePort
 	customerRepositoryOnce     sync.Once
 )
 
@@ -66,7 +71,7 @@ func GetCustomerPersistence(
 	ReadWriteClient *gorm.DB,
 	ReadOnlyClient *gorm.DB,
 	Logger zerolog.Logger,
-) CustomerRepository {
+) output.CustomerPersistencePort {
 	customerRepositoryOnce.Do(func() {
 		customerRepositoryInstance = CustomerRepository{
 			readWriteClient: ReadWriteClient,

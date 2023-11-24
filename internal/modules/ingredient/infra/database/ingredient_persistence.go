@@ -42,7 +42,9 @@ func (c IngredientRepository) GetByType(ctx context.Context, ingredientType stri
 	var ingredients []model.Ingredient
 	err := c.readOnlyClient.
 		Preload(clause.Associations).
-		Joins("IngredientType", c.readOnlyClient.Where(&model.IngredientType{Name: ingredientType})).
+		Table("ingredient").
+		Joins("JOIN ingredient_type ON ingredient_type.name = ingredient.type").
+		Where("ingredient.type = ?", ingredientType).
 		Find(&ingredients).Error
 	if err != nil {
 		c.logger.Error().

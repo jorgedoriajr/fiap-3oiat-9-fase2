@@ -7,8 +7,8 @@ import (
 
 type Ingredient struct {
 	ID             uuid.UUID
-	Number         int `gorm:"autoIncrement:true;unique"`
-	Name           string
+	Number         int    `gorm:"autoIncrement:true;unique"`
+	Name           string `gorm:"unique"`
 	Amount         int
 	Type           string
 	IngredientType IngredientType `gorm:"foreignKey:Type;references:Name"`
