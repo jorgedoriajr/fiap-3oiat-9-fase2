@@ -11,12 +11,14 @@ variables:
 push_docker-image:
   when: manual
   stage: docker
-  image: docker:latest
+  image: docker:24.0.7
   services:
-    - docker:dind
+    - docker:24.0.7-dind
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   before_script:
     - echo "$DOCKER_HUB_PASS" | docker login --username $DOCKER_HUB_USER --password-stdin
     - export DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
   script:
-    - docker build -t ${DOCKER_IMAGE} .
-    - docker push ${DOCKER_IMAGE}
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
