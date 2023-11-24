@@ -6,6 +6,8 @@ variables:
 
 before_script:
   - export BUILD_VERSION="${BUILD_VERSION_MAJOR}.${CI_PIPELINE_IID}"
+  - DOCKER_IMAGE=grupo9fiap/${APPLICATION_NAME}:${BUILD_VERSION}
+
 
 push_docker-image:
   when: manual
@@ -16,6 +18,5 @@ push_docker-image:
   before_script:
     - echo "$DOCKER_HUB_PASS" | docker login --username $DOCKER_HUB_USER --password-stdin
   script:
-    - DOCKER_IMAGE=grupo9fiap/${APPLICATION_NAME}:${BUILD_VERSION}
     - docker build -t ${DOCKER_IMAGE} .
     - docker push ${DOCKER_IMAGE}
