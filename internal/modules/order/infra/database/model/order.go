@@ -2,6 +2,8 @@ package model
 
 import (
 	"github.com/google/uuid"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/product/infra/database/model"
@@ -92,4 +94,32 @@ func OrderProductFromDomain(orderProduct domain.OrderProduct) OrderProduct {
 		Quantity: orderProduct.Quantity,
 		Amount:   orderProduct.Amount,
 	}
+}
+
+func (o Order) BeforeCreate(tx *gorm.DB) (err error) {
+	var cols []clause.Column
+	var colsNames []string
+	for _, field := range tx.Statement.Schema.PrimaryFields {
+		cols = append(cols, clause.Column{Name: field.DBName})
+		colsNames = append(colsNames, field.DBName)
+	}
+	tx.Statement.AddClause(clause.OnConflict{
+		Columns:   cols,
+		DoNothing: true,
+	})
+	return nil
+}
+
+func (o OrderProduct) BeforeCreate(tx *gorm.DB) (err error) {
+	var cols []clause.Column
+	var colsNames []string
+	for _, field := range tx.Statement.Schema.PrimaryFields {
+		cols = append(cols, clause.Column{Name: field.DBName})
+		colsNames = append(colsNames, field.DBName)
+	}
+	tx.Statement.AddClause(clause.OnConflict{
+		Columns:   cols,
+		DoNothing: true,
+	})
+	return nil
 }

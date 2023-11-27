@@ -79,6 +79,24 @@ func (c CreateProductUseCase) buildIngredients(
 			return 0, nil, errors.New(fmt.Sprintf("ingredient %d not found", ingredient.Number))
 		}
 
+		var containsCategory = false
+		for _, config := range ingredientDomain.Type.ConfigByProductCategory {
+			if config.ProductCategory == command.Category {
+				containsCategory = true
+				if config.MaxQtd != 0 && ingredient.Quantity > config.MaxQtd {
+					return 0, nil, errors.New(
+						fmt.Sprintf("ingredient %d quantity exceeds the limit", ingredient.Number),
+					)
+				}
+			}
+		}
+
+		if !containsCategory {
+			return 0, nil, errors.New(
+				fmt.Sprintf("ingredient %d is from a different category", ingredient.Number),
+			)
+		}
+
 		productIngredients = append(productIngredients, domain.ProductIngredient{
 			ID:         uuid.New(),
 			ProductId:  productID,

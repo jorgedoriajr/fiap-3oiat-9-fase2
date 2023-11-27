@@ -11,6 +11,6 @@ type IngredientTypeProductCategory struct {
 	Id              uuid.UUID
 	IngredientType  string
 	Optional        string
-	MaxQtd          string
+	MaxQtd          int
 	ProductCategory string
 }
