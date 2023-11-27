@@ -16,15 +16,15 @@ databases:
     host: ${DB_HOST:localhost}
     port: 5432
     databaseName: hamburgueria
-    user: hamburgueria-app-read
-    password: hamburgueria-app-read
+    user: ${DB_RO_USER:hamburgueria-app-read}
+    password: ${DB_RO_USER:hamburgueria-app-read}
     maxPoolSize: 5
 
   readWrite:
     host: ${DB_HOST:localhost}
     port: 5432
     databaseName: hamburgueria
-    user: hamburgueria-app-write
-    password: hamburgueria-app-write
+    user: ${DB_RW_USER:hamburgueria-app-write}
+    password: ${DB_RW_USER:hamburgueria-app-write}
     maxPoolSize: 5
 

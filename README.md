@@ -29,8 +29,6 @@ The `config` folder contains the configuration, loading environment variables, l
 
 ## Open Api Doc
 
-    http://ifoodcard-redeem-handler.aws.cluster-01.k8s.enterprise-sandbox.dc-ifood.com/swagger/index.html
-
     Documentacao gerada pelo swaggo. (http://github.com/swaggo/echo-swagger)
     Acessar doc: ${path}/swagger/index.html
 
@@ -58,6 +56,41 @@ Run application - *this need the database up*
 If have problems with permission with the database startup, maybe you will need to give permission to this file and them starter the docker compose again.
 
 `chmod +x ./deployments/compose/database/setup-postgresql-databases.sh`
+
+### Start application using k8s(minikube)
+
+#### Instalação do Minikube
+
+##### macOS
+
+**Homebrew:**
+   ```bash
+   brew install minikube
+   ```
+
+##### Ubuntu
+**Instalação de Dependências:**
+   ```bash
+    sudo apt update
+    sudo apt install curl
+    curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    sudo install minikube-linux-amd64 /usr/local/bin/minikube
+```
+##### Windows
+
+1. Download do Minikube:
+   Baixe o instalador MSI do [site oficial](https://minikube.sigs.k8s.io/docs/start/)
+
+2. Execução do Instalador:
+   Execute o instalador e siga as instruções.
+
+
+#### Iniciando o Minikube
+
+1. Inicie um Cluster:
+```bash
+minikube start 
+```
 
 ### Access
 Application will be available at http://localhost:8080
