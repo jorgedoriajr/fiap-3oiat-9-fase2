@@ -11,12 +11,12 @@ type CreateIngredientCommand struct {
 	Type   string
 }
 
-func (c CreateIngredientCommand) ToIngredientEntity() *domain.Ingredient {
+func (c CreateIngredientCommand) ToIngredientEntity(ingredientType domain.IngredientType) *domain.Ingredient {
 	return &domain.Ingredient{
 		ID:     uuid.New(),
 		Name:   c.Name,
 		Amount: c.Amount,
-		Type:   c.Type,
+		Type:   ingredientType,
 	}
 }
 

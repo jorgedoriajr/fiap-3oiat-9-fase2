@@ -7,5 +7,5 @@ import (
 
 type CustomerPersistencePort interface {
 	Create(ctx context.Context, customer domain.Customer) error
-	Get(ctx context.Context, document string) (customerResult *domain.Customer, err error)
+	Get(ctx context.Context, document string) (*domain.Customer, error)
 }

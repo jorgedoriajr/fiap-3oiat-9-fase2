@@ -2,6 +2,8 @@ package model
 
 import (
 	"github.com/google/uuid"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	ingredientDomain "hamburgueria/internal/modules/ingredient/domain"
 	"hamburgueria/internal/modules/ingredient/infra/database/model"
 	"hamburgueria/internal/modules/product/domain"
@@ -10,8 +12,8 @@ import (
 
 type Product struct {
 	ID              uuid.UUID
-	Number          int `gorm:"autoIncrement:true;unique"`
-	Name            string
+	Number          int    `gorm:"autoIncrement:true;unique"`
+	Name            string `gorm:"unique"`
 	Amount          int
 	Description     string
 	Category        string
@@ -91,7 +93,7 @@ func (pi ProductIngredient) ToDomain() domain.ProductIngredient {
 			Number: pi.Ingredient.Number,
 			Name:   pi.Ingredient.Name,
 			Amount: pi.Ingredient.Amount,
-			Type:   pi.Ingredient.IngredientType.Name,
+			Type:   *pi.Ingredient.IngredientType.ToDomain(),
 		},
 		Quantity: pi.Quantity,
 		Amount:   pi.Amount,
@@ -107,9 +109,23 @@ func ProductIngredientFromDomain(productIngredient domain.ProductIngredient) Pro
 			Number:         productIngredient.Ingredient.Number,
 			Name:           productIngredient.Ingredient.Name,
 			Amount:         productIngredient.Ingredient.Amount,
-			IngredientType: model.IngredientType{Name: productIngredient.Ingredient.Type},
+			IngredientType: model.FromIngredientTypeDomain(productIngredient.Ingredient.Type),
 		},
 		Quantity: productIngredient.Quantity,
 		Amount:   productIngredient.Amount,
 	}
+}
+
+func (p Product) BeforeCreate(tx *gorm.DB) (err error) {
+	var cols []clause.Column
+	var colsNames []string
+	for _, field := range tx.Statement.Schema.PrimaryFields {
+		cols = append(cols, clause.Column{Name: field.DBName})
+		colsNames = append(colsNames, field.DBName)
+	}
+	tx.Statement.AddClause(clause.OnConflict{
+		Columns:   cols,
+		DoNothing: true,
+	})
+	return nil
 }

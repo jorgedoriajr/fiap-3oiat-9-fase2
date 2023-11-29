@@ -42,7 +42,9 @@ func (c IngredientRepository) GetByType(ctx context.Context, ingredientType stri
 	var ingredients []model.Ingredient
 	err := c.readOnlyClient.
 		Preload(clause.Associations).
-		Joins("IngredientType", c.readOnlyClient.Where(&model.IngredientType{Name: ingredientType})).
+		Table("ingredient").
+		Joins("JOIN ingredient_type ON ingredient_type.name = ingredient.type").
+		Where("ingredient.type = ?", ingredientType).
 		Find(&ingredients).Error
 	if err != nil {
 		c.logger.Error().
@@ -86,7 +88,11 @@ func (c IngredientRepository) Create(ctx context.Context, ingredient domain.Ingr
 
 func (c IngredientRepository) GetByID(ctx context.Context, ingredientId uuid.UUID) (*domain.Ingredient, error) {
 	var ingredient model.Ingredient
-	err := c.readOnlyClient.Preload(clause.Associations).First(&ingredient, ingredientId).Error
+	err := c.readOnlyClient.
+		Preload(clause.Associations).
+		Preload("IngredientType.ConfigByProductCategory").
+		First(&ingredient, ingredientId).
+		Error
 	if err != nil {
 		c.logger.Error().
 			Ctx(ctx).
@@ -101,7 +107,11 @@ func (c IngredientRepository) GetByID(ctx context.Context, ingredientId uuid.UUI
 
 func (c IngredientRepository) GetByNumber(ctx context.Context, number int) (*domain.Ingredient, error) {
 	var ingredient model.Ingredient
-	err := c.readOnlyClient.Preload(clause.Associations).Where("number = ?", number).First(&ingredient).Error
+	err := c.readOnlyClient.
+		Preload(clause.Associations).
+		Preload("IngredientType.ConfigByProductCategory").
+		Where("number = ?", number).
+		First(&ingredient).Error
 	if err != nil {
 		c.logger.Error().
 			Ctx(ctx).

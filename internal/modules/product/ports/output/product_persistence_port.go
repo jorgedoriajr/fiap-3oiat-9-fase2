@@ -13,4 +13,5 @@ type ProductPersistencePort interface {
 	GetByID(ctx context.Context, productID uuid.UUID) (*domain.Product, error)
 	GetByNumber(ctx context.Context, productNumber int) (*domain.Product, error)
 	GetByCategory(ctx context.Context, productID string) ([]domain.Product, error)
+	CheckProductExists(ctx context.Context, product domain.Product) (*domain.Product, error)
 }

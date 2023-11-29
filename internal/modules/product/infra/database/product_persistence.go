@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"errors"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"gorm.io/gorm"
@@ -46,7 +47,9 @@ func (c ProductRepository) GetByCategory(ctx context.Context, category string) (
 	err := c.readOnlyClient.
 		Preload(clause.Associations).
 		Preload("Ingredients.Ingredient.IngredientType").
-		Joins("ProductCategory", c.readOnlyClient.Where(&model.ProductCategory{Name: category})).
+		Table("product").
+		Joins("JOIN product_category ON product_category.name = product.category").
+		Where("product.category = ?", category).
 		Find(&products).Error
 
 	if err != nil {
@@ -157,6 +160,41 @@ func (c ProductRepository) GetByNumber(ctx context.Context, productNumber int) (
 		return nil, err
 	}
 	return product.ToDomain(), nil
+}
+
+func (c ProductRepository) CheckProductExists(ctx context.Context, product domain.Product) (*domain.Product, error) {
+	query := "product.name = ?"
+	args := []interface{}{product.Name}
+
+	for _, ingredient := range product.Ingredients {
+
+		query += `
+			AND EXISTS (
+				SELECT 1 FROM product_ingredient JOIN ingredient ON product_ingredient.ingredient_id = ingredient.id 
+				WHERE product.id = product_ingredient.product_id AND ingredient.name = ? AND product_ingredient.quantity = ?
+			)
+		`
+		args = append(args, ingredient.Ingredient.Name, ingredient.Quantity)
+	}
+
+	var existentProduct model.Product
+	err := c.readOnlyClient.Table("product").
+		Where(query, args...).
+		First(&existentProduct).Error
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		c.logger.Error().
+			Ctx(ctx).
+			Err(err).
+			Str("productName", product.Name).
+			Msg("Failed to find if product already exists")
+		return nil, err
+	}
+
+	return existentProduct.ToDomain(), nil
 }
 
 var (

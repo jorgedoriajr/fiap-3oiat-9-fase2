@@ -47,7 +47,7 @@ func FromProductIngredientDomain(productIngredient domain.ProductIngredient) Pro
 		Number:   productIngredient.Ingredient.Number,
 		Name:     productIngredient.Ingredient.Name,
 		Amount:   productIngredient.Amount,
-		Type:     productIngredient.Ingredient.Type,
+		Type:     productIngredient.Ingredient.Type.Name,
 		Quantity: productIngredient.Quantity,
 	}
 }
