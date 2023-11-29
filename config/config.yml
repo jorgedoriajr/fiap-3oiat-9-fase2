@@ -19,7 +19,7 @@ databases:
     user: hamburgueria-app-read
     password: hamburgueria-app-read
     maxPoolSize: 5
-    logger: INFO
+    logLevel: 3
 
   readWrite:
     host: ${DB_HOST:localhost}
