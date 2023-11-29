@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"errors"
 	"github.com/rs/zerolog"
 	"gorm.io/gorm"
 	"hamburgueria/internal/modules/product/domain"
@@ -39,6 +40,30 @@ func (c ProductCategoryRepository) GetByName(ctx context.Context, name string) (
 	var category model.ProductCategory
 	err := c.readOnlyClient.Where("name = ?", name).Find(&category).Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		c.logger.Error().
+			Ctx(ctx).
+			Err(err).
+			Str("name", name).
+			Msg("Failed to find category by name")
+		return nil, err
+	}
+
+	return category.ToDomain(), nil
+}
+
+func (c ProductCategoryRepository) GetConfig(ctx context.Context, name string) (*domain.ProductCategory, error) {
+	var category model.ProductCategory
+	err := c.readOnlyClient.
+		Preload("ConfigByProductCategory").
+		Where("name = ?", name).
+		Find(&category).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		c.logger.Error().
 			Ctx(ctx).
 			Err(err).

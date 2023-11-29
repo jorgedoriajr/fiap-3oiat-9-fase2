@@ -68,15 +68,15 @@ func NewClient(conf config.DatabaseConfig) (*gorm.DB, error) {
 		return nil, err
 	}
 
-	return connect(dsn)
+	return connect(dsn, conf)
 }
 
-func connect(dsn string) (*gorm.DB, error) {
+func connect(dsn string, conf config.DatabaseConfig) (*gorm.DB, error) {
 	_, cancel := context.WithTimeout(context.Background(), time.Second*50)
 	defer cancel()
 	conn, errConn := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{SingularTable: true},
-		Logger:         logger.Default.LogMode(logger.Info),
+		Logger:         logger.Default.LogMode(logger.LogLevel(conf.LogLevel)),
 	})
 	if errConn != nil {
 		return nil, errorx.Decorate(errConn, "Failed to connect to database")

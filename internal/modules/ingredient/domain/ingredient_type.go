@@ -10,7 +10,7 @@ type IngredientType struct {
 type IngredientTypeProductCategory struct {
 	Id              uuid.UUID
 	IngredientType  string
-	Optional        string
+	Optional        bool
 	MaxQtd          int
 	ProductCategory string
 }

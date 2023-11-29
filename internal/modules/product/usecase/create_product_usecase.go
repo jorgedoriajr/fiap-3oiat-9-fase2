@@ -31,7 +31,7 @@ func (c CreateProductUseCase) AddProduct(
 ) (*result.ProductResult, error) {
 	productID := uuid.New()
 
-	category, err := c.productCategoryPort.GetByName(ctx, command.Category)
+	category, err := c.productCategoryPort.GetConfig(ctx, command.Category)
 	if err != nil {
 		return nil, err
 	}
@@ -39,13 +39,19 @@ func (c CreateProductUseCase) AddProduct(
 		return nil, errors.New("category not found")
 	}
 
-	amount, productIngredients, err := c.buildIngredients(ctx, command, productID)
+	mandatoryTypes := make(map[string]bool)
+	for _, config := range category.ConfigByProductCategory {
+		if !config.Optional {
+			mandatoryTypes[config.IngredientType] = false
+		}
+	}
+
+	amount, productIngredients, err := c.buildIngredients(ctx, command, productID, mandatoryTypes)
 	if err != nil {
 		return nil, err
 	}
 
 	product := command.ToProductDomain(productIngredients, amount, productID, *category)
-
 	existentProduct, err := c.productPersistencePort.CheckProductExists(ctx, product)
 
 	if existentProduct != nil {
@@ -67,6 +73,7 @@ func (c CreateProductUseCase) buildIngredients(
 	ctx context.Context,
 	command command.CreateProductCommand,
 	productID uuid.UUID,
+	mandatoryTypes map[string]bool,
 ) (int, []domain.ProductIngredient, error) {
 	var amount int
 	var productIngredients []domain.ProductIngredient
@@ -78,6 +85,8 @@ func (c CreateProductUseCase) buildIngredients(
 		if ingredientDomain == nil {
 			return 0, nil, errors.New(fmt.Sprintf("ingredient %d not found", ingredient.Number))
 		}
+
+		mandatoryTypes[ingredientDomain.Type.Name] = true
 
 		var containsCategory = false
 		for _, config := range ingredientDomain.Type.ConfigByProductCategory {
@@ -107,6 +116,15 @@ func (c CreateProductUseCase) buildIngredients(
 
 		amount = amount + ingredientDomain.Amount*ingredient.Quantity
 	}
+
+	for mandatoryType, contains := range mandatoryTypes {
+		if contains == false {
+			return 0, nil, errors.New(
+				fmt.Sprintf("mandatory ingredient type %s missing", mandatoryType),
+			)
+		}
+	}
+
 	return amount, productIngredients, nil
 }
 

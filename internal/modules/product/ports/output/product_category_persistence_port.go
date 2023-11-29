@@ -8,4 +8,5 @@ import (
 type ProductCategoryPersistencePort interface {
 	GetAll(ctx context.Context) ([]domain.ProductCategory, error)
 	GetByName(ctx context.Context, category string) (*domain.ProductCategory, error)
+	GetConfig(ctx context.Context, name string) (*domain.ProductCategory, error)
 }

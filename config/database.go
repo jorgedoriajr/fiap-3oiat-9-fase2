@@ -1,7 +1,13 @@
 package config
 
 // DatabaseConfig represents sql database configuration
-// QueryMode should be passed with value simple_protocol if you are considering use pgBouncer.
+/*
+LogLevel
+Silent silent log level - 1
+Error error log level - 2
+Warn warn log level - 3
+Info info log level - 4
+*/
 type DatabaseConfig struct {
 	Host         string
 	Port         int
@@ -10,5 +16,5 @@ type DatabaseConfig struct {
 	Password     string
 	MaxPoolSize  int
 	Schema       string
-	QueryMode    string
+	LogLevel     int
 }
