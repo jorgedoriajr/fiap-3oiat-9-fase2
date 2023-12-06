@@ -17,6 +17,20 @@ spec:
           image: grupo9fiap/hamburgueria-app:0.0.1-alpha
           ports:
             - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: 8081
+              path: /liveness
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              port: 8081
+              path: /readiness
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
           env:
             - name: DB_HOST
               value: host.minikube.internal

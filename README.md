@@ -59,6 +59,33 @@ If have problems with permission with the database startup, maybe you will need 
 
 `chmod +x ./deployments/compose/database/setup-postgresql-databases.sh`
 
+### Start application with minukube
+
+Primeiramente verifique se você já tem o minikube instalado.
+
+Passo a passo para instalação conforme sistema operacional: https://minikube.sigs.k8s.io/docs/start/
+
+Também é necessário ter o kubectl instalado: https://kubernetes.io/docs/tasks/tools/
+
+Após a instalação, é necessário startar o cluster
+
+`minikube start`
+
+Para subir nosso deployment `hamburgueria-app` primeiramente você precisa ter o banco de dados up, 
+conforme step "Start application using docker":
+
+`docker compose -f ./deployments/compose/docker-compose.yml postgres flyway up -d`
+
+Agora é só rodar o seguinte comando para executar todos os arquivos yml da pasta k8s:
+
+`kubectl apply -f ./deployments/k8s/`
+
+Isso criará o service e deployment.
+
+Para acessar através da porta 8080, é necessário dar um port forward
+
+`kubectl port-forward service/hamburgueria-app-service 8080:80`
+
 ### Access
 Application will be available at http://localhost:8080
 
