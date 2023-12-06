@@ -53,7 +53,7 @@ Run application - *this need the database up*
 
 ### Start application using docker
 
-`docker compose -f ./deployments/compose/docker-compose.yml up -d`
+`docker-compose -f ./deployments/compose/docker-compose.yml up -d`
 
 If have problems with permission with the database startup, maybe you will need to give permission to this file and them starter the docker compose again.
 
@@ -74,7 +74,7 @@ Após a instalação, é necessário startar o cluster
 Para subir nosso deployment `hamburgueria-app` primeiramente você precisa ter o banco de dados up, 
 conforme step "Start application using docker":
 
-`docker compose -f ./deployments/compose/docker-compose.yml postgres flyway up -d`
+`docker-compose -f ./deployments/compose/docker-compose.yml up -d postgres flyway`
 
 Agora é só rodar o seguinte comando para executar todos os arquivos yml da pasta k8s:
 
