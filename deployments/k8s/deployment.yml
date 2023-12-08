@@ -33,7 +33,9 @@ spec:
             timeoutSeconds: 5
           resources:
             requests:
-              cpu: 1m
+              cpu: 50m
+            limits:
+              cpu: 100m
           env:
             - name: DB_HOST
               value: host.minikube.internal

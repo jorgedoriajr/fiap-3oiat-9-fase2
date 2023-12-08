@@ -9,4 +9,4 @@ spec:
     name: hamburgueria-app
   minReplicas: 2
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 70
+  targetCPUUtilizationPercentage: 80
