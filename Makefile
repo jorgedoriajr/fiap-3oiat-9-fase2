@@ -16,7 +16,18 @@ compose-down:
 	docker compose -f ./deployments/compose/docker-compose.yml down
 
 compose-db:
-	docker compose -f ./deployments/compose/docker-compose.yml postgres flyway up -d
+	docker compose -f ./deployments/compose/docker-compose.yml up postgres flyway  -d
+
+run-on-k8s: compose-db minikube-start apply-k8s-config port-forward
+
+apply-k8s-config:
+	kubectl apply -f ./deployments/k8s/configmap.yaml ./deployments/k8s/deployment.yaml ./deployments/k8s/service.yaml ./deployments/k8s/hpa.yaml
+
+port-forward:
+	kubectl port-forward service/hamburgueria-app-service 8080:80
+
+minikube-start:
+	minikube start
 
 validate: vet tests
 
