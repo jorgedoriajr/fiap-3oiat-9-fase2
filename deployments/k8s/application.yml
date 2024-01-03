@@ -39,3 +39,31 @@ spec:
           env:
             - name: DB_HOST
               value: host.minikube.internal
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hamburgueria-app-service
+spec:
+  selector:
+    name: hamburgueria-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
+---
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hamburgueria-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: hamburgueria-app
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
