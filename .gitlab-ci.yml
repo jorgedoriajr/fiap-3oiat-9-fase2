@@ -1,4 +1,5 @@
 stages:
+  - test
   - docker
 
 variables:
@@ -6,14 +7,33 @@ variables:
   DOCKER_IMAGE_NAME: grupo9fiap/${APPLICATION_NAME}
   DOCKER_IMAGE_VERSION: ${BUILD_VERSION}
 
+unit-test:
+  stage: test
+  image: golang:1.21-alpine
+  allow_failure: false
+  variables:
+    GOPATH: $CI_PROJECT_DIR/.go
+  cache:
+    paths:
+      - .go
+  script:
+    - go get -u github.com/jstemmer/go-junit-report
+    - go get github.com/mfridman/tparse
+    - EXIT_CODE=0
+    - go test -v -count=1 ./... -covermode=count -coverprofile coverage.out 2>&1 |& tee test.out || EXIT_CODE=$?
+    - cat test.out
+    - go tool cover -func=coverage.out
+    - exit $EXIT_CODE
+  artifacts:
+    paths:
+      - coverage.out
+
 push_docker-image:
   when: manual
   stage: docker
   image: docker:24.0.7
   services:
     - docker:24.0.7-dind
-  #  variables:
-  #    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   before_script:
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
     - export DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
