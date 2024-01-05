@@ -3,22 +3,24 @@ stages:
 
 variables:
   APPLICATION_NAME: hamburgueria-app
-
-before_script:
-  - export BUILD_VERSION="${BUILD_VERSION_MAJOR}.${CI_PIPELINE_IID}"
+  DOCKER_IMAGE_NAME: grupo9fiap/${APPLICATION_NAME}
+  DOCKER_FLYWAY_IMAGE_NAME: grupo9fiap/${APPLICATION_NAME}-flyway
+  DOCKER_IMAGE_VERSION: ${BUILD_VERSION}
 
 push_docker-image:
   when: manual
   stage: docker
-  image: docker:latest
+  image: docker:24.0.7
   services:
-    - docker:dind
+    - docker:24.0.7-dind
+  #  variables:
+  #    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   before_script:
-    - docker login --username $DOCKER_HUB_USER --password-stdin $DOCKER_HUB_PASS
+    - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
+    - export DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+    - export DOCKER_IMAGE_FLYWAY=${DOCKER_FLYWAY_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
   script:
-    - DOCKER_IMAGE=grupo9fiap/${APPLICATION_NAME}:${BUILD_VERSION}
-    - DOCKER_FLYWAY_IMAGE=grupo9fiap/${APPLICATION_NAME}-flyway:latest
-    - docker build -t ${DOCKER_IMAGE} .
-    - docker push ${DOCKER_IMAGE}
-    - docker build -t ${DOCKER_FLYWAY_IMAGE} .
-    - docker push ${DOCKER_FLYWAY_IMAGE}
+    - docker build -t $DOCKER_IMAGE .
+    - docker build -t DOCKER_IMAGE_FLYWAY .
+    - docker push $DOCKER_IMAGE
+    - docker push $DOCKER_IMAGE_FLYWAY

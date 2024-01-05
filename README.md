@@ -29,7 +29,7 @@ The `config` folder contains the configuration, loading environment variables, l
 
 ## Open Api Doc
 
-    http://ifoodcard-redeem-handler.aws.cluster-01.k8s.enterprise-sandbox.dc-ifood.com/swagger/index.html
+    http://localhost:8080/swagger/index.html
 
     Documentacao gerada pelo swaggo. (http://github.com/swaggo/echo-swagger)
     Acessar doc: ${path}/swagger/index.html
