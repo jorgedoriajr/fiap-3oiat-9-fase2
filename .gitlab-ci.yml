@@ -4,7 +4,6 @@ stages:
 variables:
   APPLICATION_NAME: hamburgueria-app
   DOCKER_IMAGE_NAME: grupo9fiap/${APPLICATION_NAME}
-  DOCKER_FLYWAY_IMAGE_NAME: grupo9fiap/${APPLICATION_NAME}-flyway
   DOCKER_IMAGE_VERSION: ${BUILD_VERSION}
 
 push_docker-image:
@@ -21,6 +20,6 @@ push_docker-image:
     - export DOCKER_IMAGE_FLYWAY=${DOCKER_FLYWAY_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
   script:
     - docker build -t $DOCKER_IMAGE .
-    - docker build -t DOCKER_IMAGE_FLYWAY .
+    - docker build -t DOCKER_IMAGE_FLYWAY ./deployments/compose/database/
     - docker push $DOCKER_IMAGE
     - docker push $DOCKER_IMAGE_FLYWAY
