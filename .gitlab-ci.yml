@@ -9,13 +9,15 @@ variables:
 
 unit-test:
   stage: test
-  image: golang:1.21-alpine
+  image: golang:1.21
   allow_failure: false
   variables:
     GOPATH: $CI_PROJECT_DIR/.go
   cache:
     paths:
       - .go
+  before_script:
+    - mkdir -p .go
   script:
     - go get -u github.com/jstemmer/go-junit-report
     - go get github.com/mfridman/tparse
