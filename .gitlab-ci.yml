@@ -41,7 +41,7 @@ push_docker-image:
     - export DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
     - export DOCKER_IMAGE_FLYWAY=${DOCKER_FLYWAY_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
   script:
-    - docker build -t $DOCKER_IMAGE .
-    - docker build -t DOCKER_IMAGE_FLYWAY ./deployments/compose/database/
+    - docker build -t grupo9fiap/hamburgueria-app:0.0.1-alpha .
+    - docker build -t grupo9fiap/hamburgueria-app-flyway:0.0.1-alpha ./deployments/compose/database/
     - docker push $DOCKER_IMAGE
     - docker push $DOCKER_IMAGE_FLYWAY
