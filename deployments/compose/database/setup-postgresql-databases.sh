@@ -45,6 +45,8 @@ EOSQL
 EOSQL
 }
 
+echo "Creating database hamburgueria"
+
 if [ -n "$POSTGRES_DB" ]; then
 		create_user_and_database "hamburgueria" "hamburgueria"
 fi
