@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
         - name: flyway
-          image: grupo9fiap/hamburgueria-flyway:latest
+          image: grupo9fiap/hamburgueria-app-flyway:latest
           env:
             - name: FLYWAY_URL
               value: jdbc:postgresql://postgres:5432/hamburgueria

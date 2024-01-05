@@ -77,16 +77,17 @@ Agora já é possível iniciar o cluster
 
 `minikube start`
 
-Para subir nosso deployment `hamburgueria-app` primeiramente você precisa ter o banco de dados up, 
-conforme step "Start application using docker":
+Para subir nosso deployment `hamburgueria-app` primeiramente você precisa ter o banco de dados up.
 
-`docker-compose -f ./deployments/compose/docker-compose.yml up -d postgres flyway`
+`kubectl apply -f deployments/k8s/database.yml`
 
-Agora é só rodar o seguinte comando para executar todos os arquivos yml da pasta k8s:
+E rodar os scripts para criar as tabelas do banco
 
-`kubectl apply -f ./deployments/k8s/`
+`kubectl apply -f deployments/k8s/job-flyway.yml`
 
-Isso criará o service e deployment.
+Agora é só rodar o seguinte comando para subir a aplicação:
+
+`kubectl apply -f deployments/k8s/application.yml`
 
 Para acessar através da porta 8080, é necessário dar um port forward
 

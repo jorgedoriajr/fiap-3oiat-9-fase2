@@ -38,7 +38,7 @@ spec:
               cpu: 100m
           env:
             - name: DB_HOST
-              value: host.minikube.internal
+              value: postgres
 ---
 
 apiVersion: v1
