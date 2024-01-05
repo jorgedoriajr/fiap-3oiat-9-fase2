@@ -17,18 +17,20 @@ type CreateIngredientUseCasePort struct {
 }
 
 // AddIngredient provides a mock function with given fields: ctx, _a1
-func (_m *CreateIngredientUseCasePort) AddIngredient(ctx context.Context, _a1 command.CreateIngredientCommand) (result.CreateIngredientResult, error) {
+func (_m *CreateIngredientUseCasePort) AddIngredient(ctx context.Context, _a1 command.CreateIngredientCommand) (*result.CreateIngredientResult, error) {
 	ret := _m.Called(ctx, _a1)
 
-	var r0 result.CreateIngredientResult
+	var r0 *result.CreateIngredientResult
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, command.CreateIngredientCommand) (result.CreateIngredientResult, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, command.CreateIngredientCommand) (*result.CreateIngredientResult, error)); ok {
 		return rf(ctx, _a1)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, command.CreateIngredientCommand) result.CreateIngredientResult); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, command.CreateIngredientCommand) *result.CreateIngredientResult); ok {
 		r0 = rf(ctx, _a1)
 	} else {
-		r0 = ret.Get(0).(result.CreateIngredientResult)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*result.CreateIngredientResult)
+		}
 	}
 
 	if rf, ok := ret.Get(1).(func(context.Context, command.CreateIngredientCommand) error); ok {

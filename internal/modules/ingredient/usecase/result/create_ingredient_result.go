@@ -12,8 +12,8 @@ type CreateIngredientResult struct {
 	Type   string
 }
 
-func ToCreateIngredientResultFrom(entity domain.Ingredient) CreateIngredientResult {
-	return CreateIngredientResult{
+func ToCreateIngredientResultFrom(entity domain.Ingredient) *CreateIngredientResult {
+	return &CreateIngredientResult{
 		ID:     entity.ID,
 		Name:   entity.Name,
 		Amount: entity.Amount,

@@ -19,11 +19,11 @@ type CreateIngredientUseCase struct {
 	ingredientTypePersistence output.IngredientTypePersistencePort
 }
 
-func (c CreateIngredientUseCase) AddIngredient(ctx context.Context, command command.CreateIngredientCommand) (result.CreateIngredientResult, error) {
+func (c CreateIngredientUseCase) AddIngredient(ctx context.Context, command command.CreateIngredientCommand) (*result.CreateIngredientResult, error) {
 	ingredientType, err := c.ingredientTypePersistence.GetByName(ctx, command.Type)
 
 	if err != nil {
-		return result.CreateIngredientResult{}, err
+		return nil, err
 	}
 
 	ingredient := command.ToIngredientEntity(*ingredientType)
@@ -31,7 +31,7 @@ func (c CreateIngredientUseCase) AddIngredient(ctx context.Context, command comm
 	fmt.Printf("creating new ingredient: [%v]", ingredient)
 	err = c.ingredientPersistence.Create(ctx, *ingredient)
 	if err != nil {
-		return result.CreateIngredientResult{}, err
+		return nil, err
 	}
 	return result.ToCreateIngredientResultFrom(*ingredient), nil
 }
