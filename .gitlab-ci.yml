@@ -2,11 +2,6 @@ stages:
   - test
   - docker
 
-variables:
-  APPLICATION_NAME: hamburgueria-app
-  DOCKER_IMAGE_NAME: grupo9fiap/${APPLICATION_NAME}
-  DOCKER_IMAGE_VERSION: ${BUILD_VERSION}
-
 unit-test:
   stage: test
   image: golang:1.21
@@ -38,10 +33,8 @@ push_docker-image:
     - docker:24.0.7-dind
   before_script:
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
-    - export DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
-    - export DOCKER_IMAGE_FLYWAY=${DOCKER_FLYWAY_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
   script:
-    - docker build -t grupo9fiap/hamburgueria-app:0.0.1-alpha .
-    - docker build -t grupo9fiap/hamburgueria-app-flyway:0.0.1-alpha ./deployments/compose/database/
-    - docker push $DOCKER_IMAGE
-    - docker push $DOCKER_IMAGE_FLYWAY
+    - docker build -t grupo9fiap/hamburgueria-app:${BUILD_VERSION} .
+    - docker build -t grupo9fiap/hamburgueria-app-flyway:${BUILD_VERSION} ./deployments/compose/database/
+    - docker push grupo9fiap/hamburgueria-app:${BUILD_VERSION}
+    - docker push grupo9fiap/hamburgueria-app-flyway:${BUILD_VERSION}
