@@ -31,7 +31,7 @@ func (u UpdateProductUseCase) UpdateProduct(ctx context.Context, command command
 	}
 
 	product.UpdatedAt = time.Now()
-	if command.Ingredients != nil {
+	if command.Ingredients != nil && len(command.Ingredients) > 0 {
 		amount, productIngredients, err := u.buildIngredients(ctx, command, product.ID)
 		if err != nil {
 			return err

@@ -59,7 +59,7 @@ func (c *Controller) AddIngredient(e echo.Context) error {
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return e.JSON(http.StatusOK, response.FromCreateIngredientResult(resultIngredient))
+	return e.JSON(http.StatusOK, response.FromCreateIngredientResult(*resultIngredient))
 }
 
 // GetIngredientByNumber

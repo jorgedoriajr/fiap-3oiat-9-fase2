@@ -7,5 +7,5 @@ import (
 )
 
 type CreateIngredientUseCasePort interface {
-	AddIngredient(ctx context.Context, command command.CreateIngredientCommand) (result.CreateIngredientResult, error)
+	AddIngredient(ctx context.Context, command command.CreateIngredientCommand) (*result.CreateIngredientResult, error)
 }
