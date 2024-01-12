@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"hamburgueria/internal/modules/product/domain"
-	"hamburgueria/tests/mocks"
+	mocks "hamburgueria/tests/mocks/modules/product/ports/output"
 	"testing"
 )
 

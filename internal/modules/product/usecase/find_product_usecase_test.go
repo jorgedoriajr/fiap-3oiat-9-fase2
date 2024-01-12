@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	ingredientDomain "hamburgueria/internal/modules/ingredient/domain"
 	"hamburgueria/internal/modules/product/domain"
-	"hamburgueria/tests/mocks"
+	mocks "hamburgueria/tests/mocks/modules/product/ports/output"
 	"testing"
 	"time"
 )

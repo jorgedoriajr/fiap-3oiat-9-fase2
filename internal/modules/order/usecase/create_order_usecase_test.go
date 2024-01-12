@@ -12,7 +12,10 @@ import (
 	"hamburgueria/internal/modules/order/usecase/command"
 	"hamburgueria/internal/modules/order/usecase/result"
 	productDomain "hamburgueria/internal/modules/product/domain"
-	"hamburgueria/tests/mocks"
+	customerMocks "hamburgueria/tests/mocks/modules/customer/port/output"
+	mocks "hamburgueria/tests/mocks/modules/order/port/input"
+	orderMocks "hamburgueria/tests/mocks/modules/order/port/output"
+	productMocks "hamburgueria/tests/mocks/modules/product/ports/output"
 	"testing"
 	"time"
 )
@@ -20,9 +23,9 @@ import (
 func TestCreateOrderUseCase(t *testing.T) {
 
 	t.Run(`should create order`, func(t *testing.T) {
-		orderPersistenceMock := mocks.NewOrderPersistencePort(t)
-		customerPersistenceMock := mocks.NewCustomerPersistencePort(t)
-		productPersistenceMock := mocks.NewProductPersistencePort(t)
+		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
+		customerPersistenceMock := customerMocks.NewCustomerPersistencePort(t)
+		productPersistenceMock := productMocks.NewProductPersistencePort(t)
 		processPaymentUseCaseMock := mocks.NewProcessPaymentUseCasePort(t)
 		createOrderUseCase := CreateOrderUseCase{
 			customerPersistence:   customerPersistenceMock,
@@ -99,9 +102,9 @@ func TestCreateOrderUseCase(t *testing.T) {
 	})
 
 	t.Run(`should return error when customer not found`, func(t *testing.T) {
-		orderPersistenceMock := mocks.NewOrderPersistencePort(t)
-		customerPersistenceMock := mocks.NewCustomerPersistencePort(t)
-		productPersistenceMock := mocks.NewProductPersistencePort(t)
+		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
+		customerPersistenceMock := customerMocks.NewCustomerPersistencePort(t)
+		productPersistenceMock := productMocks.NewProductPersistencePort(t)
 		processPaymentUseCaseMock := mocks.NewProcessPaymentUseCasePort(t)
 		createOrderUseCase := CreateOrderUseCase{
 			customerPersistence:   customerPersistenceMock,
@@ -142,9 +145,9 @@ func TestCreateOrderUseCase(t *testing.T) {
 	})
 
 	t.Run(`should return error when product not found`, func(t *testing.T) {
-		orderPersistenceMock := mocks.NewOrderPersistencePort(t)
-		customerPersistenceMock := mocks.NewCustomerPersistencePort(t)
-		productPersistenceMock := mocks.NewProductPersistencePort(t)
+		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
+		customerPersistenceMock := customerMocks.NewCustomerPersistencePort(t)
+		productPersistenceMock := productMocks.NewProductPersistencePort(t)
 		processPaymentUseCaseMock := mocks.NewProcessPaymentUseCasePort(t)
 		createOrderUseCase := CreateOrderUseCase{
 			customerPersistence:   customerPersistenceMock,
@@ -195,9 +198,9 @@ func TestCreateOrderUseCase(t *testing.T) {
 	})
 
 	t.Run(`should return error when create failed`, func(t *testing.T) {
-		orderPersistenceMock := mocks.NewOrderPersistencePort(t)
-		customerPersistenceMock := mocks.NewCustomerPersistencePort(t)
-		productPersistenceMock := mocks.NewProductPersistencePort(t)
+		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
+		customerPersistenceMock := customerMocks.NewCustomerPersistencePort(t)
+		productPersistenceMock := productMocks.NewProductPersistencePort(t)
 		processPaymentUseCaseMock := mocks.NewProcessPaymentUseCasePort(t)
 		createOrderUseCase := CreateOrderUseCase{
 			customerPersistence:   customerPersistenceMock,
@@ -253,9 +256,9 @@ func TestCreateOrderUseCase(t *testing.T) {
 	})
 
 	t.Run(`should return error when payment failed`, func(t *testing.T) {
-		orderPersistenceMock := mocks.NewOrderPersistencePort(t)
-		customerPersistenceMock := mocks.NewCustomerPersistencePort(t)
-		productPersistenceMock := mocks.NewProductPersistencePort(t)
+		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
+		customerPersistenceMock := customerMocks.NewCustomerPersistencePort(t)
+		productPersistenceMock := productMocks.NewProductPersistencePort(t)
 		processPaymentUseCaseMock := mocks.NewProcessPaymentUseCasePort(t)
 		createOrderUseCase := CreateOrderUseCase{
 			customerPersistence:   customerPersistenceMock,

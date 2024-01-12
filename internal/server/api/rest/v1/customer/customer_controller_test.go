@@ -6,8 +6,9 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"hamburgueria/internal/server/api/rest/v1/customer/response"
-	"hamburgueria/tests/mocks"
+	"hamburgueria/internal/modules/customer/usecase/result"
+	mocks "hamburgueria/tests/mocks/modules/customer/port/input"
+
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -26,7 +27,7 @@ func TestCustomerController(t *testing.T) {
 		}
 
 		document := "98932673667"
-		customer := response.Customer{
+		customer := result.CustomerCreated{
 			Document: document,
 			Name:     "Name",
 			Phone:    "11999999999",

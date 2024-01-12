@@ -9,14 +9,15 @@ import (
 	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/payment/usecase/result"
-	"hamburgueria/tests/mocks"
+	orderMocks "hamburgueria/tests/mocks/modules/order/port/output"
+	mocks "hamburgueria/tests/mocks/modules/payment/port/input"
 	"testing"
 )
 
 func TestProcessPaymentUseCase(t *testing.T) {
 
 	t.Run(`should process payment`, func(t *testing.T) {
-		orderPersistenceMock := mocks.NewOrderPersistencePort(t)
+		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
 		createPaymentUseCaseMock := mocks.NewCreatePaymentPort(t)
 		processPaymentUseCase := ProcessPaymentUseCase{
 			orderPersistence:     orderPersistenceMock,
@@ -52,7 +53,7 @@ func TestProcessPaymentUseCase(t *testing.T) {
 	})
 
 	t.Run(`should return error when create payment failed`, func(t *testing.T) {
-		orderPersistenceMock := mocks.NewOrderPersistencePort(t)
+		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
 		createPaymentUseCaseMock := mocks.NewCreatePaymentPort(t)
 		processPaymentUseCase := ProcessPaymentUseCase{
 			orderPersistence:     orderPersistenceMock,
@@ -76,7 +77,7 @@ func TestProcessPaymentUseCase(t *testing.T) {
 	})
 
 	t.Run(`should return error when update failed`, func(t *testing.T) {
-		orderPersistenceMock := mocks.NewOrderPersistencePort(t)
+		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
 		createPaymentUseCaseMock := mocks.NewCreatePaymentPort(t)
 		processPaymentUseCase := ProcessPaymentUseCase{
 			orderPersistence:     orderPersistenceMock,

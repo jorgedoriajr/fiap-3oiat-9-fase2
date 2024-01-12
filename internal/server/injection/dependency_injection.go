@@ -4,7 +4,7 @@ import (
 	"hamburgueria/internal/modules/customer/infra/database"
 	customerUseCase "hamburgueria/internal/modules/customer/usecase"
 	ingredientDatabase "hamburgueria/internal/modules/ingredient/infra/database"
-	ingredientUsecase "hamburgueria/internal/modules/ingredient/usecase"
+	create2 "hamburgueria/internal/modules/ingredient/usecase"
 	orderDatabase "hamburgueria/internal/modules/order/infra/database"
 	orderUsecase "hamburgueria/internal/modules/order/usecase"
 	paymentUseCase "hamburgueria/internal/modules/payment/usecase"
@@ -77,12 +77,12 @@ func NewDependencyInjection() DependencyInjection {
 			ListOrderUseCase:   orderUsecase.GetListOrderUseCase(orderPersistence),
 		},
 		IngredientController: &ingredient.Controller{
-			CreateIngredientUseCase: ingredientUsecase.NewCreateIngredientUseCase(ingredientPersistence, ingredientTypePersistence),
-			FindIngredientUseCase:   ingredientUsecase.NewFindIngredientUseCase(ingredientPersistence),
+			CreateIngredientUseCase: create2.NewCreateIngredientUseCase(ingredientPersistence, ingredientTypePersistence),
+			FindIngredientUseCase:   create2.NewFindIngredientUseCase(ingredientPersistence),
 		},
 		ProductCategoryController: &productcategory.Controller{GetProductCategoryUseCase: findProductCategoryUseCase},
 		IngredientTypeController: &ingredienttype.Controller{
-			FindIngredientTypeUseCase: ingredientUsecase.GetIngredientTypeUseCase(ingredientTypePersistence),
+			FindIngredientTypeUseCase: create2.GetIngredientTypeUseCase(ingredientTypePersistence),
 		},
 		Swagger: &swagger.Swagger{},
 	}

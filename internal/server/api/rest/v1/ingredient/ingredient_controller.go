@@ -5,8 +5,8 @@ import (
 	"hamburgueria/internal/modules/ingredient/ports/input"
 	"hamburgueria/internal/modules/ingredient/usecase/result"
 	"hamburgueria/internal/server/api/middleware"
+	"hamburgueria/internal/server/api/rest/presenter"
 	"hamburgueria/internal/server/api/rest/v1/ingredient/request"
-	"hamburgueria/internal/server/api/rest/v1/ingredient/response"
 	"strconv"
 
 	"net/http"
@@ -59,7 +59,7 @@ func (c *Controller) AddIngredient(e echo.Context) error {
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return e.JSON(http.StatusOK, response.FromCreateIngredientResult(*resultIngredient))
+	return e.JSON(http.StatusOK, presenter.CreateIngredientResponseFromResult(*resultIngredient))
 }
 
 // GetIngredientByNumber
@@ -102,7 +102,7 @@ func (c *Controller) GetIngredientByNumber(ctx echo.Context) error {
 		return ctx.JSON(http.StatusNoContent, nil)
 	}
 
-	return ctx.JSON(http.StatusOK, response.FromFindIngredientResult(*ingredientResult))
+	return ctx.JSON(http.StatusOK, presenter.FindIngredientResponseFromResult(*ingredientResult))
 }
 
 // GetIngredients
@@ -139,6 +139,6 @@ func (c *Controller) GetIngredients(ctx echo.Context) error {
 		return ctx.JSON(http.StatusNoContent, nil)
 	}
 
-	return ctx.JSON(http.StatusOK, response.FromFindIngredientsResult(resultIngredients))
+	return ctx.JSON(http.StatusOK, presenter.FindIngredientsResponseFromResult(resultIngredients))
 
 }

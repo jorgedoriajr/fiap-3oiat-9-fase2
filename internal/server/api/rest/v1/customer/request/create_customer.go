@@ -1,6 +1,8 @@
 package request
 
-import "hamburgueria/internal/modules/customer/usecase/command"
+import (
+	"hamburgueria/internal/modules/customer/usecase/command"
+)
 
 type CreateCustomer struct {
 	Document       string `json:"document"`

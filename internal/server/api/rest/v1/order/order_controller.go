@@ -7,8 +7,8 @@ import (
 	"hamburgueria/internal/modules/order/port/input"
 	"hamburgueria/internal/modules/order/usecase/result"
 	"hamburgueria/internal/server/api/middleware"
+	"hamburgueria/internal/server/api/rest/presenter"
 	"hamburgueria/internal/server/api/rest/v1/order/request"
-	"hamburgueria/internal/server/api/rest/v1/order/response"
 	"net/http"
 )
 
@@ -66,10 +66,7 @@ func (c *Controller) AddOrder(ctx echo.Context) error {
 			"message": err.Error(),
 		})
 	}
-	return ctx.JSON(http.StatusOK, response.OrderResponse{
-		Amount:      orderCreated.Amount,
-		PaymentData: orderCreated.PaymentData,
-	})
+	return ctx.JSON(http.StatusOK, presenter.OrderResponseFromResult(*orderCreated))
 }
 
 // GetOrders
@@ -107,5 +104,5 @@ func (c *Controller) GetOrders(ctx echo.Context) error {
 		return ctx.JSON(http.StatusNoContent, nil)
 	}
 
-	return ctx.JSON(http.StatusOK, response.FromResult(resultOrders))
+	return ctx.JSON(http.StatusOK, presenter.ListOrderResponseFromResult(resultOrders))
 }

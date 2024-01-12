@@ -6,8 +6,8 @@ import (
 	"hamburgueria/internal/modules/product/ports/input"
 	"hamburgueria/internal/modules/product/usecase/result"
 	"hamburgueria/internal/server/api/middleware"
+	"hamburgueria/internal/server/api/rest/presenter"
 	"hamburgueria/internal/server/api/rest/v1/product/request"
-	"hamburgueria/internal/server/api/rest/v1/product/response"
 	"net/http"
 	"strconv"
 )
@@ -64,7 +64,7 @@ func (c *Controller) AddProduct(e echo.Context) error {
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return e.JSON(http.StatusOK, response.ProductCreatedResponseFromResult(*resultProduct))
+	return e.JSON(http.StatusOK, presenter.ProductCreatedResponseFromResult(*resultProduct))
 }
 
 // UpdateProduct
@@ -154,7 +154,7 @@ func (c *Controller) GetProductById(ctx echo.Context) error {
 		return ctx.JSON(http.StatusNoContent, nil)
 	}
 
-	return ctx.JSON(http.StatusOK, response.FromResult(*resultProduct))
+	return ctx.JSON(http.StatusOK, presenter.ProductResponseFromResult(*resultProduct))
 }
 
 // InactiveProductByNumber
@@ -228,6 +228,6 @@ func (c *Controller) GetProducts(ctx echo.Context) error {
 		return ctx.JSON(http.StatusNoContent, nil)
 	}
 
-	return ctx.JSON(http.StatusOK, response.FromResultList(resultProducts))
+	return ctx.JSON(http.StatusOK, presenter.ProductsResponseFromResultList(resultProducts))
 
 }
