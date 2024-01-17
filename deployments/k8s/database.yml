@@ -93,6 +93,8 @@ data:
   dbname: aGFtYnVyZ3Vlcmlh
   username: aGFtYnVyZ3VlcmlhLWFwcA==
   password: aGFtYnVyZ3VlcmlhLWFwcA==
+  password-write: aGFtYnVyZ3VlcmlhLWFwcC13cml0ZQ==
+  password-read: aGFtYnVyZ3VlcmlhLWFwcC1yZWFk
 ---
 
 apiVersion: apps/v1

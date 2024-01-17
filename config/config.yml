@@ -17,7 +17,7 @@ databases:
     port: 5432
     databaseName: hamburgueria
     user: hamburgueria-app-read
-    password: hamburgueria-app-read
+    password: ${DB_PASSWORD_READ:hamburgueria-app-read}
     maxPoolSize: 5
     logLevel: 3
 
@@ -26,7 +26,7 @@ databases:
     port: 5432
     databaseName: hamburgueria
     user: hamburgueria-app-write
-    password: hamburgueria-app-write
+    password: ${DB_PASSWORD_WRITE:hamburgueria-app-write}
     maxPoolSize: 5
     logLevel: 3
 

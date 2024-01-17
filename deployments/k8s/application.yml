@@ -39,6 +39,17 @@ spec:
           env:
             - name: DB_HOST
               value: postgres
+            - name: DB_PASSWORD_WRITE
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret-config
+                  key: password-write
+            - name: DB_PASSWORD_READ
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret-config
+                  key: password-read
+
 ---
 
 apiVersion: v1

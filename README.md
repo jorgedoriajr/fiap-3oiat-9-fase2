@@ -2,6 +2,8 @@
 
 Projeto FIAP 3SOAT - Grupo 9
 
+<img src="/docs/fiap-3soat-9.drawio.png" alt="desenho arquitetura">
+
 ## Responsability
 
 Responsável por gerenciar um sistema de totem para pedidos
