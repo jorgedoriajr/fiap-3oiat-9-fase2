@@ -19,7 +19,7 @@ func TestListOrderUseCase(t *testing.T) {
 	t.Run(`should find all orders`, func(t *testing.T) {
 		orderPersistenceMock := mocks.NewOrderPersistencePort(t)
 		listOrderUseCase := ListOrderUseCase{
-			orderPersistence: orderPersistenceMock,
+			orderPersistenceGateway: orderPersistenceMock,
 		}
 		orderId := uuid.New()
 		order := domain.Order{
@@ -84,7 +84,7 @@ func TestListOrderUseCase(t *testing.T) {
 	t.Run(`should return error when try to find all orders`, func(t *testing.T) {
 		orderPersistenceMock := mocks.NewOrderPersistencePort(t)
 		listOrderUseCase := ListOrderUseCase{
-			orderPersistence: orderPersistenceMock,
+			orderPersistenceGateway: orderPersistenceMock,
 		}
 
 		orderPersistenceMock.On("FindAll", mock.Anything).Return(nil, errors.New("SOME_ERROR"))
@@ -100,7 +100,7 @@ func TestListOrderUseCase(t *testing.T) {
 	t.Run(`should find all orders`, func(t *testing.T) {
 		orderPersistenceMock := mocks.NewOrderPersistencePort(t)
 		listOrderUseCase := ListOrderUseCase{
-			orderPersistence: orderPersistenceMock,
+			orderPersistenceGateway: orderPersistenceMock,
 		}
 		orderId := uuid.New()
 		order := domain.Order{
@@ -165,7 +165,7 @@ func TestListOrderUseCase(t *testing.T) {
 	t.Run(`should return error when try to find all orders`, func(t *testing.T) {
 		orderPersistenceMock := mocks.NewOrderPersistencePort(t)
 		listOrderUseCase := ListOrderUseCase{
-			orderPersistence: orderPersistenceMock,
+			orderPersistenceGateway: orderPersistenceMock,
 		}
 
 		orderPersistenceMock.On("FindByStatus", mock.Anything, "WAITING_PAYMENT").Return(nil, errors.New("SOME_ERROR"))

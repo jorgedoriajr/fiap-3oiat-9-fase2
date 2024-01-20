@@ -17,8 +17,8 @@ func TestCreateIngredientUseCase(t *testing.T) {
 		ingredientRepositoryMock := mocks.NewIngredientPersistencePort(t)
 		ingredientTypeRepositoryMock := mocks.NewIngredientTypePersistencePort(t)
 		createIngredientUseCase := CreateIngredientUseCase{
-			ingredientPersistence:     ingredientRepositoryMock,
-			ingredientTypePersistence: ingredientTypeRepositoryMock,
+			ingredientPersistenceGateway:     ingredientRepositoryMock,
+			ingredientTypePersistenceGateway: ingredientTypeRepositoryMock,
 		}
 
 		ingredientCommand := command.CreateIngredientCommand{
@@ -57,8 +57,8 @@ func TestCreateIngredientUseCase(t *testing.T) {
 		ingredientRepositoryMock := mocks.NewIngredientPersistencePort(t)
 		ingredientTypeRepositoryMock := mocks.NewIngredientTypePersistencePort(t)
 		createIngredientUseCase := CreateIngredientUseCase{
-			ingredientPersistence:     ingredientRepositoryMock,
-			ingredientTypePersistence: ingredientTypeRepositoryMock,
+			ingredientPersistenceGateway:     ingredientRepositoryMock,
+			ingredientTypePersistenceGateway: ingredientTypeRepositoryMock,
 		}
 
 		ingredientCommand := command.CreateIngredientCommand{
@@ -95,8 +95,8 @@ func TestCreateIngredientUseCase(t *testing.T) {
 		ingredientRepositoryMock := mocks.NewIngredientPersistencePort(t)
 		ingredientTypeRepositoryMock := mocks.NewIngredientTypePersistencePort(t)
 		createIngredientUseCase := CreateIngredientUseCase{
-			ingredientPersistence:     ingredientRepositoryMock,
-			ingredientTypePersistence: ingredientTypeRepositoryMock,
+			ingredientPersistenceGateway:     ingredientRepositoryMock,
+			ingredientTypePersistenceGateway: ingredientTypeRepositoryMock,
 		}
 
 		ingredientCommand := command.CreateIngredientCommand{

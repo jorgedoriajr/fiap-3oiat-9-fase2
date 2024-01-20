@@ -14,11 +14,11 @@ var (
 )
 
 type FindIngredientTypeUseCase struct {
-	ingredientTypePersistence output.IngredientTypePersistencePort
+	ingredientTypePersistenceGateway output.IngredientTypePersistencePort
 }
 
 func (p FindIngredientTypeUseCase) FindAll(ctx context.Context) ([]result.IngredientTypeResult, error) {
-	ingredients, err := p.ingredientTypePersistence.GetAll(ctx)
+	ingredients, err := p.ingredientTypePersistenceGateway.GetAll(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -31,10 +31,12 @@ func (p FindIngredientTypeUseCase) FindAll(ctx context.Context) ([]result.Ingred
 	return ingredientTypeResult, nil
 }
 
-func GetIngredientTypeUseCase(IngredientTypePersistence output.IngredientTypePersistencePort) input.FindIngredientTypeUseCasePort {
+func GetIngredientTypeUseCase(
+	IngredientTypePersistenceGateway output.IngredientTypePersistencePort,
+) input.FindIngredientTypeUseCasePort {
 	findIngredientTypeUseCaseOnce.Do(func() {
 		findIngredientTypeUseCaseInstance = FindIngredientTypeUseCase{
-			ingredientTypePersistence: IngredientTypePersistence,
+			ingredientTypePersistenceGateway: IngredientTypePersistenceGateway,
 		}
 	})
 	return findIngredientTypeUseCaseInstance

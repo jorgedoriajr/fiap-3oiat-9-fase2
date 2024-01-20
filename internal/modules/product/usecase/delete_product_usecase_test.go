@@ -18,7 +18,7 @@ func TestDeleteProductUseCase(t *testing.T) {
 	t.Run(`should delete product`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		deleteProductUseCase := DeleteProductUseCase{
-			productPersistencePort: productPersistenceMock,
+			productPersistenceGateway: productPersistenceMock,
 		}
 
 		productId := uuid.New()
@@ -70,7 +70,7 @@ func TestDeleteProductUseCase(t *testing.T) {
 	t.Run(`should return error when delete product`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		deleteProductUseCase := DeleteProductUseCase{
-			productPersistencePort: productPersistenceMock,
+			productPersistenceGateway: productPersistenceMock,
 		}
 
 		productId := uuid.New()
@@ -118,7 +118,7 @@ func TestDeleteProductUseCase(t *testing.T) {
 	t.Run(`should return error when failed to found product`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		deleteProductUseCase := DeleteProductUseCase{
-			productPersistencePort: productPersistenceMock,
+			productPersistenceGateway: productPersistenceMock,
 		}
 
 		productPersistenceMock.On("GetByNumber", mock.Anything, 1).Return(nil, errors.New("SOME_ERROR"))

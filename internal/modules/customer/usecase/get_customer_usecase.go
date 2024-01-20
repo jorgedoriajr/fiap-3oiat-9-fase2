@@ -8,11 +8,11 @@ import (
 )
 
 type GetCustomerUseCase struct {
-	customerPersistence output.CustomerPersistencePort
+	customerPersistenceGateway output.CustomerPersistencePort
 }
 
 func (c GetCustomerUseCase) GetCustomer(ctx context.Context, document string) (*result.CustomerCreated, error) {
-	customer, err := c.customerPersistence.Get(ctx, document)
+	customer, err := c.customerPersistenceGateway.Get(ctx, document)
 	if err != nil {
 		return nil, err
 	}
@@ -33,11 +33,11 @@ var (
 )
 
 func GetGetCustomerUseCase(
-	CustomerPersistence output.CustomerPersistencePort,
+	CustomerPersistenceGateway output.CustomerPersistencePort,
 ) GetCustomerUseCase {
 	getCustomerUseCaseOnce.Do(func() {
 		getCustomerUseCaseInstance = GetCustomerUseCase{
-			customerPersistence: CustomerPersistence,
+			customerPersistenceGateway: CustomerPersistenceGateway,
 		}
 	})
 	return getCustomerUseCaseInstance

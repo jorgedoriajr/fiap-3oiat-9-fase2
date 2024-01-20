@@ -18,10 +18,10 @@ import (
 )
 
 type CreateOrderUseCase struct {
-	customerPersistence   customerOutput.CustomerPersistencePort
-	productPersistence    productOutput.ProductPersistencePort
-	orderPersistence      output.OrderPersistencePort
-	processPaymentUseCase paymentInput.ProcessPaymentUseCasePort
+	customerPersistenceGateway customerOutput.CustomerPersistencePort
+	productPersistenceGateway  productOutput.ProductPersistencePort
+	orderPersistenceGateway    output.OrderPersistencePort
+	processPaymentUseCase      paymentInput.ProcessPaymentPort
 }
 
 func (c CreateOrderUseCase) AddOrder(
@@ -29,7 +29,7 @@ func (c CreateOrderUseCase) AddOrder(
 	createOrderCommand command.CreateOrderCommand,
 ) (*result.CreateOrderResult, error) {
 
-	customer, err := c.customerPersistence.Get(ctx, createOrderCommand.CustomerDocument)
+	customer, err := c.customerPersistenceGateway.Get(ctx, createOrderCommand.CustomerDocument)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (c CreateOrderUseCase) AddOrder(
 	for _, createProductCommand := range createOrderCommand.Products {
 		var productAmount int
 		if createProductCommand.Type == "default" {
-			product, err := c.productPersistence.GetByNumber(ctx, createProductCommand.Number)
+			product, err := c.productPersistenceGateway.GetByNumber(ctx, createProductCommand.Number)
 			if err != nil {
 				return nil, err
 			}
@@ -78,7 +78,7 @@ func (c CreateOrderUseCase) AddOrder(
 		Amount:     amount,
 	}
 
-	err = c.orderPersistence.Create(ctx, order)
+	err = c.orderPersistenceGateway.Create(ctx, order)
 	if err != nil {
 		return nil, err
 	}
@@ -100,17 +100,17 @@ var (
 )
 
 func GetCreateOrderUseCase(
-	productPersistence productOutput.ProductPersistencePort,
-	orderPersistence output.OrderPersistencePort,
-	processPaymentUseCase paymentInput.ProcessPaymentUseCasePort,
-	customerPersistence customerOutput.CustomerPersistencePort,
+	productPersistenceGateway productOutput.ProductPersistencePort,
+	orderPersistenceGateway output.OrderPersistencePort,
+	processPaymentUseCase paymentInput.ProcessPaymentPort,
+	customerPersistenceGateway customerOutput.CustomerPersistencePort,
 ) CreateOrderUseCase {
 	createOrderUseCaseOnce.Do(func() {
 		createOrderUseCaseInstance = CreateOrderUseCase{
-			productPersistence:    productPersistence,
-			orderPersistence:      orderPersistence,
-			processPaymentUseCase: processPaymentUseCase,
-			customerPersistence:   customerPersistence,
+			productPersistenceGateway:  productPersistenceGateway,
+			orderPersistenceGateway:    orderPersistenceGateway,
+			processPaymentUseCase:      processPaymentUseCase,
+			customerPersistenceGateway: customerPersistenceGateway,
 		}
 	})
 	return createOrderUseCaseInstance

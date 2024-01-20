@@ -15,13 +15,13 @@ import (
 )
 
 type UpdateProductUseCase struct {
-	productPersistencePort    output.ProductPersistencePort
-	ingredientPersistencePort ingredientOutput.IngredientPersistencePort
+	productPersistenceGateway    output.ProductPersistencePort
+	ingredientPersistenceGateway ingredientOutput.IngredientPersistencePort
 }
 
 func (u UpdateProductUseCase) UpdateProduct(ctx context.Context, command command.UpdateProductCommand) error {
 
-	product, err := u.productPersistencePort.GetByNumber(ctx, command.Number)
+	product, err := u.productPersistenceGateway.GetByNumber(ctx, command.Number)
 	if err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func (u UpdateProductUseCase) UpdateProduct(ctx context.Context, command command
 		product.Description = *command.Description
 	}
 
-	err = u.productPersistencePort.Update(ctx, *product)
+	err = u.productPersistenceGateway.Update(ctx, *product)
 	if err != nil {
 		return err
 	}
@@ -76,7 +76,7 @@ func (u UpdateProductUseCase) buildIngredients(
 	var amount int
 	var productIngredients []domain.ProductIngredient
 	for _, ingredient := range command.Ingredients {
-		ingredientDomain, err := u.ingredientPersistencePort.GetByNumber(ctx, ingredient.Number)
+		ingredientDomain, err := u.ingredientPersistenceGateway.GetByNumber(ctx, ingredient.Number)
 		if err != nil {
 			return 0, nil, err
 		}
@@ -103,13 +103,13 @@ var (
 )
 
 func GetUpdateProductUseCase(
-	productPersistencePort output.ProductPersistencePort,
-	ingredientPersistencePort ingredientOutput.IngredientPersistencePort,
+	productPersistenceGateway output.ProductPersistencePort,
+	ingredientPersistenceGateway ingredientOutput.IngredientPersistencePort,
 ) input.UpdateProductUseCasePort {
 	updateProductUseCaseOnce.Do(func() {
 		updateProductUseCaseInstance = UpdateProductUseCase{
-			productPersistencePort:    productPersistencePort,
-			ingredientPersistencePort: ingredientPersistencePort,
+			productPersistenceGateway:    productPersistenceGateway,
+			ingredientPersistenceGateway: ingredientPersistenceGateway,
 		}
 	})
 	return updateProductUseCaseInstance

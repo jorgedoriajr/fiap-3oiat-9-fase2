@@ -20,9 +20,9 @@ var (
 )
 
 type CreateProductUseCase struct {
-	productPersistencePort    output.ProductPersistencePort
-	productCategoryPort       output.ProductCategoryPersistencePort
-	ingredientPersistencePort ingredientOutput.IngredientPersistencePort
+	productPersistenceGateway         output.ProductPersistencePort
+	productCategoryPersistenceGateway output.ProductCategoryPersistencePort
+	ingredientPersistenceGateway      ingredientOutput.IngredientPersistencePort
 }
 
 func (c CreateProductUseCase) AddProduct(
@@ -31,7 +31,7 @@ func (c CreateProductUseCase) AddProduct(
 ) (*result.ProductResult, error) {
 	productID := uuid.New()
 
-	category, err := c.productCategoryPort.GetConfig(ctx, command.Category)
+	category, err := c.productCategoryPersistenceGateway.GetConfig(ctx, command.Category)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func (c CreateProductUseCase) AddProduct(
 	}
 
 	product := command.ToProductDomain(productIngredients, amount, productID, *category)
-	existentProduct, err := c.productPersistencePort.CheckProductExists(ctx, product)
+	existentProduct, err := c.productPersistenceGateway.CheckProductExists(ctx, product)
 
 	if existentProduct != nil {
 		return result.FromDomain(*existentProduct), nil
@@ -61,7 +61,7 @@ func (c CreateProductUseCase) AddProduct(
 		return nil, err
 	}
 
-	err = c.productPersistencePort.Create(ctx, product)
+	err = c.productPersistenceGateway.Create(ctx, product)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (c CreateProductUseCase) buildIngredients(
 	var amount int
 	var productIngredients []domain.ProductIngredient
 	for _, ingredient := range command.Ingredients {
-		ingredientDomain, err := c.ingredientPersistencePort.GetByNumber(ctx, ingredient.Number)
+		ingredientDomain, err := c.ingredientPersistenceGateway.GetByNumber(ctx, ingredient.Number)
 		if err != nil {
 			return 0, nil, err
 		}
@@ -129,15 +129,15 @@ func (c CreateProductUseCase) buildIngredients(
 }
 
 func GetCreateProductUseCase(
-	productPersistence output.ProductPersistencePort,
-	ingredientPersistencePort ingredientOutput.IngredientPersistencePort,
-	productCategoryPort output.ProductCategoryPersistencePort,
+	productPersistenceGateway output.ProductPersistencePort,
+	ingredientPersistenceGateway ingredientOutput.IngredientPersistencePort,
+	productCategoryGateway output.ProductCategoryPersistencePort,
 ) input.CreateProductUseCasePort {
 	createProductUseCaseOnce.Do(func() {
 		createProductUseCaseInstance = CreateProductUseCase{
-			productPersistencePort:    productPersistence,
-			ingredientPersistencePort: ingredientPersistencePort,
-			productCategoryPort:       productCategoryPort,
+			productPersistenceGateway:         productPersistenceGateway,
+			ingredientPersistenceGateway:      ingredientPersistenceGateway,
+			productCategoryPersistenceGateway: productCategoryGateway,
 		}
 	})
 	return createProductUseCaseInstance

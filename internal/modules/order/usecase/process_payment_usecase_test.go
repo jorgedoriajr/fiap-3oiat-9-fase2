@@ -20,8 +20,8 @@ func TestProcessPaymentUseCase(t *testing.T) {
 		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
 		createPaymentUseCaseMock := mocks.NewCreatePaymentPort(t)
 		processPaymentUseCase := ProcessPaymentUseCase{
-			orderPersistence:     orderPersistenceMock,
-			createPaymentUseCase: createPaymentUseCaseMock,
+			orderPersistenceGateway: orderPersistenceMock,
+			createPaymentUseCase:    createPaymentUseCaseMock,
 		}
 
 		order := domain.Order{}
@@ -56,8 +56,8 @@ func TestProcessPaymentUseCase(t *testing.T) {
 		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
 		createPaymentUseCaseMock := mocks.NewCreatePaymentPort(t)
 		processPaymentUseCase := ProcessPaymentUseCase{
-			orderPersistence:     orderPersistenceMock,
-			createPaymentUseCase: createPaymentUseCaseMock,
+			orderPersistenceGateway: orderPersistenceMock,
+			createPaymentUseCase:    createPaymentUseCaseMock,
 		}
 
 		order := domain.Order{}
@@ -80,8 +80,8 @@ func TestProcessPaymentUseCase(t *testing.T) {
 		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
 		createPaymentUseCaseMock := mocks.NewCreatePaymentPort(t)
 		processPaymentUseCase := ProcessPaymentUseCase{
-			orderPersistence:     orderPersistenceMock,
-			createPaymentUseCase: createPaymentUseCaseMock,
+			orderPersistenceGateway: orderPersistenceMock,
+			createPaymentUseCase:    createPaymentUseCaseMock,
 		}
 
 		order := domain.Order{}

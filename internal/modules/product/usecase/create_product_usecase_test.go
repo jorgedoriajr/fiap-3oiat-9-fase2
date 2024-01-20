@@ -20,9 +20,9 @@ func TestCreateProductUseCase(t *testing.T) {
 		productCategoryPersistenceMock := mocks.NewProductCategoryPersistencePort(t)
 		ingredientPersistenceMock := mocks2.NewIngredientPersistencePort(t)
 		createProductUseCase := CreateProductUseCase{
-			productPersistencePort:    productPersistenceMock,
-			productCategoryPort:       productCategoryPersistenceMock,
-			ingredientPersistencePort: ingredientPersistenceMock,
+			productPersistenceGateway:         productPersistenceMock,
+			productCategoryPersistenceGateway: productCategoryPersistenceMock,
+			ingredientPersistenceGateway:      ingredientPersistenceMock,
 		}
 
 		ingredientTypeProductCategory := []ingredientDomain.IngredientTypeProductCategory{
@@ -109,9 +109,9 @@ func TestCreateProductUseCase(t *testing.T) {
 		productCategoryPersistenceMock := mocks.NewProductCategoryPersistencePort(t)
 		ingredientPersistenceMock := mocks2.NewIngredientPersistencePort(t)
 		createProductUseCase := CreateProductUseCase{
-			productPersistencePort:    productPersistenceMock,
-			productCategoryPort:       productCategoryPersistenceMock,
-			ingredientPersistencePort: ingredientPersistenceMock,
+			productPersistenceGateway:         productPersistenceMock,
+			productCategoryPersistenceGateway: productCategoryPersistenceMock,
+			ingredientPersistenceGateway:      ingredientPersistenceMock,
 		}
 
 		ingredientTypeProductCategory := []ingredientDomain.IngredientTypeProductCategory{
@@ -210,9 +210,9 @@ func TestCreateProductUseCase(t *testing.T) {
 		productCategoryPersistenceMock := mocks.NewProductCategoryPersistencePort(t)
 		ingredientPersistenceMock := mocks2.NewIngredientPersistencePort(t)
 		createProductUseCase := CreateProductUseCase{
-			productPersistencePort:    productPersistenceMock,
-			productCategoryPort:       productCategoryPersistenceMock,
-			ingredientPersistencePort: ingredientPersistenceMock,
+			productPersistenceGateway:         productPersistenceMock,
+			productCategoryPersistenceGateway: productCategoryPersistenceMock,
+			ingredientPersistenceGateway:      ingredientPersistenceMock,
 		}
 
 		ingredientTypeProductCategory := []ingredientDomain.IngredientTypeProductCategory{
@@ -295,9 +295,9 @@ func TestCreateProductUseCase(t *testing.T) {
 		productCategoryPersistenceMock := mocks.NewProductCategoryPersistencePort(t)
 		ingredientPersistenceMock := mocks2.NewIngredientPersistencePort(t)
 		createProductUseCase := CreateProductUseCase{
-			productPersistencePort:    productPersistenceMock,
-			productCategoryPort:       productCategoryPersistenceMock,
-			ingredientPersistencePort: ingredientPersistenceMock,
+			productPersistenceGateway:         productPersistenceMock,
+			productCategoryPersistenceGateway: productCategoryPersistenceMock,
+			ingredientPersistenceGateway:      ingredientPersistenceMock,
 		}
 
 		ingredientTypeProductCategory := []ingredientDomain.IngredientTypeProductCategory{
@@ -388,9 +388,9 @@ func TestCreateProductUseCase(t *testing.T) {
 		productCategoryPersistenceMock := mocks.NewProductCategoryPersistencePort(t)
 		ingredientPersistenceMock := mocks2.NewIngredientPersistencePort(t)
 		createProductUseCase := CreateProductUseCase{
-			productPersistencePort:    productPersistenceMock,
-			productCategoryPort:       productCategoryPersistenceMock,
-			ingredientPersistencePort: ingredientPersistenceMock,
+			productPersistenceGateway:         productPersistenceMock,
+			productCategoryPersistenceGateway: productCategoryPersistenceMock,
+			ingredientPersistenceGateway:      ingredientPersistenceMock,
 		}
 
 		ingredientTypeProductCategory := []ingredientDomain.IngredientTypeProductCategory{

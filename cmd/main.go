@@ -3,7 +3,7 @@ package main
 import (
 	"hamburgueria/config"
 	_ "hamburgueria/docs"
-	"hamburgueria/internal/server/injection"
+	"hamburgueria/internal/web/injection"
 	"hamburgueria/pkg/httpserver"
 	"hamburgueria/pkg/sql"
 	"hamburgueria/pkg/starter"
@@ -30,7 +30,7 @@ func main() {
 	server := httpserver.Builder().
 		WithConfig(starter.GetHttpServerConfig()).
 		WithHealthCheck(sql.GetHealthChecker()).
-		WithControllers(injection.GetAllControllers(dependencyInjection)...).
+		WithControllers(injection.GetAllApis(dependencyInjection)...).
 		WithValidator(validation.GetEchoValidator()).
 		Build()
 

@@ -13,11 +13,11 @@ var (
 )
 
 type GetProductCategoryUseCase struct {
-	productCategoryPersistencePort output.ProductCategoryPersistencePort
+	productCategoryPersistenceGateway output.ProductCategoryPersistencePort
 }
 
 func (c GetProductCategoryUseCase) FindAll(ctx context.Context) ([]result.FindProductCategoryResult, error) {
-	productCategories, err := c.productCategoryPersistencePort.GetAll(ctx)
+	productCategories, err := c.productCategoryPersistenceGateway.GetAll(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -32,10 +32,10 @@ func (c GetProductCategoryUseCase) FindAll(ctx context.Context) ([]result.FindPr
 	return categoriesResult, nil
 }
 
-func NewGetProductCategoryUseCase(productCategoryPersistence output.ProductCategoryPersistencePort) *GetProductCategoryUseCase {
+func NewGetProductCategoryUseCase(productCategoryPersistenceGateway output.ProductCategoryPersistencePort) *GetProductCategoryUseCase {
 	getProductCategoryUseCaseOnce.Do(func() {
 		getProductCategoryUseCaseInstance = &GetProductCategoryUseCase{
-			productCategoryPersistencePort: productCategoryPersistence,
+			productCategoryPersistenceGateway: productCategoryPersistenceGateway,
 		}
 	})
 	return getProductCategoryUseCaseInstance

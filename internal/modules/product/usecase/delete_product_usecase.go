@@ -15,11 +15,11 @@ var (
 )
 
 type DeleteProductUseCase struct {
-	productPersistencePort output.ProductPersistencePort
+	productPersistenceGateway output.ProductPersistencePort
 }
 
 func (d DeleteProductUseCase) Inactive(ctx context.Context, number int) error {
-	product, err := d.productPersistencePort.GetByNumber(ctx, number)
+	product, err := d.productPersistenceGateway.GetByNumber(ctx, number)
 	if err != nil {
 		return err
 	}
@@ -27,13 +27,13 @@ func (d DeleteProductUseCase) Inactive(ctx context.Context, number int) error {
 		return errors.New(fmt.Sprintf("product %d not found", number))
 	}
 	product.Active = false
-	return d.productPersistencePort.Update(ctx, *product)
+	return d.productPersistenceGateway.Update(ctx, *product)
 }
 
-func GetDeleteProductUseCase(productPersistencePort output.ProductPersistencePort) input.DeleteProductUseCasePort {
+func GetDeleteProductUseCase(productPersistenceGateway output.ProductPersistencePort) input.DeleteProductUseCasePort {
 	deleteProductUseCaseOnce.Do(func() {
 		deleteProductUseCaseInstance = DeleteProductUseCase{
-			productPersistencePort: productPersistencePort,
+			productPersistenceGateway: productPersistenceGateway,
 		}
 	})
 	return deleteProductUseCaseInstance

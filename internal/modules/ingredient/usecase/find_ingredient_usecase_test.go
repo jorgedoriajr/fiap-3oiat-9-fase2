@@ -16,7 +16,7 @@ func TestFindIngredientUseCase(t *testing.T) {
 	t.Run(`should find all ingredients`, func(t *testing.T) {
 		ingredientRepositoryMock := mocks.NewIngredientPersistencePort(t)
 		findIngredientUseCase := FindIngredientUseCase{
-			ingredientPersistence: ingredientRepositoryMock,
+			ingredientPersistenceGateway: ingredientRepositoryMock,
 		}
 
 		ingredient := domain.Ingredient{
@@ -56,7 +56,7 @@ func TestFindIngredientUseCase(t *testing.T) {
 	t.Run(`should return error when GetAll failed`, func(t *testing.T) {
 		ingredientRepositoryMock := mocks.NewIngredientPersistencePort(t)
 		findIngredientUseCase := FindIngredientUseCase{
-			ingredientPersistence: ingredientRepositoryMock,
+			ingredientPersistenceGateway: ingredientRepositoryMock,
 		}
 
 		ingredientRepositoryMock.On("GetAll", mock.Anything).Return(nil, errors.New("SOME_ERROR"))
@@ -72,7 +72,7 @@ func TestFindIngredientUseCase(t *testing.T) {
 	t.Run(`should return empty`, func(t *testing.T) {
 		ingredientRepositoryMock := mocks.NewIngredientPersistencePort(t)
 		findIngredientUseCase := FindIngredientUseCase{
-			ingredientPersistence: ingredientRepositoryMock,
+			ingredientPersistenceGateway: ingredientRepositoryMock,
 		}
 
 		ingredientRepositoryMock.On("GetAll", mock.Anything).Return([]domain.Ingredient{}, nil)
@@ -88,7 +88,7 @@ func TestFindIngredientUseCase(t *testing.T) {
 	t.Run(`should find ingredient by type`, func(t *testing.T) {
 		ingredientRepositoryMock := mocks.NewIngredientPersistencePort(t)
 		findIngredientUseCase := FindIngredientUseCase{
-			ingredientPersistence: ingredientRepositoryMock,
+			ingredientPersistenceGateway: ingredientRepositoryMock,
 		}
 
 		ingredient := domain.Ingredient{
@@ -116,7 +116,7 @@ func TestFindIngredientUseCase(t *testing.T) {
 	t.Run(`should return when when find ingredient by type with error`, func(t *testing.T) {
 		ingredientRepositoryMock := mocks.NewIngredientPersistencePort(t)
 		findIngredientUseCase := FindIngredientUseCase{
-			ingredientPersistence: ingredientRepositoryMock,
+			ingredientPersistenceGateway: ingredientRepositoryMock,
 		}
 
 		ingredientRepositoryMock.On("GetByType", mock.Anything, "Type").Return(nil, errors.New("SOME_ERROR"))
@@ -132,7 +132,7 @@ func TestFindIngredientUseCase(t *testing.T) {
 	t.Run(`should find ingredient by number`, func(t *testing.T) {
 		ingredientRepositoryMock := mocks.NewIngredientPersistencePort(t)
 		findIngredientUseCase := FindIngredientUseCase{
-			ingredientPersistence: ingredientRepositoryMock,
+			ingredientPersistenceGateway: ingredientRepositoryMock,
 		}
 
 		ingredient := domain.Ingredient{
@@ -159,7 +159,7 @@ func TestFindIngredientUseCase(t *testing.T) {
 	t.Run(`should return error when find ingredient by number with error`, func(t *testing.T) {
 		ingredientRepositoryMock := mocks.NewIngredientPersistencePort(t)
 		findIngredientUseCase := FindIngredientUseCase{
-			ingredientPersistence: ingredientRepositoryMock,
+			ingredientPersistenceGateway: ingredientRepositoryMock,
 		}
 
 		ingredientRepositoryMock.On("GetByNumber", mock.Anything, 1).Return(nil, errors.New("SOME_ERROR"))
