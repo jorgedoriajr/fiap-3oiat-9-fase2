@@ -9,7 +9,7 @@ import (
 	ingredientDomain "hamburgueria/internal/modules/ingredient/domain"
 	"hamburgueria/internal/modules/order/domain"
 	productDomain "hamburgueria/internal/modules/product/domain"
-	"hamburgueria/tests/mocks"
+	mocks "hamburgueria/tests/mocks/modules/order/port/output"
 	"testing"
 	"time"
 )

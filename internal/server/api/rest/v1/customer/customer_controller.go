@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"hamburgueria/internal/modules/customer/port/input"
 	"hamburgueria/internal/server/api/middleware"
+	"hamburgueria/internal/server/api/rest/presenter"
 	"hamburgueria/internal/server/api/rest/v1/customer/request"
 	"hamburgueria/pkg/validation"
 	"net/http"
@@ -52,7 +53,7 @@ func (c *Controller) GetCustomer(ctx echo.Context) error {
 		return ctx.JSON(http.StatusNoContent, nil)
 	}
 
-	return ctx.JSON(http.StatusOK, response)
+	return ctx.JSON(http.StatusOK, presenter.ToGetCustomerResponse(*response))
 }
 
 // AddCustomer

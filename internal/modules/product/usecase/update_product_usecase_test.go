@@ -9,7 +9,8 @@ import (
 	ingredientDomain "hamburgueria/internal/modules/ingredient/domain"
 	"hamburgueria/internal/modules/product/domain"
 	"hamburgueria/internal/modules/product/usecase/command"
-	"hamburgueria/tests/mocks"
+	mocks2 "hamburgueria/tests/mocks/modules/ingredient/ports/output"
+	mocks "hamburgueria/tests/mocks/modules/product/ports/output"
 	"testing"
 	"time"
 )
@@ -18,7 +19,7 @@ func TestUpdateProductUseCase(t *testing.T) {
 
 	t.Run(`should update product`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
-		ingredientPersistenceMock := mocks.NewIngredientPersistencePort(t)
+		ingredientPersistenceMock := mocks2.NewIngredientPersistencePort(t)
 		updateProductUseCase := UpdateProductUseCase{
 			productPersistencePort:    productPersistenceMock,
 			ingredientPersistencePort: ingredientPersistenceMock,

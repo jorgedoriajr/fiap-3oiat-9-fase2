@@ -7,7 +7,8 @@ import (
 	"github.com/stretchr/testify/mock"
 	"hamburgueria/internal/modules/customer/domain"
 	"hamburgueria/internal/modules/customer/usecase/command"
-	"hamburgueria/tests/mocks"
+	mocks "hamburgueria/tests/mocks/modules/customer/port/output"
+
 	"testing"
 )
 

@@ -8,7 +8,8 @@ import (
 	ingredientDomain "hamburgueria/internal/modules/ingredient/domain"
 	"hamburgueria/internal/modules/product/domain"
 	"hamburgueria/internal/modules/product/usecase/command"
-	"hamburgueria/tests/mocks"
+	mocks2 "hamburgueria/tests/mocks/modules/ingredient/ports/output"
+	mocks "hamburgueria/tests/mocks/modules/product/ports/output"
 	"testing"
 )
 
@@ -17,7 +18,7 @@ func TestCreateProductUseCase(t *testing.T) {
 	t.Run(`should create product`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		productCategoryPersistenceMock := mocks.NewProductCategoryPersistencePort(t)
-		ingredientPersistenceMock := mocks.NewIngredientPersistencePort(t)
+		ingredientPersistenceMock := mocks2.NewIngredientPersistencePort(t)
 		createProductUseCase := CreateProductUseCase{
 			productPersistencePort:    productPersistenceMock,
 			productCategoryPort:       productCategoryPersistenceMock,
@@ -106,7 +107,7 @@ func TestCreateProductUseCase(t *testing.T) {
 	t.Run(`should not create product when doesn't have all ingredients'`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		productCategoryPersistenceMock := mocks.NewProductCategoryPersistencePort(t)
-		ingredientPersistenceMock := mocks.NewIngredientPersistencePort(t)
+		ingredientPersistenceMock := mocks2.NewIngredientPersistencePort(t)
 		createProductUseCase := CreateProductUseCase{
 			productPersistencePort:    productPersistenceMock,
 			productCategoryPort:       productCategoryPersistenceMock,
@@ -207,7 +208,7 @@ func TestCreateProductUseCase(t *testing.T) {
 	t.Run(`should not create product when quantity exceeds the limit`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		productCategoryPersistenceMock := mocks.NewProductCategoryPersistencePort(t)
-		ingredientPersistenceMock := mocks.NewIngredientPersistencePort(t)
+		ingredientPersistenceMock := mocks2.NewIngredientPersistencePort(t)
 		createProductUseCase := CreateProductUseCase{
 			productPersistencePort:    productPersistenceMock,
 			productCategoryPort:       productCategoryPersistenceMock,
@@ -292,7 +293,7 @@ func TestCreateProductUseCase(t *testing.T) {
 	t.Run(`should not create product when ingredient is from another category`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		productCategoryPersistenceMock := mocks.NewProductCategoryPersistencePort(t)
-		ingredientPersistenceMock := mocks.NewIngredientPersistencePort(t)
+		ingredientPersistenceMock := mocks2.NewIngredientPersistencePort(t)
 		createProductUseCase := CreateProductUseCase{
 			productPersistencePort:    productPersistenceMock,
 			productCategoryPort:       productCategoryPersistenceMock,
@@ -385,7 +386,7 @@ func TestCreateProductUseCase(t *testing.T) {
 	t.Run(`should return existent product when already exists`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		productCategoryPersistenceMock := mocks.NewProductCategoryPersistencePort(t)
-		ingredientPersistenceMock := mocks.NewIngredientPersistencePort(t)
+		ingredientPersistenceMock := mocks2.NewIngredientPersistencePort(t)
 		createProductUseCase := CreateProductUseCase{
 			productPersistencePort:    productPersistenceMock,
 			productCategoryPort:       productCategoryPersistenceMock,

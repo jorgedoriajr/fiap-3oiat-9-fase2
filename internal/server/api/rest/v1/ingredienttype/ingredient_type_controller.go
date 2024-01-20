@@ -4,7 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"hamburgueria/internal/modules/ingredient/ports/input"
 	"hamburgueria/internal/server/api/middleware"
-	"hamburgueria/internal/server/api/rest/v1/ingredienttype/response"
+	"hamburgueria/internal/server/api/rest/presenter"
 	"net/http"
 )
 
@@ -45,10 +45,6 @@ func (c *Controller) GetIngredientTypes(ctx echo.Context) error {
 		return ctx.JSON(http.StatusNoContent, nil)
 	}
 
-	var ingredientTypeResponse []response.IngredientTypeResponse
-	for _, ingredientType := range result {
-		ingredientTypeResponse = append(ingredientTypeResponse, response.IngredientTypeResponse{Name: ingredientType.Name})
-	}
-	return ctx.JSON(http.StatusOK, ingredientTypeResponse)
+	return ctx.JSON(http.StatusOK, presenter.IngredientTypeResponseFromResult(result))
 
 }

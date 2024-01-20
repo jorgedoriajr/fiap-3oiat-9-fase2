@@ -2,9 +2,9 @@ package input
 
 import (
 	"context"
-	"hamburgueria/internal/server/api/rest/v1/customer/response"
+	"hamburgueria/internal/modules/customer/usecase/result"
 )
 
 type GetCustomerPort interface {
-	GetCustomer(ctx context.Context, document string) (*response.Customer, error)
+	GetCustomer(ctx context.Context, document string) (*result.CustomerCreated, error)
 }
