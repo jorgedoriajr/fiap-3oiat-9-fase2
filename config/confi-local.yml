@@ -17,7 +17,7 @@ databases:
     port: 5432
     databaseName: hamburgueria
     user: hamburgueria-app-read
-    password: ${DB_PASSWORD_READ:hamburgueria-app-read}
+    password: hamburgueria-app-read
     maxPoolSize: 5
     logLevel: 3
 
@@ -26,13 +26,13 @@ databases:
     port: 5432
     databaseName: hamburgueria
     user: hamburgueria-app-write
-    password: ${DB_PASSWORD_WRITE:hamburgueria-app-write}
+    password: hamburgueria-app-write
     maxPoolSize: 5
     logLevel: 3
 
 httpClients:
   mercadoPago:
-    baseUrl: https://api.mercadopago.com/instore/orders/qr/seller/collectors/{user_id}/pos/{external_pos_id}/qrs
-    userId: "446566691"
-    externalPosId: "SUC001POS001"
+    baseUrl: http://localhost:3006
+    UserId: "446566691"
+    ExternalPosId: "SUC001POS001"
 

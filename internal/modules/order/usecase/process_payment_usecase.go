@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"github.com/google/uuid"
 	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/order/port/input"
@@ -12,6 +11,8 @@ import (
 	"hamburgueria/internal/modules/payment/usecase/command"
 	"sync"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type ProcessPaymentUseCase struct {
@@ -21,7 +22,7 @@ type ProcessPaymentUseCase struct {
 
 func (p ProcessPaymentUseCase) ProcessPayment(ctx context.Context, order domain.Order) (*result.PaymentCreatedResult, error) {
 
-	paymentData, err := p.createPaymentUseCase.CreatePayment(ctx, command.CreatePaymentCommand{Amount: order.Amount})
+	paymentData, err := p.createPaymentUseCase.CreatePayment(ctx, command.CreatePaymentCommand{Amount: order.Amount, OrderId: order.Id})
 	if err != nil {
 		return nil, err
 	}
