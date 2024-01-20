@@ -17,7 +17,7 @@ func TestGetCustomerUseCase(t *testing.T) {
 	t.Run(`should get customer`, func(t *testing.T) {
 		repositoryMock := mocks.NewCustomerPersistencePort(t)
 		allowListService := GetCustomerUseCase{
-			customerPersistence: repositoryMock,
+			customerPersistenceGateway: repositoryMock,
 		}
 
 		document := "58642725826"
@@ -45,7 +45,7 @@ func TestGetCustomerUseCase(t *testing.T) {
 	t.Run(`should return nil when not found`, func(t *testing.T) {
 		repositoryMock := mocks.NewCustomerPersistencePort(t)
 		allowListService := GetCustomerUseCase{
-			customerPersistence: repositoryMock,
+			customerPersistenceGateway: repositoryMock,
 		}
 
 		document := "58642725826"
@@ -63,7 +63,7 @@ func TestGetCustomerUseCase(t *testing.T) {
 	t.Run(`should return error if something wrong while trying to get`, func(t *testing.T) {
 		repositoryMock := mocks.NewCustomerPersistencePort(t)
 		allowListService := GetCustomerUseCase{
-			customerPersistence: repositoryMock,
+			customerPersistenceGateway: repositoryMock,
 		}
 
 		document := "58642725826"

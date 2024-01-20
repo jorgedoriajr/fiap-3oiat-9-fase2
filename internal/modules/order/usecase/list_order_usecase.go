@@ -8,11 +8,11 @@ import (
 )
 
 type ListOrderUseCase struct {
-	orderPersistence output.OrderPersistencePort
+	orderPersistenceGateway output.OrderPersistencePort
 }
 
 func (c ListOrderUseCase) FindAllOrders(ctx context.Context) ([]result.ListOrderResult, error) {
-	orders, err := c.orderPersistence.FindAll(ctx)
+	orders, err := c.orderPersistenceGateway.FindAll(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func (c ListOrderUseCase) FindAllOrders(ctx context.Context) ([]result.ListOrder
 }
 
 func (c ListOrderUseCase) FindByStatus(ctx context.Context, status string) ([]result.ListOrderResult, error) {
-	orders, err := c.orderPersistence.FindByStatus(ctx, status)
+	orders, err := c.orderPersistenceGateway.FindByStatus(ctx, status)
 	if err != nil {
 		return nil, err
 	}
@@ -71,11 +71,11 @@ var (
 )
 
 func GetListOrderUseCase(
-	orderPersistence output.OrderPersistencePort,
+	orderPersistenceGateway output.OrderPersistencePort,
 ) ListOrderUseCase {
 	listOrderUseCaseOnce.Do(func() {
 		listOrderUseCaseInstance = ListOrderUseCase{
-			orderPersistence: orderPersistence,
+			orderPersistenceGateway: orderPersistenceGateway,
 		}
 	})
 	return listOrderUseCaseInstance

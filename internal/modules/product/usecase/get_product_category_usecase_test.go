@@ -15,7 +15,7 @@ func TestGetProductCategoryUseCase(t *testing.T) {
 	t.Run(`should find all categories`, func(t *testing.T) {
 		productCategoryPersistenceMock := mocks.NewProductCategoryPersistencePort(t)
 		getProductCategoryUseCase := GetProductCategoryUseCase{
-			productCategoryPersistencePort: productCategoryPersistenceMock,
+			productCategoryPersistenceGateway: productCategoryPersistenceMock,
 		}
 
 		productCategory := domain.ProductCategory{
@@ -46,7 +46,7 @@ func TestGetProductCategoryUseCase(t *testing.T) {
 	t.Run(`should return error`, func(t *testing.T) {
 		productCategoryPersistenceMock := mocks.NewProductCategoryPersistencePort(t)
 		getProductCategoryUseCase := GetProductCategoryUseCase{
-			productCategoryPersistencePort: productCategoryPersistenceMock,
+			productCategoryPersistenceGateway: productCategoryPersistenceMock,
 		}
 
 		productCategoryPersistenceMock.On("GetAll", mock.Anything).Return(nil, errors.New("SOME_ERROR"))

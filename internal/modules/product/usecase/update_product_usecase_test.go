@@ -21,8 +21,8 @@ func TestUpdateProductUseCase(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		ingredientPersistenceMock := mocks2.NewIngredientPersistencePort(t)
 		updateProductUseCase := UpdateProductUseCase{
-			productPersistencePort:    productPersistenceMock,
-			ingredientPersistencePort: ingredientPersistenceMock,
+			productPersistenceGateway:    productPersistenceMock,
+			ingredientPersistenceGateway: ingredientPersistenceMock,
 		}
 
 		productId := uuid.New()
@@ -100,7 +100,7 @@ func TestUpdateProductUseCase(t *testing.T) {
 	t.Run(`should return error when update product`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		updateProductUseCase := UpdateProductUseCase{
-			productPersistencePort: productPersistenceMock,
+			productPersistenceGateway: productPersistenceMock,
 		}
 
 		productId := uuid.New()
@@ -133,7 +133,7 @@ func TestUpdateProductUseCase(t *testing.T) {
 	t.Run(`should return error when failed to found product`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		updateProductUseCase := UpdateProductUseCase{
-			productPersistencePort: productPersistenceMock,
+			productPersistenceGateway: productPersistenceMock,
 		}
 
 		productPersistenceMock.On("GetByNumber", mock.Anything, 0).Return(nil, errors.New("SOME_ERROR"))

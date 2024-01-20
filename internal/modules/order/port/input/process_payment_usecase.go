@@ -6,6 +6,6 @@ import (
 	"hamburgueria/internal/modules/order/usecase/result"
 )
 
-type ProcessPaymentUseCasePort interface {
+type ProcessPaymentPort interface {
 	ProcessPayment(ctx context.Context, order domain.Order) (*result.PaymentCreatedResult, error)
 }

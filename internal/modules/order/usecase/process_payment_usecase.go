@@ -15,8 +15,8 @@ import (
 )
 
 type ProcessPaymentUseCase struct {
-	orderPersistence     output.OrderPersistencePort
-	createPaymentUseCase paymentInput.CreatePaymentPort
+	orderPersistenceGateway output.OrderPersistencePort
+	createPaymentUseCase    paymentInput.CreatePaymentPort
 }
 
 func (p ProcessPaymentUseCase) ProcessPayment(ctx context.Context, order domain.Order) (*result.PaymentCreatedResult, error) {
@@ -37,7 +37,7 @@ func (p ProcessPaymentUseCase) ProcessPayment(ctx context.Context, order domain.
 		CreatedAt: order.UpdatedAt,
 	})
 
-	err = p.orderPersistence.Update(ctx, order)
+	err = p.orderPersistenceGateway.Update(ctx, order)
 	if err != nil {
 		return nil, err
 	}
@@ -45,18 +45,18 @@ func (p ProcessPaymentUseCase) ProcessPayment(ctx context.Context, order domain.
 }
 
 var (
-	processPaymentUseCaseInstance input.ProcessPaymentUseCasePort
+	processPaymentUseCaseInstance input.ProcessPaymentPort
 	processPaymentUseCaseOnce     sync.Once
 )
 
 func GetProcessPaymentUseCase(
-	orderPersistence output.OrderPersistencePort,
+	orderPersistenceGateway output.OrderPersistencePort,
 	processPaymentUseCase paymentInput.CreatePaymentPort,
-) input.ProcessPaymentUseCasePort {
+) input.ProcessPaymentPort {
 	processPaymentUseCaseOnce.Do(func() {
 		processPaymentUseCaseInstance = ProcessPaymentUseCase{
-			orderPersistence:     orderPersistence,
-			createPaymentUseCase: processPaymentUseCase,
+			orderPersistenceGateway: orderPersistenceGateway,
+			createPaymentUseCase:    processPaymentUseCase,
 		}
 	})
 	return processPaymentUseCaseInstance

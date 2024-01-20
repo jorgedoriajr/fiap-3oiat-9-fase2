@@ -14,11 +14,11 @@ var (
 )
 
 type FindProductUseCase struct {
-	productPersistencePort output.ProductPersistencePort
+	productPersistenceGateway output.ProductPersistencePort
 }
 
 func (f FindProductUseCase) FindByID(ctx context.Context, id uuid.UUID) (*result.FindProductResult, error) {
-	product, err := f.productPersistencePort.GetByID(ctx, id)
+	product, err := f.productPersistenceGateway.GetByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +26,7 @@ func (f FindProductUseCase) FindByID(ctx context.Context, id uuid.UUID) (*result
 	return &productResult, nil
 }
 func (f FindProductUseCase) FindByNumber(ctx context.Context, number int) (*result.FindProductResult, error) {
-	product, err := f.productPersistencePort.GetByNumber(ctx, number)
+	product, err := f.productPersistenceGateway.GetByNumber(ctx, number)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +34,7 @@ func (f FindProductUseCase) FindByNumber(ctx context.Context, number int) (*resu
 	return &productResult, nil
 }
 func (f FindProductUseCase) FindByCategory(ctx context.Context, category string) ([]result.FindProductResult, error) {
-	products, err := f.productPersistencePort.GetByCategory(ctx, category)
+	products, err := f.productPersistenceGateway.GetByCategory(ctx, category)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (f FindProductUseCase) FindByCategory(ctx context.Context, category string)
 	return productsResult, nil
 }
 func (f FindProductUseCase) FindAllProducts(ctx context.Context) ([]result.FindProductResult, error) {
-	products, err := f.productPersistencePort.GetAll(ctx)
+	products, err := f.productPersistenceGateway.GetAll(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -59,11 +59,11 @@ func (f FindProductUseCase) FindAllProducts(ctx context.Context) ([]result.FindP
 }
 
 func NewFindProductUseCase(
-	productPersistence output.ProductPersistencePort,
+	productPersistenceGateway output.ProductPersistencePort,
 ) FindProductUseCase {
 	findProductUseCaseOnce.Do(func() {
 		findProductUseCaseInstance = FindProductUseCase{
-			productPersistencePort: productPersistence,
+			productPersistenceGateway: productPersistenceGateway,
 		}
 	})
 	return findProductUseCaseInstance

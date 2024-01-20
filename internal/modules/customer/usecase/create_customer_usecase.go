@@ -10,11 +10,11 @@ import (
 )
 
 type CreateCustomerUseCase struct {
-	customerPersistence output.CustomerPersistencePort
+	customerPersistenceGateway output.CustomerPersistencePort
 }
 
 func (c CreateCustomerUseCase) AddCustomer(ctx context.Context, customer command.CreateCustomerCommand) error {
-	return c.customerPersistence.Create(
+	return c.customerPersistenceGateway.Create(
 		ctx,
 		domain.Customer{
 			Document:       customer.Document,
@@ -34,11 +34,11 @@ var (
 )
 
 func GetCreateCustomerUseCase(
-	CustomerPersistence output.CustomerPersistencePort,
+	CustomerPersistenceGateway output.CustomerPersistencePort,
 ) CreateCustomerUseCase {
 	createCustomerUseCaseOnce.Do(func() {
 		createCustomerUseCaseInstance = CreateCustomerUseCase{
-			customerPersistence: CustomerPersistence,
+			customerPersistenceGateway: CustomerPersistenceGateway,
 		}
 	})
 	return createCustomerUseCaseInstance

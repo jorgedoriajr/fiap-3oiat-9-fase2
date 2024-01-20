@@ -16,7 +16,7 @@ func TestFindIngredientTypeUseCase(t *testing.T) {
 	t.Run(`should find all ingredient type`, func(t *testing.T) {
 		ingredientTypeRepositoryMock := mocks.NewIngredientTypePersistencePort(t)
 		findIngredientTypeUseCase := FindIngredientTypeUseCase{
-			ingredientTypePersistence: ingredientTypeRepositoryMock,
+			ingredientTypePersistenceGateway: ingredientTypeRepositoryMock,
 		}
 
 		type1 := domain.IngredientType{
@@ -44,7 +44,7 @@ func TestFindIngredientTypeUseCase(t *testing.T) {
 	t.Run(`should return error when GetAll failed`, func(t *testing.T) {
 		ingredientTypeRepositoryMock := mocks.NewIngredientTypePersistencePort(t)
 		findIngredientTypeUseCase := FindIngredientTypeUseCase{
-			ingredientTypePersistence: ingredientTypeRepositoryMock,
+			ingredientTypePersistenceGateway: ingredientTypeRepositoryMock,
 		}
 
 		ingredientTypeRepositoryMock.On("GetAll", mock.Anything).Return(nil, errors.New("SOME_ERROR"))
@@ -60,7 +60,7 @@ func TestFindIngredientTypeUseCase(t *testing.T) {
 	t.Run(`should return empty`, func(t *testing.T) {
 		ingredientTypeRepositoryMock := mocks.NewIngredientTypePersistencePort(t)
 		findIngredientTypeUseCase := FindIngredientTypeUseCase{
-			ingredientTypePersistence: ingredientTypeRepositoryMock,
+			ingredientTypePersistenceGateway: ingredientTypeRepositoryMock,
 		}
 
 		ingredientTypeRepositoryMock.On("GetAll", mock.Anything).Return([]domain.IngredientType{}, nil)

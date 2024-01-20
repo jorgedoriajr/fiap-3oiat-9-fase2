@@ -18,7 +18,7 @@ func TestFindProductUseCase(t *testing.T) {
 	t.Run(`should find all products`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		listProductUseCase := FindProductUseCase{
-			productPersistencePort: productPersistenceMock,
+			productPersistenceGateway: productPersistenceMock,
 		}
 
 		productId := uuid.New()
@@ -66,7 +66,7 @@ func TestFindProductUseCase(t *testing.T) {
 	t.Run(`should return error`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		listProductUseCase := FindProductUseCase{
-			productPersistencePort: productPersistenceMock,
+			productPersistenceGateway: productPersistenceMock,
 		}
 
 		productPersistenceMock.On("GetAll", mock.Anything).Return(nil, errors.New("SOME_ERROR"))
@@ -83,7 +83,7 @@ func TestFindProductUseCase(t *testing.T) {
 	t.Run(`should find products by category`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		listProductUseCase := FindProductUseCase{
-			productPersistencePort: productPersistenceMock,
+			productPersistenceGateway: productPersistenceMock,
 		}
 
 		productId := uuid.New()
@@ -131,7 +131,7 @@ func TestFindProductUseCase(t *testing.T) {
 	t.Run(`should return error when find by category`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		listProductUseCase := FindProductUseCase{
-			productPersistencePort: productPersistenceMock,
+			productPersistenceGateway: productPersistenceMock,
 		}
 
 		productPersistenceMock.On("GetByCategory", mock.Anything, "Category").Return(nil, errors.New("SOME_ERROR"))
@@ -148,7 +148,7 @@ func TestFindProductUseCase(t *testing.T) {
 	t.Run(`should find product by number`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		listProductUseCase := FindProductUseCase{
-			productPersistencePort: productPersistenceMock,
+			productPersistenceGateway: productPersistenceMock,
 		}
 
 		productId := uuid.New()
@@ -195,7 +195,7 @@ func TestFindProductUseCase(t *testing.T) {
 	t.Run(`should return error when find by number`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		listProductUseCase := FindProductUseCase{
-			productPersistencePort: productPersistenceMock,
+			productPersistenceGateway: productPersistenceMock,
 		}
 
 		productPersistenceMock.On("GetByNumber", mock.Anything, 1).Return(nil, errors.New("SOME_ERROR"))
@@ -212,7 +212,7 @@ func TestFindProductUseCase(t *testing.T) {
 	t.Run(`should find product by ID`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		listProductUseCase := FindProductUseCase{
-			productPersistencePort: productPersistenceMock,
+			productPersistenceGateway: productPersistenceMock,
 		}
 
 		productId := uuid.New()
@@ -259,7 +259,7 @@ func TestFindProductUseCase(t *testing.T) {
 	t.Run(`should return error when find by id`, func(t *testing.T) {
 		productPersistenceMock := mocks.NewProductPersistencePort(t)
 		listProductUseCase := FindProductUseCase{
-			productPersistencePort: productPersistenceMock,
+			productPersistenceGateway: productPersistenceMock,
 		}
 
 		productPersistenceMock.On("GetByID", mock.Anything, mock.Anything).Return(nil, errors.New("SOME_ERROR"))
