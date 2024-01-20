@@ -29,9 +29,10 @@ var (
 	processPaymentUseCaseOnce sync.Once
 )
 
-func GetCreatePaymentUseCase() input.CreatePaymentPort {
+func GetCreatePaymentUseCase(paymentClientGateway output.PaymentClient) input.CreatePaymentPort {
 	processPaymentUseCaseOnce.Do(func() {
-		processPaymentUseCase = CreatePaymentUseCase{}
+		processPaymentUseCase = CreatePaymentUseCase{paymentClientGateway: paymentClientGateway}
+
 	})
 	return processPaymentUseCase
 }

@@ -7,12 +7,14 @@ import (
 	"hamburgueria/internal/modules/payment/domain"
 	"hamburgueria/internal/modules/payment/infra/client/mercadopago/request"
 	"hamburgueria/internal/modules/payment/infra/client/mercadopago/response"
+	"hamburgueria/internal/modules/payment/port/output"
 	"hamburgueria/internal/modules/payment/usecase/command"
 	"net/http"
+	"sync"
 )
 
 type MercadoPagoClient struct {
-	Host   string
+	host   string
 	bearer string
 	client http.Client
 }
@@ -52,4 +54,17 @@ func (mpc MercadoPagoClient) post(ctx context.Context, command command.CreatePay
 
 	return paymentEntity, nil
 
+}
+
+var (
+	mercadoPagoClient     MercadoPagoClient
+	mercadoPagoClientOnce sync.Once
+)
+
+func GetCreateMercadoPagoClient(host string, bearer string, client http.Client) output.PaymentClient {
+	mercadoPagoClientOnce.Do(func() {
+		mercadoPagoClient = MercadoPagoClient{host: host, bearer: bearer, client: client}
+
+	})
+	return mercadoPagoClient
 }
