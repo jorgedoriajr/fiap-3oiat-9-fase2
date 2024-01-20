@@ -4,22 +4,24 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"hamburgueria/internal/modules/payment/domain"
 	"hamburgueria/internal/modules/payment/infra/client/mercadopago/request"
 	"hamburgueria/internal/modules/payment/infra/client/mercadopago/response"
 	"hamburgueria/internal/modules/payment/usecase/command"
-	"hamburgueria/internal/modules/payment/usecase/result"
 	"net/http"
 )
 
-type mercadoPagoClient struct {
+type MercadoPagoClient struct {
+	Host   string
+	bearer string
 	client http.Client
 }
 
-func (mpc mercadoPagoClient) CreatePayment(ctx context.Context, command command.CreatePaymentCommand) (*result.PaymentProcessed, error) {
+func (mpc MercadoPagoClient) GenerateQrCode(ctx context.Context, command command.CreatePaymentCommand) (*domain.Payment, error) {
 	return mpc.post(ctx, command)
 }
 
-func (mpc mercadoPagoClient) post(ctx context.Context, command command.CreatePaymentCommand) (*result.PaymentProcessed, error) {
+func (mpc MercadoPagoClient) post(ctx context.Context, command command.CreatePaymentCommand) (*domain.Payment, error) {
 	// url mp https://api.mercadopago.com/instore/orders/qr/seller/collectors/{user_id}/pos/{external_pos_id}/qrs
 	qr := request.MapToMPQrCodePaymentRequest(command)
 	var buf bytes.Buffer
@@ -28,7 +30,7 @@ func (mpc mercadoPagoClient) post(ctx context.Context, command command.CreatePay
 		return nil, err
 	}
 	req, err := http.NewRequest("POST", "URL", &buf)
-	req.Header.Set("Authorization", "application/json")
+	req.Header.Set("Authorization", mpc.bearer)
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := mpc.client.Do(req)
@@ -41,6 +43,13 @@ func (mpc mercadoPagoClient) post(ctx context.Context, command command.CreatePay
 	if err != nil {
 		return nil, err
 	}
-	return nil, nil
+
+	paymentEntity := mp_qr_code_response.MpQrCodeResponseToPaymentEntity()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return paymentEntity, nil
 
 }
