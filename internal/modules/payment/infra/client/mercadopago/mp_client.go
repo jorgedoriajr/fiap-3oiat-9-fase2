@@ -17,7 +17,7 @@ type MercadoPagoClient struct {
 	client http.Client
 }
 
-func (mpc MercadoPagoClient) GenerateQrCode(ctx context.Context, command command.CreatePaymentCommand) (*domain.Payment, error) {
+func (mpc MercadoPagoClient) CreatePayment(ctx context.Context, command command.CreatePaymentCommand) (*domain.Payment, error) {
 	return mpc.post(ctx, command)
 }
 

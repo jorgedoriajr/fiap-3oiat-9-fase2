@@ -7,5 +7,5 @@ import (
 )
 
 type PaymentClient interface {
-	GenerateQrCode(ctx context.Context, command command.CreatePaymentCommand) (*domain.Payment, error)
+	CreatePayment(ctx context.Context, command command.CreatePaymentCommand) (*domain.Payment, error)
 }

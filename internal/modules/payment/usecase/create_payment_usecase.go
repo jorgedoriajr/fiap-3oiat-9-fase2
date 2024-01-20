@@ -2,21 +2,26 @@ package usecase
 
 import (
 	"context"
-	"github.com/google/uuid"
+	"hamburgueria/internal/modules/payment/domain"
 	"hamburgueria/internal/modules/payment/port/input"
+	"hamburgueria/internal/modules/payment/port/output"
+
 	"hamburgueria/internal/modules/payment/usecase/command"
 	"hamburgueria/internal/modules/payment/usecase/result"
+
 	"sync"
 )
 
 type CreatePaymentUseCase struct {
+	paymentClientGateway output.PaymentClient
 }
 
 func (p CreatePaymentUseCase) CreatePayment(ctx context.Context, command command.CreatePaymentCommand) (*result.PaymentProcessed, error) {
-	return &result.PaymentProcessed{
-		PaymentId:   uuid.New(),
-		PaymentData: "mocked",
-	}, nil
+	paymentData, err := p.paymentClientGateway.CreatePayment(ctx, command)
+	if err != nil {
+		return nil, err
+	}
+	return mapperPaymentEntityToPaymentProcessed(paymentData), nil
 }
 
 var (
@@ -29,4 +34,11 @@ func GetCreatePaymentUseCase() input.CreatePaymentPort {
 		processPaymentUseCase = CreatePaymentUseCase{}
 	})
 	return processPaymentUseCase
+}
+
+func mapperPaymentEntityToPaymentProcessed(payment *domain.Payment) *result.PaymentProcessed {
+	return &result.PaymentProcessed{
+		PaymentId:   payment.Id,
+		PaymentData: payment.Data,
+	}
 }

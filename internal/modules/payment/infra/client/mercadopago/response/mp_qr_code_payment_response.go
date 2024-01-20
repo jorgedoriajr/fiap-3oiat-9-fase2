@@ -9,7 +9,7 @@ type QrCodePaymentResponse struct {
 
 func (qcpr QrCodePaymentResponse) MpQrCodeResponseToPaymentEntity() *domain.Payment {
 	return &domain.Payment{
-		Id:     qcpr.InStoreOrderId,
-		QrCode: qcpr.QrData,
+		Id:   qcpr.InStoreOrderId,
+		Data: qcpr.QrData,
 	}
 }
