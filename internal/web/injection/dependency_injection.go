@@ -7,6 +7,7 @@ import (
 	create2 "hamburgueria/internal/modules/ingredient/usecase"
 	orderDatabase "hamburgueria/internal/modules/order/infra/database"
 	orderUsecase "hamburgueria/internal/modules/order/usecase"
+	"hamburgueria/internal/modules/payment/infra/client/mercadopago"
 	paymentUseCase "hamburgueria/internal/modules/payment/usecase"
 	productDatabase "hamburgueria/internal/modules/product/infra/database"
 	"hamburgueria/internal/modules/product/usecase"
@@ -17,8 +18,10 @@ import (
 	"hamburgueria/internal/web/api/rest/v1/product"
 	"hamburgueria/internal/web/api/rest/v1/productcategory"
 	"hamburgueria/internal/web/api/swagger"
+	"hamburgueria/pkg/httpclient"
 	"hamburgueria/pkg/logger"
 	"hamburgueria/pkg/sql"
+	"hamburgueria/pkg/starter"
 )
 
 type DependencyInjection struct {
@@ -51,7 +54,13 @@ func NewDependencyInjection() DependencyInjection {
 
 	orderPersistence := orderDatabase.GetOrderPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
 
-	createPaymentUseCase := paymentUseCase.GetCreatePaymentUseCase()
+	mercadoPagoClient := mercadopago.GetCreateMercadoPagoClient(
+		httpclient.GetClient("mercadoPago"),
+		starter.GetConfigRoot().MercadoPago,
+		logger.Get(),
+	)
+
+	createPaymentUseCase := paymentUseCase.GetCreatePaymentUseCase(mercadoPagoClient)
 	processPaymentUseCase := orderUsecase.GetProcessPaymentUseCase(orderPersistence, createPaymentUseCase)
 
 	createOrderUseCase := orderUsecase.GetCreateOrderUseCase(

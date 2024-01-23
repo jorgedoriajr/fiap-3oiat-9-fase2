@@ -4,6 +4,12 @@ import (
 	"hamburgueria/config"
 )
 
+// GetConfigRoot return the loaded server config
+func GetConfigRoot() config.Root {
+	ensureInitialized()
+	return *appInstance.configRoot
+}
+
 // GetAppConfig return the loaded server config
 func GetAppConfig() config.Application {
 	ensureInitialized()

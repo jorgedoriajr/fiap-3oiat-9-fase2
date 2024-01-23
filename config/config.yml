@@ -43,5 +43,6 @@ httpClients:
       enabled: true
 
 mercadoPago:
-  userId: "446566691"
-  externalPosId: "SUC001POS001"
+  userId: 446566691
+  externalPosId: SUC001POS001
+  bearer: xxxxx

@@ -1,52 +1,51 @@
 package mercadopago
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
+	"github.com/rs/zerolog"
+	"hamburgueria/config"
 	"hamburgueria/internal/modules/payment/domain"
 	"hamburgueria/internal/modules/payment/infra/client/mercadopago/request"
 	"hamburgueria/internal/modules/payment/infra/client/mercadopago/response"
 	"hamburgueria/internal/modules/payment/port/output"
 	"hamburgueria/internal/modules/payment/usecase/command"
-	"net/http"
+	"hamburgueria/pkg/httpclient"
 	"sync"
 )
 
-type MercadoPagoClient struct {
-	host   string
-	bearer string
-	client http.Client
+type ClientGateway struct {
+	userId        string
+	externalPosId string
+	bearer        string
+	client        httpclient.Client
+	logger        zerolog.Logger
 }
 
-func (mpc MercadoPagoClient) CreatePayment(ctx context.Context, command command.CreatePaymentCommand) (*domain.Payment, error) {
+func (mpc ClientGateway) CreatePayment(ctx context.Context, command command.CreatePaymentCommand) (*domain.Payment, error) {
 	return mpc.post(ctx, command)
 }
 
-func (mpc MercadoPagoClient) post(ctx context.Context, command command.CreatePaymentCommand) (*domain.Payment, error) {
+func (mpc ClientGateway) post(ctx context.Context, command command.CreatePaymentCommand) (*domain.Payment, error) {
 	// url mp https://api.mercadopago.com/instore/orders/qr/seller/collectors/{user_id}/pos/{external_pos_id}/qrs
-	qr := request.MapToMPQrCodePaymentRequest(command)
-	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(qr)
-	if err != nil {
-		return nil, err
-	}
-	req, err := http.NewRequest("POST", "URL", &buf)
-	req.Header.Set("Authorization", mpc.bearer)
-	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := mpc.client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	mp_qr_code_response := response.QrCodePaymentResponse{}
+	httpRequest := httpclient.NewRequest[response.QrCodePaymentResponse](
+		ctx, mpc.client, "instore/orders/qr/seller/collectors/{user_id}/pos/{external_pos_id}/qrs",
+	).
+		WithPathParams(map[string]string{
+			"user_id":         mpc.userId,
+			"external_pos_id": mpc.externalPosId,
+		}).
+		WithHeaders(map[string]string{
+			"Authorization": mpc.bearer,
+		})
 
-	err = json.NewDecoder(resp.Body).Decode(&mp_qr_code_response)
+	responseMP, err := httpRequest.Post(request.MapToMPQrCodePaymentRequest(command))
+
 	if err != nil {
 		return nil, err
 	}
 
-	paymentEntity := mp_qr_code_response.MpQrCodeResponseToPaymentEntity()
+	paymentEntity := responseMP.Result.MpQrCodeResponseToPaymentEntity()
 
 	if err != nil {
 		return nil, err
@@ -57,13 +56,19 @@ func (mpc MercadoPagoClient) post(ctx context.Context, command command.CreatePay
 }
 
 var (
-	mercadoPagoClient     MercadoPagoClient
+	mercadoPagoClient     ClientGateway
 	mercadoPagoClientOnce sync.Once
 )
 
-func GetCreateMercadoPagoClient(host string, bearer string, client http.Client) output.PaymentClient {
+func GetCreateMercadoPagoClient(client httpclient.Client, mercadoPagoConfig config.MercadoPago, logger zerolog.Logger) output.PaymentClient {
 	mercadoPagoClientOnce.Do(func() {
-		mercadoPagoClient = MercadoPagoClient{host: host, bearer: bearer, client: client}
+		mercadoPagoClient = ClientGateway{
+			userId:        mercadoPagoConfig.UserId,
+			externalPosId: mercadoPagoConfig.ExternalPosId,
+			bearer:        mercadoPagoConfig.Bearer,
+			client:        client,
+			logger:        logger,
+		}
 
 	})
 	return mercadoPagoClient
