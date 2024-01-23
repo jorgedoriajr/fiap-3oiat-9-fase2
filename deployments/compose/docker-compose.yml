@@ -48,6 +48,18 @@ services:
     networks:
       - hamburgueria-network
 
+  localstack:
+    image: localstack/localstack:latest
+    container_name: hamburgueria-localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - DEFAULT_REGION=us-east-1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/tmp/docker.sock:/var/run/docker.sock"
+      - "/tmp/docker-entrypoint.sh:/docker-entrypoint-initaws.d/docker-entrypoint.sh"
+
 networks:
   hamburgueria-network:
     driver: bridge

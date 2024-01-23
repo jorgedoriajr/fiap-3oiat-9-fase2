@@ -2,6 +2,7 @@ package starter
 
 import (
 	"hamburgueria/config"
+	"hamburgueria/pkg/httpclient"
 )
 
 // GetAppConfig return the loaded server config
@@ -20,4 +21,10 @@ func GetHttpServerConfig() config.HttpServerConfig {
 func GetDatabasesConfig() map[string]config.DatabaseConfig {
 	ensureInitialized()
 	return appInstance.configRoot.Databases
+}
+
+// GetHttpClientsConfig return the loaded http client config
+func GetHttpClientsConfig() map[string]httpclient.Config {
+	ensureInitialized()
+	return appInstance.configRoot.HttpClients
 }

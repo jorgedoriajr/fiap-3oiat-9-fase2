@@ -32,7 +32,16 @@ databases:
 
 httpClients:
   mercadoPago:
-    baseUrl: https://api.mercadopago.com/instore/orders/qr/seller/collectors/{user_id}/pos/{external_pos_id}/qrs
-    userId: "446566691"
-    externalPosId: "SUC001POS001"
+    baseUrl: https://api.mercadopago.com
+    timeOutMilliseconds: 10000
+    maxRetries: 0
+    retryWaitTimeMilliseconds: 100
+    retryMaxWaitTimeMilliseconds: 2000
+    defaultHeaders:
+      accept: application/json
+    circuitBreaker:
+      enabled: true
 
+mercadoPago:
+  userId: "446566691"
+  externalPosId: "SUC001POS001"
