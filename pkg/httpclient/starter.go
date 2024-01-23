@@ -21,7 +21,22 @@ func Initialize() {
 
 		var defaultConf Config
 		if c, exists := conf[defaultClientName]; exists {
-			defaultConf = c
+			defaultConf = Config{
+				BaseUrl:                      c.BaseUrl,
+				TimeOutMilliseconds:          c.TimeOutMilliseconds,
+				MaxRetries:                   c.MaxRetries,
+				RetryWaitTimeMilliseconds:    c.RetryWaitTimeMilliseconds,
+				RetryMaxWaitTimeMilliseconds: c.RetryMaxWaitTimeMilliseconds,
+				DefaultHeaders:               c.DefaultHeaders,
+				CircuitBreaker: CircuitBreakerConfig{
+					Enabled:                       c.CircuitBreaker.Enabled,
+					RequestsInOpenState:           c.CircuitBreaker.RequestsInOpenState,
+					IntervalMilliseconds:          c.CircuitBreaker.IntervalMilliseconds,
+					OpenStateDurationMilliseconds: c.CircuitBreaker.OpenStateDurationMilliseconds,
+					MinRequestsToOpen:             c.CircuitBreaker.MinRequestsToOpen,
+					FailureAllowedRatio:           c.CircuitBreaker.FailureAllowedRatio,
+				},
+			}
 		} else {
 			defaultConf = Config{}
 		}
@@ -31,7 +46,22 @@ func Initialize() {
 				continue
 			}
 
-			mergedConfig := mergeConfig(defaultConf, v)
+			mergedConfig := mergeConfig(defaultConf, Config{
+				BaseUrl:                      v.BaseUrl,
+				TimeOutMilliseconds:          v.TimeOutMilliseconds,
+				MaxRetries:                   v.MaxRetries,
+				RetryWaitTimeMilliseconds:    v.RetryWaitTimeMilliseconds,
+				RetryMaxWaitTimeMilliseconds: v.RetryMaxWaitTimeMilliseconds,
+				DefaultHeaders:               v.DefaultHeaders,
+				CircuitBreaker: CircuitBreakerConfig{
+					Enabled:                       v.CircuitBreaker.Enabled,
+					RequestsInOpenState:           v.CircuitBreaker.RequestsInOpenState,
+					IntervalMilliseconds:          v.CircuitBreaker.IntervalMilliseconds,
+					OpenStateDurationMilliseconds: v.CircuitBreaker.OpenStateDurationMilliseconds,
+					MinRequestsToOpen:             v.CircuitBreaker.MinRequestsToOpen,
+					FailureAllowedRatio:           v.CircuitBreaker.FailureAllowedRatio,
+				},
+			})
 
 			c, err := NewClient(k, mergedConfig)
 			if err != nil {
