@@ -12,10 +12,10 @@ type QrCodePaymentRequest struct {
 	ExpirationDate    string `json:"expiration_date"`
 }
 
-func MapToMPQrCodePaymentRequest(command command.CreatePaymentCommand) QrCodePaymentRequest {
+func MapToMPQrCodePaymentRequest(command command.CreatePaymentCommand, callBackURl string) QrCodePaymentRequest {
 	return QrCodePaymentRequest{
 		ExternalReference: command.OrderId.String(),
-		NotificationUrl:   "",
+		NotificationUrl:   callBackURl,
 		TotalAmount:       command.Amount,
 		ExpirationDate:    setExperionDateTime(),
 	}

@@ -2,7 +2,6 @@ package mercadopago
 
 import (
 	"context"
-	"github.com/rs/zerolog"
 	"hamburgueria/config"
 	"hamburgueria/internal/modules/payment/domain"
 	"hamburgueria/internal/modules/payment/infra/client/mercadopago/request"
@@ -11,12 +10,15 @@ import (
 	"hamburgueria/internal/modules/payment/usecase/command"
 	"hamburgueria/pkg/httpclient"
 	"sync"
+
+	"github.com/rs/zerolog"
 )
 
 type ClientGateway struct {
 	userId        string
 	externalPosId string
 	bearer        string
+	callBackUrl   string
 	client        httpclient.Client
 	logger        zerolog.Logger
 }
@@ -29,7 +31,7 @@ func (mpc ClientGateway) post(ctx context.Context, command command.CreatePayment
 	// url mp https://api.mercadopago.com/instore/orders/qr/seller/collectors/{user_id}/pos/{external_pos_id}/qrs
 
 	httpRequest := httpclient.NewRequest[response.QrCodePaymentResponse](
-		ctx, mpc.client, "instore/orders/qr/seller/collectors/{user_id}/pos/{external_pos_id}/qrs",
+		ctx, mpc.client, "/instore/orders/qr/seller/collectors/{user_id}/pos/{external_pos_id}/qrs",
 	).
 		WithPathParams(map[string]string{
 			"user_id":         mpc.userId,
@@ -39,7 +41,7 @@ func (mpc ClientGateway) post(ctx context.Context, command command.CreatePayment
 			"Authorization": mpc.bearer,
 		})
 
-	responseMP, err := httpRequest.Post(request.MapToMPQrCodePaymentRequest(command))
+	responseMP, err := httpRequest.Post(request.MapToMPQrCodePaymentRequest(command, mpc.callBackUrl))
 
 	if err != nil {
 		return nil, err
@@ -66,6 +68,7 @@ func GetCreateMercadoPagoClient(client httpclient.Client, mercadoPagoConfig conf
 			userId:        mercadoPagoConfig.UserId,
 			externalPosId: mercadoPagoConfig.ExternalPosId,
 			bearer:        mercadoPagoConfig.Bearer,
+			callBackUrl:   mercadoPagoConfig.CallbackUrl,
 			client:        client,
 			logger:        logger,
 		}

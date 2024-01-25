@@ -43,6 +43,7 @@ httpClients:
       enabled: true
 
 mercadoPago:
-  userId: 446566691
+  userId: 95762750
   externalPosId: SUC001POS001
   bearer: xxxxx
+  callBackUrl: https://meuserver.com

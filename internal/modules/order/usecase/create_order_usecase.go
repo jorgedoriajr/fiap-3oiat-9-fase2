@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	customerOutput "hamburgueria/internal/modules/customer/port/output"
 	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
@@ -15,6 +14,8 @@ import (
 	productOutput "hamburgueria/internal/modules/product/ports/output"
 	"sync"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type CreateOrderUseCase struct {
