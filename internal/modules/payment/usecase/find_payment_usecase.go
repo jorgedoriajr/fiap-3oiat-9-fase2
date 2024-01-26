@@ -5,18 +5,19 @@ import (
 	"hamburgueria/internal/modules/payment/port/input"
 	"hamburgueria/internal/modules/payment/port/output"
 
-	"hamburgueria/internal/modules/payment/usecase/command"
 	"hamburgueria/internal/modules/payment/usecase/result"
 
 	"sync"
+
+	"github.com/google/uuid"
 )
 
 type FindPaymentUseCase struct {
-	paymentClientGateway output.PaymentClient
+	paymentClientGateway output.PaymentPersistencePort
 }
 
-func (p FindPaymentUseCase) FindPayment(ctx context.Context, command command.CreatePaymentCommand) (*result.PaymentProcessed, error) {
-	paymentData, err := p.paymentClientGateway.CreatePayment(ctx, command)
+func (p FindPaymentUseCase) FindPaymentById(ctx context.Context, paymentId uuid.UUID) (*result.PaymentProcessed, error) {
+	paymentData, err := p.paymentClientGateway.FindById(ctx, paymentId)
 	if err != nil {
 		return nil, err
 	}
@@ -28,10 +29,10 @@ var (
 	findPaymentUseCaseOnce sync.Once
 )
 
-func GetFindPaymentUseCase(paymentClientGateway output.PaymentClient) input.CreatePaymentPort {
-	processPaymentUseCaseOnce.Do(func() {
-		processPaymentUseCase = CreatePaymentUseCase{paymentClientGateway: paymentClientGateway}
+func GetFindPaymentUseCase(paymentClientGateway output.PaymentPersistencePort) input.FindPaymentPort {
+	findPaymentUseCaseOnce.Do(func() {
+		findPaymentUseCase = FindPaymentUseCase{paymentClientGateway: paymentClientGateway}
 
 	})
-	return processPaymentUseCase
+	return findPaymentUseCase
 }

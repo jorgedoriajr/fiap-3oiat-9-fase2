@@ -60,7 +60,7 @@ func NewDependencyInjection() DependencyInjection {
 	paymentPersistance := paymentDatabase.GetPaymentPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
 	paymentStatusPersistance := paymentDatabase.GetPaymentStatusPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
 
-	paymentStatusUseCase := paymentUseCase.GetCreatePaymentStatusUseCase(paymentStatusPersistance)
+	paymentStatusUseCase := paymentUseCase.GetCreatePaymentStatusUseCase(&paymentStatusPersistance)
 
 	mercadoPagoClient := mercadopago.GetCreateMercadoPagoClient(
 		httpclient.GetClient("mercadoPago"),

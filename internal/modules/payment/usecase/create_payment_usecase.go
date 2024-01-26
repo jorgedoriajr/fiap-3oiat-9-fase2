@@ -28,7 +28,7 @@ func (p CreatePaymentUseCase) CreatePayment(ctx context.Context, command command
 		return nil, errPersistance
 	}
 
-	return mapperPaymentEntityToPaymentProcessed(paymentData), nil
+	return mapperPaymentEntityToPaymentProcessed(&paymentData), nil
 }
 
 var (
@@ -44,7 +44,7 @@ func GetCreatePaymentUseCase(paymentClientGateway output.PaymentClient, paymentP
 	return processPaymentUseCase
 }
 
-func mapperPaymentEntityToPaymentProcessed(payment domain.Payment) *result.PaymentProcessed {
+func mapperPaymentEntityToPaymentProcessed(payment *domain.Payment) *result.PaymentProcessed {
 	return &result.PaymentProcessed{
 		PaymentId:   payment.Id,
 		OrderId:     payment.OrderId,
