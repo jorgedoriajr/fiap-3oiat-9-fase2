@@ -18,22 +18,8 @@
               "endpoint": "/instore/orders/qr/seller/collectors/{user_id}/pos/{external_pos_id}/qrs",
               "responses": [
                 {
-                  "uuid": "",
-                  "body": "{\n  \"user_id\": \"{{request.params.user_id}}\",\n  \"external_pos_id\": \"{{request.params.external_pos_id}}\",\n  \"qr_code_payment_request\": {\n    \"external_reference\": \"example_reference\",\n    \"notification_url\": \"http://example.com/notification\",\n    \"total_amount\": 1000,\n    \"expiration_date\": \"2024-01-31\"\n  }\n}",
-                  "latency": 0,
-                  "statusCode": 200,
-                  "label": "",
-                  "headers": [],
-                  "filePath": "",
-                  "sendFileAsBody": false,
-                  "rules": [],
-                  "rulesOperator": "OR",
-                  "disableTemplating": false,
-                  "fallbackTo404": false
-                },
-                {
                     "uuid": "",
-                    "body": "{\n  \"user_id\": \"{{request.params.user_id}}\",\n  \"external_pos_id\": \"{{request.params.external_pos_id}}\",\n  \"qr_code_payment_request\": {\n    \"external_reference\": \"{{random 'string' 10}}\",\n    \"notification_url\": \"http://example.com/notification\",\n    \"total_amount\": {{random 'integer' 100 10000}},\n    \"expiration_date\": \"{{date '2006-01-02T15:04:05.999-04:00'}}\"\n  }\n}",
+                    "body": "{\n  \"qr_data\": \"00020101021243650016COM.MERCADOLIBRE02013063638f1192a-5fd1-4180-a180-8bcae3556bc35204000053039865802BR5925IZABEL AAAA DE MELO6007BARUERI62070503***63040B6D\",\n  \"in_store_order_id\": \"d4e8ca59-3e1d-4c03-b1f6-580e87c654ae\"\n}",
                     "latency": 0,
                     "statusCode": 200,
                     "label": "",
@@ -44,10 +30,25 @@
                     "rulesOperator": "OR",
                     "disableTemplating": false,
                     "fallbackTo404": false
-                  },
+                },
+                {
+                    "uuid": "",
+                    "body": "{\n  \"qr_data\": \"00020101021243650016COM.MERCADOLIBRE02013063638f1192a-5fd1-4180-a180-8bcae3556bc35204000053039865802BR5925IZABEL AAAA DE MELO6007BARUERI62070503***63040B6D\",\n  \"in_store_order_id\": \"e52c8aa2-7d2a-4fb2-b26a-12d0e6975a4a\"\n}",
+                    "latency": 0,
+                    "statusCode": 200,
+                    "label": "",
+                    "headers": [],
+                    "filePath": "",
+                    "sendFileAsBody": false,
+                    "rules": [],
+                    "rulesOperator": "OR",
+                    "disableTemplating": false,
+                    "fallbackTo404": false
+                  }
+                  ,
                   {
                     "uuid": "",
-                    "body": "{\n  \"user_id\": \"{{request.params.user_id}}\",\n  \"external_pos_id\": \"{{request.params.external_pos_id}}\",\n  \"qr_code_payment_request\": {\n    \"external_reference\": \"{{random 'string' 10}}\",\n    \"notification_url\": \"http://example.com/notification\",\n    \"total_amount\": {{random 'integer' 100 10000}},\n    \"expiration_date\": \"{{date '2006-01-02T15:04:05.999-04:00'}}\"\n  }\n}",
+                    "body": "{\n  \"qr_data\": \"00020101021243650016COM.MERCADOLIBRE02013063638f1192a-5fd1-4180-a180-8bcae3556bc35204000053039865802BR5925IZABEL AAAA DE MELO6007BARUERI62070503***63040B6D\",\n  \"in_store_order_id\": \"a6f3c46a-7fa4-46b3-b3c8-53a41f98ebdd\"\n}",
                     "latency": 0,
                     "statusCode": 200,
                     "label": "",
@@ -74,6 +75,10 @@
             {
               "key": "Content-Type",
               "value": "application/json"
+            },
+            {
+              "key": "Authorization",
+              "value": "Bearer TEST-637********4932-012********a7f2e43a********c9c7bc09********62750"
             }
           ],
           "proxyReqHeaders": [

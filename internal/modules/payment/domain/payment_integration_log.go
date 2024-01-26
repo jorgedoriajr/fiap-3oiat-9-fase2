@@ -1,17 +1,14 @@
 package domain
 
-import "github.com/google/uuid"
+import (
+	"hamburgueria/internal/modules/payment/domain/valueobjects"
+
+	"github.com/google/uuid"
+)
 
 type PaymentIntegrationLog struct {
 	Id                   uuid.UUID
+	PaymentId            uuid.UUID
 	PaymentIntegrationId uuid.UUID
-	PaymentStatus        Status
+	PaymentStatus        valueobjects.Status
 }
-
-type Status string
-
-const (
-	Created  Status = "created"
-	Approved Status = "approved"
-	Rejected Status = "rejected"
-)

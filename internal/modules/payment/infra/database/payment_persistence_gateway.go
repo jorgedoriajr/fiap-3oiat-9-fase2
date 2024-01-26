@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"hamburgueria/internal/modules/payment/domain"
+	"hamburgueria/internal/modules/payment/infra/database/model"
 	"sync"
 
 	"github.com/google/uuid"
@@ -17,58 +18,45 @@ type PaymentPersistenceGateway struct {
 	logger          zerolog.Logger
 }
 
-func NewPaymentPersistenceGateway(readWriteClient, readOnlyClient *gorm.DB, logger zerolog.Logger) *PaymentPersistenceGateway {
-	return &PaymentPersistenceGateway{
-		readWriteClient: readWriteClient,
-		readOnlyClient:  readOnlyClient,
-		logger:          logger,
-	}
-}
-
 func (p *PaymentPersistenceGateway) Create(ctx context.Context, payment domain.Payment) error {
-	if err := p.readWriteClient.Create(&payment).Error; err != nil {
-		p.logger.Error().Err(err).Msg("Failed to create payment")
-		return err
+	tx := p.readWriteClient.Create(&model.Payment{
+		Id:      payment.Id,
+		OrderId: payment.OrderId,
+		Data:    payment.Data,
+	})
+	if tx.Error != nil {
+		p.logger.Error().
+			Ctx(ctx).
+			Err(tx.Error).
+			Str("order", payment.OrderId.String()).
+			Msg("Failed to insert payment")
+		return tx.Error
 	}
 	return nil
-}
-
-func (p *PaymentPersistenceGateway) GetAll(ctx context.Context) ([]domain.Payment, error) {
-	var payments []domain.Payment
-	if err := p.readOnlyClient.Find(&payments).Error; err != nil {
-		p.logger.Error().Err(err).Msg("Failed to get all payments")
-		return nil, err
-	}
-	return payments, nil
-}
-
-func (p *PaymentPersistenceGateway) FindByStatus(ctx context.Context, status string) ([]domain.Payment, error) {
-	var payments []domain.Payment
-	if err := p.readOnlyClient.Where("status = ?", status).Find(&payments).Error; err != nil {
-		p.logger.Error().Err(err).Msg("Failed to find payments by status")
-		return nil, err
-	}
-	return payments, nil
 }
 
 func (p *PaymentPersistenceGateway) FindById(ctx context.Context, paymentId uuid.UUID) (*domain.Payment, error) {
-	var payment domain.Payment
-	if err := p.readOnlyClient.Where("id = ?", paymentId).First(&payment).Error; err != nil {
+
+	var payment model.Payment
+
+	err := p.readOnlyClient.First(&payment, paymentId).Error
+
+	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, err
+			return nil, nil
 		}
-		p.logger.Error().Err(err).Msg("Failed to find payment by ID")
+		p.logger.Error().
+			Ctx(ctx).
+			Err(err).
+			Str("payment", paymentId.String()).
+			Msg("Failed to get payment by id")
 		return nil, err
 	}
-	return &payment, nil
-}
 
-func (p *PaymentPersistenceGateway) Update(ctx context.Context, payment domain.Payment) error {
-	if err := p.readWriteClient.Save(&payment).Error; err != nil {
-		p.logger.Error().Err(err).Msg("Failed to update payment")
-		return err
+	if payment.Id.String() == "" {
+		return nil, nil
 	}
-	return nil
+	return payment.ToDomain(), nil
 }
 
 var (

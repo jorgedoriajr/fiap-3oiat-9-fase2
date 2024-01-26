@@ -32,7 +32,7 @@ databases:
 
 httpClients:
   mercadoPago:
-    baseUrl: https://api.mercadopago.com
+    baseUrl: http://localhost:3006
     timeOutMilliseconds: 10000
     maxRetries: 0
     retryWaitTimeMilliseconds: 100

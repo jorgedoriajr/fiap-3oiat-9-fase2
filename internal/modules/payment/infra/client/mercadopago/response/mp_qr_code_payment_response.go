@@ -11,9 +11,10 @@ type QrCodePaymentResponse struct {
 	InStoreOrderId uuid.UUID `json:"in_store_order_id"`
 }
 
-func (q QrCodePaymentResponse) MpQrCodeResponseToPaymentEntity() *domain.Payment {
-	return &domain.Payment{
-		Id:   q.InStoreOrderId,
-		Data: q.QrData,
+func (q QrCodePaymentResponse) MpQrCodeResponseToPaymentEntity(orderId uuid.UUID) domain.Payment {
+	return domain.Payment{
+		Id:      q.InStoreOrderId,
+		OrderId: orderId,
+		Data:    q.QrData,
 	}
 }

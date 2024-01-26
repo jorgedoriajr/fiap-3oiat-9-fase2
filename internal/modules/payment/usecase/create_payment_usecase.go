@@ -13,7 +13,8 @@ import (
 )
 
 type CreatePaymentUseCase struct {
-	paymentClientGateway output.PaymentClient
+	paymentClientGateway      output.PaymentClient
+	paymentPersistanceGateway output.PaymentPersistencePort
 }
 
 func (p CreatePaymentUseCase) CreatePayment(ctx context.Context, command command.CreatePaymentCommand) (*result.PaymentProcessed, error) {
@@ -21,6 +22,12 @@ func (p CreatePaymentUseCase) CreatePayment(ctx context.Context, command command
 	if err != nil {
 		return nil, err
 	}
+
+	errPersistance := p.paymentPersistanceGateway.Create(ctx, paymentData)
+	if errPersistance != nil {
+		return nil, errPersistance
+	}
+
 	return mapperPaymentEntityToPaymentProcessed(paymentData), nil
 }
 
@@ -29,17 +36,18 @@ var (
 	processPaymentUseCaseOnce sync.Once
 )
 
-func GetCreatePaymentUseCase(paymentClientGateway output.PaymentClient) input.CreatePaymentPort {
+func GetCreatePaymentUseCase(paymentClientGateway output.PaymentClient, paymentPersistanceGateway output.PaymentPersistencePort) input.CreatePaymentPort {
 	processPaymentUseCaseOnce.Do(func() {
-		processPaymentUseCase = CreatePaymentUseCase{paymentClientGateway: paymentClientGateway}
+		processPaymentUseCase = CreatePaymentUseCase{paymentClientGateway: paymentClientGateway, paymentPersistanceGateway: paymentPersistanceGateway}
 
 	})
 	return processPaymentUseCase
 }
 
-func mapperPaymentEntityToPaymentProcessed(payment *domain.Payment) *result.PaymentProcessed {
+func mapperPaymentEntityToPaymentProcessed(payment domain.Payment) *result.PaymentProcessed {
 	return &result.PaymentProcessed{
 		PaymentId:   payment.Id,
+		OrderId:     payment.OrderId,
 		PaymentData: payment.Data,
 	}
 }

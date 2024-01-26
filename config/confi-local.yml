@@ -33,6 +33,18 @@ databases:
 httpClients:
   mercadoPago:
     baseUrl: http://localhost:3006
-    UserId: "446566691"
-    ExternalPosId: "SUC001POS001"
+    timeOutMilliseconds: 10000
+    maxRetries: 0
+    retryWaitTimeMilliseconds: 100
+    retryMaxWaitTimeMilliseconds: 2000
+    defaultHeaders:
+      accept: application/json
+    circuitBreaker:
+      enabled: true
+
+mercadoPago:
+  userId: 95762750
+  externalPosId: SUC001POS001
+  bearer: xxxxx
+  callBackUrl: https://meuserver.com
 

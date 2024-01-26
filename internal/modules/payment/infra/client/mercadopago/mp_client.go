@@ -23,11 +23,11 @@ type ClientGateway struct {
 	logger        zerolog.Logger
 }
 
-func (mpc ClientGateway) CreatePayment(ctx context.Context, command command.CreatePaymentCommand) (*domain.Payment, error) {
+func (mpc ClientGateway) CreatePayment(ctx context.Context, command command.CreatePaymentCommand) (domain.Payment, error) {
 	return mpc.post(ctx, command)
 }
 
-func (mpc ClientGateway) post(ctx context.Context, command command.CreatePaymentCommand) (*domain.Payment, error) {
+func (mpc ClientGateway) post(ctx context.Context, command command.CreatePaymentCommand) (domain.Payment, error) {
 	// url mp https://api.mercadopago.com/instore/orders/qr/seller/collectors/{user_id}/pos/{external_pos_id}/qrs
 
 	httpRequest := httpclient.NewRequest[response.QrCodePaymentResponse](
@@ -44,14 +44,10 @@ func (mpc ClientGateway) post(ctx context.Context, command command.CreatePayment
 	responseMP, err := httpRequest.Post(request.MapToMPQrCodePaymentRequest(command, mpc.callBackUrl))
 
 	if err != nil {
-		return nil, err
+		return domain.Payment{}, err
 	}
 
-	paymentEntity := responseMP.Result.MpQrCodeResponseToPaymentEntity()
-
-	if err != nil {
-		return nil, err
-	}
+	paymentEntity := responseMP.Result.MpQrCodeResponseToPaymentEntity(command.OrderId)
 
 	return paymentEntity, nil
 
