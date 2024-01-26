@@ -16,6 +16,7 @@ import (
 	"hamburgueria/internal/web/api/rest/v1/ingredient"
 	"hamburgueria/internal/web/api/rest/v1/ingredienttype"
 	"hamburgueria/internal/web/api/rest/v1/order"
+	"hamburgueria/internal/web/api/rest/v1/payment"
 	"hamburgueria/internal/web/api/rest/v1/product"
 	"hamburgueria/internal/web/api/rest/v1/productcategory"
 	"hamburgueria/internal/web/api/swagger"
@@ -26,13 +27,14 @@ import (
 )
 
 type DependencyInjection struct {
-	CustomerApi        *customer.Api
-	ProductApi         *product.Api
-	IngredientApi      *ingredient.Api
-	OrderApi           *order.Api
-	IngredientTypeApi  *ingredienttype.Api
-	ProductCategoryApi *productcategory.Api
-	Swagger            *swagger.Swagger
+	CustomerApi           *customer.Api
+	ProductApi            *product.Api
+	IngredientApi         *ingredient.Api
+	OrderApi              *order.Api
+	IngredientTypeApi     *ingredienttype.Api
+	ProductCategoryApi    *productcategory.Api
+	PaymentsStatusWebhook *payment.Webhook
+	Swagger               *swagger.Swagger
 }
 
 func NewDependencyInjection() DependencyInjection {
@@ -56,6 +58,9 @@ func NewDependencyInjection() DependencyInjection {
 	orderPersistence := orderDatabase.GetOrderPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
 
 	paymentPersistance := paymentDatabase.GetPaymentPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
+	paymentStatusPersistance := paymentDatabase.GetPaymentStatusPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
+
+	paymentStatusUseCase := paymentUseCase.GetCreatePaymentStatusUseCase(paymentStatusPersistance)
 
 	mercadoPagoClient := mercadopago.GetCreateMercadoPagoClient(
 		httpclient.GetClient("mercadoPago"),
@@ -96,6 +101,7 @@ func NewDependencyInjection() DependencyInjection {
 		IngredientTypeApi: &ingredienttype.Api{
 			FindIngredientTypeUseCase: create2.GetIngredientTypeUseCase(ingredientTypePersistence),
 		},
-		Swagger: &swagger.Swagger{},
+		PaymentsStatusWebhook: &payment.Webhook{CreatePaymentStatusUseCase: paymentStatusUseCase},
+		Swagger:               &swagger.Swagger{},
 	}
 }
