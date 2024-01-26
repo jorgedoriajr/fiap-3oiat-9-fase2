@@ -39,7 +39,7 @@ func GetFindPaymentStatusUseCase(paymentStatusPersistanceGateway output.PaymentS
 	return findPaymentStatusUseCase
 }
 
-func mapperPaymentStatusEntityToPaymentProcessed(paymentStatus domain.PaymentIntegrationLog) *result.PaymentStatusProcessed {
+func mapperPaymentStatusEntityToPaymentProcessed(paymentStatus *domain.PaymentIntegrationLog) *result.PaymentStatusProcessed {
 	return &result.PaymentStatusProcessed{
 		Id:                   paymentStatus.Id,
 		PaymentId:            paymentStatus.PaymentId,

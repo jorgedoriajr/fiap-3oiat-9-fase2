@@ -8,6 +8,6 @@ import (
 )
 
 type PaymentStatusPersistencePort interface {
-	FindPaymentStatus(ctx context.Context, paymentStatusId uuid.UUID) (domain.PaymentIntegrationLog, error)
+	FindPaymentStatus(ctx context.Context, paymentStatusId uuid.UUID) (*domain.PaymentIntegrationLog, error)
 	CreatePaymentStatus(ctx context.Context, paymentStatus domain.PaymentIntegrationLog) error
 }
