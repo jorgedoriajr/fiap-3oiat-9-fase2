@@ -40,7 +40,7 @@ httpClients:
     defaultHeaders:
       accept: application/json
     circuitBreaker:
-      enabled: true
+      enabled: false
 
 mercadoPago:
   userId: 95762750

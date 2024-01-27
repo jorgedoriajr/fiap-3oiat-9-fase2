@@ -4,6 +4,8 @@ import (
 	"hamburgueria/config"
 	_ "hamburgueria/docs"
 	"hamburgueria/internal/web/injection"
+	"hamburgueria/pkg/httpclient"
+
 	"hamburgueria/pkg/httpserver"
 	"hamburgueria/pkg/sql"
 	"hamburgueria/pkg/starter"
@@ -22,6 +24,7 @@ func main() {
 		panic("error on unmarshall configs")
 	}
 	config.SetConfig(serviceConfig)
+	httpclient.Initialize()
 
 	sql.Initialize()
 
