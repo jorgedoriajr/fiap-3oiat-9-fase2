@@ -1,6 +1,7 @@
 package request
 
 import (
+	"hamburgueria/internal/modules/payment/domain/valueobjects"
 	"hamburgueria/internal/modules/payment/usecase/command"
 	"strings"
 	"time"
@@ -34,7 +35,8 @@ func (c *CreatePaymentStatusRequest) GetPaymentStatus() string {
 func (c CreatePaymentStatusRequest) ToCommand() command.CreatePaymentStatusCommand {
 	return command.CreatePaymentStatusCommand{
 		Id:                c.ID,
-		ExternalReference: c.Data.ID,
-		Status:            command.Status(c.GetPaymentStatus()),
+		ExternalReference: c.ID,
+		PaymentId:         c.Data.ID,
+		Status:            valueobjects.Status(c.GetPaymentStatus()),
 	}
 }

@@ -1,17 +1,14 @@
 package command
 
-import "github.com/google/uuid"
+import (
+	"hamburgueria/internal/modules/payment/domain/valueobjects"
+
+	"github.com/google/uuid"
+)
 
 type CreatePaymentStatusCommand struct {
 	Id                uuid.UUID
+	PaymentId         uuid.UUID
 	ExternalReference uuid.UUID
-	Status            Status
+	Status            valueobjects.Status
 }
-
-type Status string
-
-const (
-	Created  Status = "created"
-	Approved Status = "approved"
-	Rejected Status = "rejected"
-)

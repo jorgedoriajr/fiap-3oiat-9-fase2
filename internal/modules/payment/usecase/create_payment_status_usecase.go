@@ -39,9 +39,10 @@ func GetCreatePaymentStatusUseCase(paymentStatusPersistanceGateway output.Paymen
 	return processPaymentStatusUseCase
 }
 
-func mapperPaymentStatusCommandToEntityPaymentStatus(command command.CreatePaymentStatusCommand) domain.PaymentIntegrationLog {
-	return domain.PaymentIntegrationLog{
+func mapperPaymentStatusCommandToEntityPaymentStatus(command command.CreatePaymentStatusCommand) domain.PaymentStatus {
+	return domain.PaymentStatus{
 		Id:                   command.Id,
+		PaymentId:            command.PaymentId,
 		PaymentIntegrationId: command.ExternalReference,
 		PaymentStatus:        valueobjects.Status(command.Status),
 	}

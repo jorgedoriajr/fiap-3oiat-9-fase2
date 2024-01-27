@@ -12,6 +12,7 @@ func GetAllApis(injection DependencyInjection) []httpserver.Controller {
 		injection.OrderApi,
 		injection.IngredientTypeApi,
 		injection.ProductCategoryApi,
+		injection.PaymentsStatusWebhook,
 		injection.Swagger,
 	}
 }

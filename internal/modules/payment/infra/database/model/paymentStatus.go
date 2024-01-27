@@ -15,8 +15,8 @@ type PaymentStatus struct {
 	PaymentStatus        string
 }
 
-func (ps PaymentStatus) ToDomain() *domain.PaymentIntegrationLog {
-	return &domain.PaymentIntegrationLog{
+func (ps PaymentStatus) ToDomain() *domain.PaymentStatus {
+	return &domain.PaymentStatus{
 		Id:                   ps.Id,
 		PaymentIntegrationId: ps.PaymentIntegrationId,
 		PaymentStatus:        valueobjects.Status(ps.PaymentStatus),

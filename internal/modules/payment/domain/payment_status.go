@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type PaymentIntegrationLog struct {
+type PaymentStatus struct {
 	Id                   uuid.UUID
 	PaymentId            uuid.UUID
 	PaymentIntegrationId uuid.UUID

@@ -18,7 +18,7 @@ type PaymentStatusPersistanceGateway struct {
 	logger          zerolog.Logger
 }
 
-func (ps *PaymentStatusPersistanceGateway) CreatePaymentStatus(ctx context.Context, paymentStatus domain.PaymentIntegrationLog) error {
+func (ps *PaymentStatusPersistanceGateway) CreatePaymentStatus(ctx context.Context, paymentStatus domain.PaymentStatus) error {
 	tx := ps.readWriteClient.Create(&model.PaymentStatus{
 		Id:                   paymentStatus.Id,
 		PaymentIntegrationId: paymentStatus.PaymentIntegrationId,
@@ -35,7 +35,7 @@ func (ps *PaymentStatusPersistanceGateway) CreatePaymentStatus(ctx context.Conte
 	return nil
 }
 
-func (ps *PaymentStatusPersistanceGateway) FindPaymentStatus(ctx context.Context, paymentStatusId uuid.UUID) (*domain.PaymentIntegrationLog, error) {
+func (ps *PaymentStatusPersistanceGateway) FindPaymentStatus(ctx context.Context, paymentStatusId uuid.UUID) (*domain.PaymentStatus, error) {
 
 	var paymentStatus model.PaymentStatus
 

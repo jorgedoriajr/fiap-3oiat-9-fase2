@@ -5,7 +5,6 @@ import (
 	_ "hamburgueria/docs"
 	"hamburgueria/internal/web/injection"
 	"hamburgueria/pkg/httpclient"
-
 	"hamburgueria/pkg/httpserver"
 	"hamburgueria/pkg/sql"
 	"hamburgueria/pkg/starter"

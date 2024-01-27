@@ -58,6 +58,8 @@ func (wh *Webhook) AddPaymentStatus(ctx echo.Context) error {
 		})
 	}
 
+	print("cheguei aqui!")
+
 	errCreated := wh.CreatePaymentStatusUseCase.AddPaymentStatus(ctx.Request().Context(), createPaymentStatusRequest.ToCommand())
 	if errCreated != nil {
 		return ctx.JSON(http.StatusInternalServerError, map[string]any{
