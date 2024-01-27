@@ -61,6 +61,9 @@ If have problems with permission with the database startup, maybe you will need 
 
 `chmod +x ./deployments/compose/database/setup-postgresql-databases.sh`
 
+Se houver problemas de permissão para leitura do arquivo de configuração do mockoon, de as permissões necessarias:
+`chmod -R 755 ./deployments/compose/local/external-service-mock`
+
 ### Start application with minukube
 
 Primeiramente verifique se você já tem o minikube instalado.

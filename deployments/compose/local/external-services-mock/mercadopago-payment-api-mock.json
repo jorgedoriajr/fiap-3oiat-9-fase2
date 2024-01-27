@@ -1,12 +1,12 @@
 {
-    "source": "mockoon:1.15.0",
+    "source": "mockoon:1.15.1",
     "data": [
       {
         "type": "environment",
         "item": {
           "uuid": "",
-          "lastMigration": 17,
-          "name": "SeuProjeto",
+          "lastMigration": 1,
+          "name": "MP QRCode",
           "endpointPrefix": "",
           "latency": 0,
           "port": 3000,
@@ -15,7 +15,7 @@
               "uuid": "",
               "documentation": "",
               "method": "post",
-              "endpoint": "/instore/orders/qr/seller/collectors/{user_id}/pos/{external_pos_id}/qrs",
+              "endpoint": "/instore/orders/qr/seller/collectors/95762750/pos/SUC001POS001/qrs",
               "responses": [
                 {
                     "uuid": "",
@@ -23,10 +23,19 @@
                     "latency": 0,
                     "statusCode": 200,
                     "label": "",
-                    "headers": [],
+                    "headers": [
+                      {
+                        "target": "body",
+                        "modifier": "method",
+                        "value": "post",
+                        "isRegex": false
+                      }
+                    ],
                     "filePath": "",
                     "sendFileAsBody": false,
-                    "rules": [],
+                    "rules": [
+
+                    ],
                     "rulesOperator": "OR",
                     "disableTemplating": false,
                     "fallbackTo404": false
@@ -37,7 +46,14 @@
                     "latency": 0,
                     "statusCode": 200,
                     "label": "",
-                    "headers": [],
+                    "headers": [
+                      {
+                        "target": "body",
+                        "modifier": "method",
+                        "value": "post",
+                        "isRegex": false
+                      }
+                    ],
                     "filePath": "",
                     "sendFileAsBody": false,
                     "rules": [],
@@ -48,11 +64,18 @@
                   ,
                   {
                     "uuid": "",
-                    "body": "{\n  \"qr_data\": \"00020101021243650016COM.MERCADOLIBRE02013063638f1192a-5fd1-4180-a180-8bcae3556bc35204000053039865802BR5925IZABEL AAAA DE MELO6007BARUERI62070503***63040B6D\",\n  \"in_store_order_id\": \"a6f3c46a-7fa4-46b3-b3c8-53a41f98ebdd\"\n}",
+                    "body": "{\n  \"qr_data\": \"00020101021243650016COM.MERCADOLIBRE02013063638f1192a-5fd1-4180-a180-8bcae3556bc35204000053039865802BR5925IZABEL AAAA DE MELO6007BARUERI62070503***63040B6D\",\n  \"in_store_order_id\": \"6f3c46a-7fa4-46b3-b3c8-53a41f98ebdd\"\n}",
                     "latency": 0,
                     "statusCode": 200,
                     "label": "",
-                    "headers": [],
+                    "headers": [
+                      {
+                        "target": "body",
+                        "modifier": "method",
+                        "value": "post",
+                        "isRegex": false
+                      }
+                    ],
                     "filePath": "",
                     "sendFileAsBody": false,
                     "rules": [],
@@ -62,7 +85,7 @@
                   }
               ],
               "enabled": true,
-              "randomResponse": false,
+              "randomResponse": true,
               "sequentialResponse": false
             }
           ],
