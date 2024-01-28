@@ -32,7 +32,7 @@ databases:
 
 httpClients:
   mercadoPago:
-    baseUrl: http://localhost:3000
+    baseUrl: https://api.mercadopago.com
     timeOutMilliseconds: 10000
     maxRetries: 0
     retryWaitTimeMilliseconds: 100
@@ -45,5 +45,5 @@ httpClients:
 mercadoPago:
   userId: 95762750
   externalPosId: SUC001POS001
-  bearer: xxxxx
+  bearer: TEST-637003506854932-012323-067ca7f2e43a2c093b61c9c7bc096978-95762750
   callBackUrl: https://meuserver.com
