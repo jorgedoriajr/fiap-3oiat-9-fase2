@@ -105,14 +105,15 @@ func (c OrderPersistenceGateway) Update(ctx context.Context, order domain.Order)
 func (c OrderPersistenceGateway) UpdateStatus(ctx context.Context, orderID uuid.UUID, status valueobject.OrderStatus) error {
 	err := c.readWriteClient.
 		Session(&gorm.Session{FullSaveAssociations: true}).
-		Save(&orderModel).
+		Update("status", status).
+		Where("id = ?", orderID).
 		Error
 	if err != nil {
 		c.logger.Error().
 			Ctx(ctx).
 			Err(err).
-			Str("orderId", order.Id.String()).
-			Msg("Failed to update order")
+			Str("orderId", orderID.String()).
+			Msg("Failed to update order status by ID: " + orderID.String())
 		return err
 	}
 	return nil
