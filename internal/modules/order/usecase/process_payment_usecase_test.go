@@ -3,15 +3,16 @@ package usecase
 import (
 	"context"
 	"errors"
-	"github.com/google/uuid"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/payment/usecase/result"
 	orderMocks "hamburgueria/tests/mocks/modules/order/port/output"
 	mocks "hamburgueria/tests/mocks/modules/payment/port/input"
 	"testing"
+
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestProcessPaymentUseCase(t *testing.T) {
@@ -28,7 +29,7 @@ func TestProcessPaymentUseCase(t *testing.T) {
 
 		payment := result.PaymentProcessed{
 			PaymentId:   uuid.New(),
-			PaymentData: "mocked",
+			PaymentData: []byte{0x01, 0x02, 0x03},
 		}
 
 		createPaymentUseCaseMock.On("CreatePayment", mock.Anything, mock.Anything).Return(&payment, nil)
@@ -88,7 +89,7 @@ func TestProcessPaymentUseCase(t *testing.T) {
 
 		payment := result.PaymentProcessed{
 			PaymentId:   uuid.New(),
-			PaymentData: "mocked",
+			PaymentData: []byte{0x01, 0x02, 0x03},
 		}
 
 		createPaymentUseCaseMock.On("CreatePayment", mock.Anything, mock.Anything).Return(&payment, nil)

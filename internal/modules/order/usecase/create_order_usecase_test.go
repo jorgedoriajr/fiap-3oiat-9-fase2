@@ -3,9 +3,6 @@ package usecase
 import (
 	"context"
 	"errors"
-	"github.com/google/uuid"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	customerDomain "hamburgueria/internal/modules/customer/domain"
 	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
@@ -18,6 +15,10 @@ import (
 	productMocks "hamburgueria/tests/mocks/modules/product/ports/output"
 	"testing"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestCreateOrderUseCase(t *testing.T) {
@@ -79,7 +80,7 @@ func TestCreateOrderUseCase(t *testing.T) {
 		})).Return(nil)
 
 		processPaymentUseCaseMock.On("ProcessPayment", mock.Anything, mock.Anything).Return(&result.PaymentCreatedResult{
-			PaymentData: "mocked",
+			PaymentData: []byte{0x01, 0x02, 0x03},
 		}, nil)
 
 		orderCreated, err := createOrderUseCase.AddOrder(context.TODO(), createOrderCommand)

@@ -1,5 +1,5 @@
 package result
 
 type PaymentCreatedResult struct {
-	PaymentData string
+	PaymentData []byte
 }

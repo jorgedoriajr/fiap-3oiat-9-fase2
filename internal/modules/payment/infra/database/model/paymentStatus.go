@@ -11,6 +11,7 @@ import (
 
 type PaymentStatus struct {
 	Id                   uuid.UUID
+	PaymentId            uuid.UUID
 	PaymentIntegrationId uuid.UUID
 	PaymentStatus        string
 }
@@ -18,6 +19,7 @@ type PaymentStatus struct {
 func (ps PaymentStatus) ToDomain() *domain.PaymentStatus {
 	return &domain.PaymentStatus{
 		Id:                   ps.Id,
+		PaymentId:            ps.PaymentId,
 		PaymentIntegrationId: ps.PaymentIntegrationId,
 		PaymentStatus:        valueobjects.Status(ps.PaymentStatus),
 	}

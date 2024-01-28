@@ -21,6 +21,7 @@ type PaymentStatusPersistanceGateway struct {
 func (ps *PaymentStatusPersistanceGateway) CreatePaymentStatus(ctx context.Context, paymentStatus domain.PaymentStatus) error {
 	tx := ps.readWriteClient.Create(&model.PaymentStatus{
 		Id:                   paymentStatus.Id,
+		PaymentId:            paymentStatus.PaymentId,
 		PaymentIntegrationId: paymentStatus.PaymentIntegrationId,
 		PaymentStatus:        string(paymentStatus.PaymentStatus),
 	})

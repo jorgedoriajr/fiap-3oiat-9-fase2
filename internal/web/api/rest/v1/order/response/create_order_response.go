@@ -2,5 +2,5 @@ package response
 
 type OrderResponse struct {
 	Amount      int    `json:"amount"`
-	PaymentData string `json:"paymentData"`
+	PaymentData []byte `json:"paymentData"`
 }

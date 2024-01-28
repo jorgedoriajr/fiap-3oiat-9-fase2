@@ -39,50 +39,7 @@
                     "rulesOperator": "OR",
                     "disableTemplating": false,
                     "fallbackTo404": false
-                },
-                {
-                    "uuid": "",
-                    "body": "{\n  \"qr_data\": \"00020101021243650016COM.MERCADOLIBRE02013063638f1192a-5fd1-4180-a180-8bcae3556bc35204000053039865802BR5925IZABEL AAAA DE MELO6007BARUERI62070503***63040B6D\",\n  \"in_store_order_id\": \"e52c8aa2-7d2a-4fb2-b26a-12d0e6975a4a\"\n}",
-                    "latency": 0,
-                    "statusCode": 200,
-                    "label": "",
-                    "headers": [
-                      {
-                        "target": "body",
-                        "modifier": "method",
-                        "value": "post",
-                        "isRegex": false
-                      }
-                    ],
-                    "filePath": "",
-                    "sendFileAsBody": false,
-                    "rules": [],
-                    "rulesOperator": "OR",
-                    "disableTemplating": false,
-                    "fallbackTo404": false
-                  }
-                  ,
-                  {
-                    "uuid": "",
-                    "body": "{\n  \"qr_data\": \"00020101021243650016COM.MERCADOLIBRE02013063638f1192a-5fd1-4180-a180-8bcae3556bc35204000053039865802BR5925IZABEL AAAA DE MELO6007BARUERI62070503***63040B6D\",\n  \"in_store_order_id\": \"6f3c46a-7fa4-46b3-b3c8-53a41f98ebdd\"\n}",
-                    "latency": 0,
-                    "statusCode": 200,
-                    "label": "",
-                    "headers": [
-                      {
-                        "target": "body",
-                        "modifier": "method",
-                        "value": "post",
-                        "isRegex": false
-                      }
-                    ],
-                    "filePath": "",
-                    "sendFileAsBody": false,
-                    "rules": [],
-                    "rulesOperator": "OR",
-                    "disableTemplating": false,
-                    "fallbackTo404": false
-                  }
+                }
               ],
               "enabled": true,
               "randomResponse": true,

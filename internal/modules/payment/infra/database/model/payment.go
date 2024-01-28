@@ -2,6 +2,7 @@ package model
 
 import (
 	"hamburgueria/internal/modules/payment/domain"
+	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -9,16 +10,18 @@ import (
 )
 
 type Payment struct {
-	Id      uuid.UUID `gorm:"primarykey"`
-	OrderId uuid.UUID
-	Data    string
+	Id       uuid.UUID `gorm:"primarykey"`
+	OrderId  uuid.UUID
+	Data     []byte
+	CreateAt time.Time
 }
 
 func (p Payment) ToDomain() *domain.Payment {
 	return &domain.Payment{
-		Id:      p.Id,
-		OrderId: p.OrderId,
-		Data:    p.Data,
+		Id:        p.Id,
+		OrderId:   p.OrderId,
+		Data:      p.Data,
+		CreatedAt: p.CreateAt,
 	}
 }
 

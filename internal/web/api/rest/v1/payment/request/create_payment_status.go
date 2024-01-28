@@ -10,18 +10,17 @@ import (
 )
 
 type CreatePaymentStatusRequest struct {
-	ID          uuid.UUID `json:"id"`
-	LiveMode    bool      `json:"live_mode"`
-	Type        string    `json:"type"`
-	DateCreated time.Time `json:"date_created"`
-	UserID      int       `json:"user_id"`
-	APIVersion  string    `json:"api_version"`
-	Action      string    `json:"action"`
-	Data        Data      `json:"data"`
+	Id          uuid.UUID  `json:"id"`
+	LiveMode    bool       `json:"live_mode"`
+	Type        string     `json:"type"`
+	DateCreated time.Time  `json:"date_created"`
+	UserID      int        `json:"user_id"`
+	APIVersion  string     `json:"api_version"`
+	Action      string     `json:"action"`
+	Data        DataStatus `json:"data"`
 }
-
-type Data struct {
-	ID uuid.UUID `json:"id"`
+type DataStatus struct {
+	Id uuid.UUID `json:"id"`
 }
 
 func (c *CreatePaymentStatusRequest) GetPaymentStatus() string {
@@ -34,9 +33,9 @@ func (c *CreatePaymentStatusRequest) GetPaymentStatus() string {
 
 func (c CreatePaymentStatusRequest) ToCommand() command.CreatePaymentStatusCommand {
 	return command.CreatePaymentStatusCommand{
-		Id:                c.ID,
-		ExternalReference: c.ID,
-		PaymentId:         c.Data.ID,
+		Id:                uuid.New(),
+		ExternalReference: c.Id,
+		PaymentId:         c.Data.Id,
 		Status:            valueobjects.Status(c.GetPaymentStatus()),
 	}
 }

@@ -49,5 +49,6 @@ func mapperPaymentEntityToPaymentProcessed(payment *domain.Payment) *result.Paym
 		PaymentId:   payment.Id,
 		OrderId:     payment.OrderId,
 		PaymentData: payment.Data,
+		CreatedAt:   payment.CreatedAt,
 	}
 }
