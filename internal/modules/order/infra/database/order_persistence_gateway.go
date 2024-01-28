@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"hamburgueria/internal/modules/order/domain"
+	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/order/infra/database/model"
 	"sync"
 )
@@ -86,6 +87,22 @@ func (c OrderPersistenceGateway) FindByStatus(ctx context.Context, status string
 
 func (c OrderPersistenceGateway) Update(ctx context.Context, order domain.Order) error {
 	orderModel := model.FromDomain(order)
+	err := c.readWriteClient.
+		Session(&gorm.Session{FullSaveAssociations: true}).
+		Save(&orderModel).
+		Error
+	if err != nil {
+		c.logger.Error().
+			Ctx(ctx).
+			Err(err).
+			Str("orderId", order.Id.String()).
+			Msg("Failed to update order")
+		return err
+	}
+	return nil
+}
+
+func (c OrderPersistenceGateway) UpdateStatus(ctx context.Context, orderID uuid.UUID, status valueobject.OrderStatus) error {
 	err := c.readWriteClient.
 		Session(&gorm.Session{FullSaveAssociations: true}).
 		Save(&orderModel).

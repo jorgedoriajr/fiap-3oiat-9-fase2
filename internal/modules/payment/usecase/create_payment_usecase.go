@@ -5,11 +5,15 @@ import (
 	"hamburgueria/internal/modules/payment/domain"
 	"hamburgueria/internal/modules/payment/port/input"
 	"hamburgueria/internal/modules/payment/port/output"
-
 	"hamburgueria/internal/modules/payment/usecase/command"
 	"hamburgueria/internal/modules/payment/usecase/result"
 
 	"sync"
+)
+
+var (
+	processPaymentUseCase     CreatePaymentUseCase
+	processPaymentUseCaseOnce sync.Once
 )
 
 type CreatePaymentUseCase struct {
@@ -30,11 +34,6 @@ func (p CreatePaymentUseCase) CreatePayment(ctx context.Context, command command
 
 	return mapperPaymentEntityToPaymentProcessed(&paymentData), nil
 }
-
-var (
-	processPaymentUseCase     CreatePaymentUseCase
-	processPaymentUseCaseOnce sync.Once
-)
 
 func GetCreatePaymentUseCase(paymentClientGateway output.PaymentClient, paymentPersistanceGateway output.PaymentPersistencePort) input.CreatePaymentPort {
 	processPaymentUseCaseOnce.Do(func() {

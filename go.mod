@@ -31,7 +31,6 @@ require (
 	github.com/DataDog/datadog-agent/pkg/obfuscate v0.50.2 // indirect
 	github.com/DataDog/datadog-agent/pkg/remoteconfig/state v0.50.2 // indirect
 	github.com/DataDog/datadog-go/v5 v5.5.0 // indirect
-	github.com/DataDog/go-libddwaf v1.7.0 // indirect
 	github.com/DataDog/go-libddwaf/v2 v2.2.3 // indirect
 	github.com/DataDog/go-sqllexer v0.0.10 // indirect
 	github.com/DataDog/go-tuf v1.0.2-0.5.2 // indirect
@@ -72,7 +71,6 @@ require (
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/outcaste-io/ristretto v0.2.3 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.1 // indirect
