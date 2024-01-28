@@ -60,14 +60,14 @@ func NewDependencyInjection() DependencyInjection {
 	paymentPersistance := paymentDatabase.GetPaymentPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
 	paymentStatusPersistance := paymentDatabase.GetPaymentStatusPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
 
-	paymentStatusUseCase := paymentUseCase.GetCreatePaymentStatusUseCase(&paymentStatusPersistance)
+	createPaymentStatusUseCase := paymentUseCase.GetCreatePaymentStatusUseCase(&paymentStatusPersistance)
 
 	mercadoPagoClient := mercadopago.GetCreateMercadoPagoClient(
 		httpclient.GetClient("mercadoPago"),
 		starter.GetConfigRoot().MercadoPago,
 		logger.Get(),
 	)
-	//findPaymentUseCase := paymentUseCase.GetFindPaymentUseCase(mercadoPagoClient)
+	//findPaymenStatustUseCase := paymentUseCase.GetFindPaymentUseCase(mercadoPagoClient)
 	createPaymentUseCase := paymentUseCase.GetCreatePaymentUseCase(mercadoPagoClient, &paymentPersistance)
 	processPaymentUseCase := orderUsecase.GetProcessPaymentUseCase(orderPersistence, createPaymentUseCase)
 
@@ -101,7 +101,7 @@ func NewDependencyInjection() DependencyInjection {
 		IngredientTypeApi: &ingredienttype.Api{
 			FindIngredientTypeUseCase: create2.GetIngredientTypeUseCase(ingredientTypePersistence),
 		},
-		PaymentsStatusWebhook: &payment.Webhook{CreatePaymentStatusUseCase: paymentStatusUseCase},
+		PaymentsStatusWebhook: &payment.Webhook{CreatePaymentStatusUseCase: createPaymentStatusUseCase},
 		Swagger:               &swagger.Swagger{},
 	}
 }

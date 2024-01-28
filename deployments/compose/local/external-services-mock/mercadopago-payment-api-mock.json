@@ -4,7 +4,7 @@
   "name": "MP_mock",
   "endpointPrefix": "",
   "latency": 0,
-  "port": 3001,
+  "port": 3000,
   "hostname": "",
   "folders": [],
   "routes": [
@@ -32,7 +32,12 @@
                   "fallbackTo404": false,
                   "default": true,
                   "crudKey": "id",
-                  "callbacks": []
+                  "callbacks": [
+                      {
+                          "uuid": "5f7ff85a-692c-450b-b024-e9f8d681812e",
+                          "latency": 0
+                      }
+                  ]
               }
           ],
           "responseMode": null
@@ -88,5 +93,20 @@
           "value": "{\n  \"external_reference\": \"sua_referencia_externa\",\n  \"notification_url\": \"sua_url_de_notificacao\",\n  \"total_amount\": 1000,\n  \"expiration_date\": \"2024-01-27T12:00:00Z\"\n}"
       }
   ],
-  "callbacks": []
+  "callbacks": [
+      {
+          "uuid": "5f7ff85a-692c-450b-b024-e9f8d681812e",
+          "id": "kbkv",
+          "uri": "http://app:8080/v1/webhook/payments_status",
+          "name": "CallbackPaymentStatus",
+          "documentation": "",
+          "method": "post",
+          "headers": [],
+          "bodyType": "INLINE",
+          "body": "{\n  \"id\": \"d7d0cf27-67fa-4ef9-b2c0-75b9ae90e4b4\",\n  \"live_mode\": true,\n  \"type\": \"payment\",\n  \"date_created\": \"2015-03-25T10:04:58.396-04:00\",\n  \"user_id\": 44444,\n  \"api_version\": \"v1\",\n  \"action\": \"payment.created\",\n  \"data\": {\n    \"id\": \"a40d6058-069e-4a7a-b873-41e3bff827be\"\n  }\n}",
+          "databucketID": "",
+          "filePath": "",
+          "sendFileAsBody": true
+      }
+  ]
 }
