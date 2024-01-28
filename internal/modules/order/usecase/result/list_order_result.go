@@ -2,8 +2,11 @@ package result
 
 import (
 	"hamburgueria/internal/modules/order/domain"
+	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/product/usecase/result"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type ListOrderResult struct {
@@ -13,6 +16,10 @@ type ListOrderResult struct {
 	CustomerId  string
 	CreatedAt   time.Time
 	Products    []OrderProductResult
+}
+
+func (l ListOrderResult) GetStatus() valueobject.OrderStatus {
+	return valueobject.OrderStatus(l.Status)
 }
 
 type OrderProductResult struct {

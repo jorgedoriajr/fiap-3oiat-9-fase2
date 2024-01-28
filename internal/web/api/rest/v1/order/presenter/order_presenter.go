@@ -3,6 +3,7 @@ package presenter
 import (
 	"hamburgueria/internal/modules/order/usecase/result"
 	"hamburgueria/internal/web/api/rest/v1/order/response"
+	"sort"
 )
 
 func OrderResponseFromResult(result result.CreateOrderResult) response.OrderResponse {
@@ -15,6 +16,7 @@ func OrderResponseFromResult(result result.CreateOrderResult) response.OrderResp
 
 func ListOrderResponseFromResult(resultOrders []result.ListOrderResult) []response.ListOrderResponse {
 	var ordersResponse []response.ListOrderResponse
+	orderSorted(resultOrders)
 	for _, order := range resultOrders {
 		var productsResponse []response.ListOrderProducts
 		for _, product := range order.Products {
@@ -76,4 +78,9 @@ func GetOrderResponseFromResult(order result.ListOrderResult) response.ListOrder
 		CreatedAt:   order.CreatedAt,
 		Products:    productsResponse,
 	}
+}
+func orderSorted(orders []result.ListOrderResult) {
+	sort.Slice(orders, func(i, j int) bool {
+		return orders[i].GetStatus() < orders[j].GetStatus()
+	})
 }
