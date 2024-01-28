@@ -1,6 +1,7 @@
 package domainevent
 
 import (
+	"context"
 	"fmt"
 	"testing"
 	"time"
@@ -31,7 +32,7 @@ type TestEventHandler struct {
 	ID int
 }
 
-func (h *TestEventHandler) Handle(event Event[TestEventType]) error {
+func (h *TestEventHandler) Handle(ctx context.Context, Event[TestEventType]) error {
 	fmt.Println(event.GetPayload())
 	return nil
 }
