@@ -5,8 +5,6 @@ import (
 	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/product/usecase/result"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type ListOrderResult struct {
