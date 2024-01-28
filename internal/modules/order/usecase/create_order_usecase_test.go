@@ -27,7 +27,7 @@ func TestCreateOrderUseCase(t *testing.T) {
 		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
 		customerPersistenceMock := customerMocks.NewCustomerPersistencePort(t)
 		productPersistenceMock := productMocks.NewProductPersistencePort(t)
-		processPaymentUseCaseMock := mocks.NewProcessPaymentUseCasePort(t)
+		processPaymentUseCaseMock := mocks.NewProcessPaymentPort(t)
 		createOrderUseCase := CreateOrderUseCase{
 			customerPersistenceGateway: customerPersistenceMock,
 			productPersistenceGateway:  productPersistenceMock,
@@ -106,7 +106,7 @@ func TestCreateOrderUseCase(t *testing.T) {
 		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
 		customerPersistenceMock := customerMocks.NewCustomerPersistencePort(t)
 		productPersistenceMock := productMocks.NewProductPersistencePort(t)
-		processPaymentUseCaseMock := mocks.NewProcessPaymentUseCasePort(t)
+		processPaymentUseCaseMock := mocks.NewProcessPaymentPort(t)
 		createOrderUseCase := CreateOrderUseCase{
 			customerPersistenceGateway: customerPersistenceMock,
 			productPersistenceGateway:  productPersistenceMock,
@@ -149,7 +149,7 @@ func TestCreateOrderUseCase(t *testing.T) {
 		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
 		customerPersistenceMock := customerMocks.NewCustomerPersistencePort(t)
 		productPersistenceMock := productMocks.NewProductPersistencePort(t)
-		processPaymentUseCaseMock := mocks.NewProcessPaymentUseCasePort(t)
+		processPaymentUseCaseMock := mocks.NewProcessPaymentPort(t)
 		createOrderUseCase := CreateOrderUseCase{
 			customerPersistenceGateway: customerPersistenceMock,
 			productPersistenceGateway:  productPersistenceMock,
@@ -202,7 +202,7 @@ func TestCreateOrderUseCase(t *testing.T) {
 		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
 		customerPersistenceMock := customerMocks.NewCustomerPersistencePort(t)
 		productPersistenceMock := productMocks.NewProductPersistencePort(t)
-		processPaymentUseCaseMock := mocks.NewProcessPaymentUseCasePort(t)
+		processPaymentUseCaseMock := mocks.NewProcessPaymentPort(t)
 		createOrderUseCase := CreateOrderUseCase{
 			customerPersistenceGateway: customerPersistenceMock,
 			productPersistenceGateway:  productPersistenceMock,
@@ -260,7 +260,7 @@ func TestCreateOrderUseCase(t *testing.T) {
 		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
 		customerPersistenceMock := customerMocks.NewCustomerPersistencePort(t)
 		productPersistenceMock := productMocks.NewProductPersistencePort(t)
-		processPaymentUseCaseMock := mocks.NewProcessPaymentUseCasePort(t)
+		processPaymentUseCaseMock := mocks.NewProcessPaymentPort(t)
 		createOrderUseCase := CreateOrderUseCase{
 			customerPersistenceGateway: customerPersistenceMock,
 			productPersistenceGateway:  productPersistenceMock,

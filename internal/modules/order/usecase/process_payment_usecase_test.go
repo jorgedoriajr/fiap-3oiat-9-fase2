@@ -6,7 +6,7 @@ import (
 	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/payment/usecase/result"
-	orderMocks "hamburgueria/tests/mocks/modules/order/port/output"
+	orderMocks "hamburgueria/tests/mocks/modules/order/port/input"
 	mocks "hamburgueria/tests/mocks/modules/payment/port/input"
 	"testing"
 
@@ -18,11 +18,11 @@ import (
 func TestProcessPaymentUseCase(t *testing.T) {
 
 	t.Run(`should process payment`, func(t *testing.T) {
-		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
+		updateOrderUseCaseMock := orderMocks.NewUpdateOrderPort(t)
 		createPaymentUseCaseMock := mocks.NewCreatePaymentPort(t)
 		processPaymentUseCase := ProcessPaymentUseCase{
-			orderPersistenceGateway: orderPersistenceMock,
-			createPaymentUseCase:    createPaymentUseCaseMock,
+			updateOrderUseCase:   updateOrderUseCaseMock,
+			createPaymentUseCase: createPaymentUseCaseMock,
 		}
 
 		order := domain.Order{}
@@ -34,12 +34,7 @@ func TestProcessPaymentUseCase(t *testing.T) {
 
 		createPaymentUseCaseMock.On("CreatePayment", mock.Anything, mock.Anything).Return(&payment, nil)
 
-		orderPersistenceMock.On("Update", mock.Anything, mock.MatchedBy(func(c domain.Order) bool {
-			return c.PaymentId == payment.PaymentId &&
-				c.Status == valueobject.PaymentCreated &&
-				len(c.History) == 1 &&
-				c.History[0].Status == valueobject.PaymentCreated
-		})).Return(nil)
+		updateOrderUseCaseMock.On("Update", mock.Anything, payment.OrderId, valueobject.PaymentCreated, &payment.PaymentId).Return(nil)
 
 		paymentCreated, err := processPaymentUseCase.ProcessPayment(context.TODO(), order)
 
@@ -49,16 +44,16 @@ func TestProcessPaymentUseCase(t *testing.T) {
 		createPaymentUseCaseMock.AssertExpectations(t)
 		createPaymentUseCaseMock.AssertCalled(t, "CreatePayment", mock.Anything, mock.Anything)
 
-		orderPersistenceMock.AssertExpectations(t)
-		orderPersistenceMock.AssertCalled(t, "Update", mock.Anything, mock.Anything)
+		updateOrderUseCaseMock.AssertExpectations(t)
+		updateOrderUseCaseMock.AssertCalled(t, "Update", mock.Anything, mock.Anything, mock.Anything, mock.Anything)
 	})
 
 	t.Run(`should return error when create payment failed`, func(t *testing.T) {
-		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
+		updateOrderUseCaseMock := orderMocks.NewUpdateOrderPort(t)
 		createPaymentUseCaseMock := mocks.NewCreatePaymentPort(t)
 		processPaymentUseCase := ProcessPaymentUseCase{
-			orderPersistenceGateway: orderPersistenceMock,
-			createPaymentUseCase:    createPaymentUseCaseMock,
+			updateOrderUseCase:   updateOrderUseCaseMock,
+			createPaymentUseCase: createPaymentUseCaseMock,
 		}
 
 		order := domain.Order{}
@@ -73,16 +68,16 @@ func TestProcessPaymentUseCase(t *testing.T) {
 		createPaymentUseCaseMock.AssertExpectations(t)
 		createPaymentUseCaseMock.AssertCalled(t, "CreatePayment", mock.Anything, mock.Anything)
 
-		orderPersistenceMock.AssertExpectations(t)
-		orderPersistenceMock.AssertNotCalled(t, "Update", mock.Anything, mock.Anything)
+		updateOrderUseCaseMock.AssertExpectations(t)
+		updateOrderUseCaseMock.AssertNotCalled(t, "Update", mock.Anything, mock.Anything, mock.Anything)
 	})
 
 	t.Run(`should return error when update failed`, func(t *testing.T) {
-		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
+		updateOrderUseCaseMock := orderMocks.NewUpdateOrderPort(t)
 		createPaymentUseCaseMock := mocks.NewCreatePaymentPort(t)
 		processPaymentUseCase := ProcessPaymentUseCase{
-			orderPersistenceGateway: orderPersistenceMock,
-			createPaymentUseCase:    createPaymentUseCaseMock,
+			updateOrderUseCase:   updateOrderUseCaseMock,
+			createPaymentUseCase: createPaymentUseCaseMock,
 		}
 
 		order := domain.Order{}
@@ -94,12 +89,7 @@ func TestProcessPaymentUseCase(t *testing.T) {
 
 		createPaymentUseCaseMock.On("CreatePayment", mock.Anything, mock.Anything).Return(&payment, nil)
 
-		orderPersistenceMock.On("Update", mock.Anything, mock.MatchedBy(func(c domain.Order) bool {
-			return c.PaymentId == payment.PaymentId &&
-				c.Status == valueobject.PaymentCreated &&
-				len(c.History) == 1 &&
-				c.History[0].Status == valueobject.PaymentCreated
-		})).Return(errors.New("SOME_ERROR"))
+		updateOrderUseCaseMock.On("Update", mock.Anything, payment.OrderId, valueobject.PaymentCreated, &payment.PaymentId).Return(errors.New("SOME_ERROR"))
 
 		paymentCreated, err := processPaymentUseCase.ProcessPayment(context.TODO(), order)
 
@@ -109,7 +99,7 @@ func TestProcessPaymentUseCase(t *testing.T) {
 		createPaymentUseCaseMock.AssertExpectations(t)
 		createPaymentUseCaseMock.AssertCalled(t, "CreatePayment", mock.Anything, mock.Anything)
 
-		orderPersistenceMock.AssertExpectations(t)
-		orderPersistenceMock.AssertCalled(t, "Update", mock.Anything, mock.Anything)
+		updateOrderUseCaseMock.AssertExpectations(t)
+		updateOrderUseCaseMock.AssertCalled(t, "Update", mock.Anything, mock.Anything, mock.Anything, mock.Anything)
 	})
 }
