@@ -9,6 +9,7 @@ import (
 
 type Order struct {
 	Id         uuid.UUID
+	Number     int
 	CustomerId string
 	Products   []OrderProduct
 	CreatedAt  time.Time

@@ -89,7 +89,13 @@ func (c CreateOrderUseCase) AddOrder(
 		return nil, err
 	}
 
+	orderFound, err := c.orderPersistenceGateway.FindById(ctx, orderId)
+	if err != nil {
+		return nil, err
+	}
+
 	return &result.CreateOrderResult{
+		Number:      orderFound.Number,
 		Amount:      amount,
 		PaymentData: paymentProcessed.PaymentData,
 	}, err

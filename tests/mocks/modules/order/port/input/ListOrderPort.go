@@ -77,6 +77,61 @@ func (_c *ListOrderPort_FindAllOrders_Call) RunAndReturn(run func(context.Contex
 	return _c
 }
 
+// FindByNumber provides a mock function with given fields: ctx, number
+func (_m *ListOrderPort) FindByNumber(ctx context.Context, number int) (*result.ListOrderResult, error) {
+	ret := _m.Called(ctx, number)
+
+	var r0 *result.ListOrderResult
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int) (*result.ListOrderResult, error)); ok {
+		return rf(ctx, number)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int) *result.ListOrderResult); ok {
+		r0 = rf(ctx, number)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*result.ListOrderResult)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
+		r1 = rf(ctx, number)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ListOrderPort_FindByNumber_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'FindByNumber'
+type ListOrderPort_FindByNumber_Call struct {
+	*mock.Call
+}
+
+// FindByNumber is a helper method to define mock.On call
+//   - ctx context.Context
+//   - number int
+func (_e *ListOrderPort_Expecter) FindByNumber(ctx interface{}, number interface{}) *ListOrderPort_FindByNumber_Call {
+	return &ListOrderPort_FindByNumber_Call{Call: _e.mock.On("FindByNumber", ctx, number)}
+}
+
+func (_c *ListOrderPort_FindByNumber_Call) Run(run func(ctx context.Context, number int)) *ListOrderPort_FindByNumber_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int))
+	})
+	return _c
+}
+
+func (_c *ListOrderPort_FindByNumber_Call) Return(_a0 *result.ListOrderResult, _a1 error) *ListOrderPort_FindByNumber_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *ListOrderPort_FindByNumber_Call) RunAndReturn(run func(context.Context, int) (*result.ListOrderResult, error)) *ListOrderPort_FindByNumber_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // FindByStatus provides a mock function with given fields: ctx, status
 func (_m *ListOrderPort) FindByStatus(ctx context.Context, status string) ([]result.ListOrderResult, error) {
 	ret := _m.Called(ctx, status)

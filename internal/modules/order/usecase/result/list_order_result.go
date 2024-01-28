@@ -1,19 +1,18 @@
 package result
 
 import (
-	"github.com/google/uuid"
 	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/product/usecase/result"
 	"time"
 )
 
 type ListOrderResult struct {
-	OrderId    uuid.UUID
-	Status     string
-	Amount     int
-	CustomerId string
-	CreatedAt  time.Time
-	Products   []OrderProductResult
+	OrderNumber int
+	Status      string
+	Amount      int
+	CustomerId  string
+	CreatedAt   time.Time
+	Products    []OrderProductResult
 }
 
 type OrderProductResult struct {
@@ -22,6 +21,22 @@ type OrderProductResult struct {
 	Amount      int
 	Quantity    int
 	Ingredients []result.ProductIngredientsResult
+}
+
+func ListOrderResultFromDomain(order domain.Order) *ListOrderResult {
+	var products []OrderProductResult
+	for _, product := range order.Products {
+		products = append(products, OrderProductResultFromDomain(product))
+	}
+
+	return &ListOrderResult{
+		OrderNumber: order.Number,
+		Status:      string(order.Status),
+		Amount:      order.Amount,
+		CustomerId:  order.CustomerId,
+		CreatedAt:   order.CreatedAt,
+		Products:    products,
+	}
 }
 
 func OrderProductResultFromDomain(orderProduct domain.OrderProduct) OrderProductResult {

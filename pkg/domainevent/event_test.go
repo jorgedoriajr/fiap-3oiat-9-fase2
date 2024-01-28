@@ -32,7 +32,7 @@ type TestEventHandler struct {
 	ID int
 }
 
-func (h *TestEventHandler) Handle(ctx context.Context, Event[TestEventType]) error {
+func (h *TestEventHandler) Handle(ctx context.Context, event Event[TestEventType]) error {
 	fmt.Println(event.GetPayload())
 	return nil
 }

@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"errors"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"gorm.io/gorm"
@@ -9,6 +10,7 @@ import (
 	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/order/infra/database/model"
+	"strconv"
 	"sync"
 )
 
@@ -121,17 +123,43 @@ func (c OrderPersistenceGateway) UpdateStatus(ctx context.Context, orderID uuid.
 
 func (c OrderPersistenceGateway) FindById(ctx context.Context, orderId uuid.UUID) (*domain.Order, error) {
 	var order model.Order
-	tx := c.readOnlyClient.
+	err := c.readOnlyClient.
 		Preload(clause.Associations).
 		Preload("Products.Product.Ingredients.Ingredient").
-		Find(&order, orderId)
-	if tx.Error != nil {
+		Find(&order, orderId).
+		Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		c.logger.Error().
 			Ctx(ctx).
-			Err(tx.Error).
+			Err(err).
 			Str("orderId", orderId.String()).
 			Msg("Failed to find orders by ID")
-		return nil, tx.Error
+		return nil, err
+	}
+
+	return order.ToDomain(), nil
+}
+
+func (c OrderPersistenceGateway) FindByNumber(ctx context.Context, number int) (*domain.Order, error) {
+	var order model.Order
+	err := c.readOnlyClient.
+		Preload(clause.Associations).
+		Preload("Products.Product.Ingredients.Ingredient").
+		Where("number = ?", number).
+		First(&order).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		c.logger.Error().
+			Ctx(ctx).
+			Err(err).
+			Str("number", strconv.Itoa(number)).
+			Msg("Failed to find orders by number")
+		return nil, err
 	}
 
 	return order.ToDomain(), nil

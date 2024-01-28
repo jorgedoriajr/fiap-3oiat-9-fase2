@@ -12,6 +12,7 @@ import (
 
 type Order struct {
 	ID         uuid.UUID
+	Number     int `gorm:"autoIncrement:true;unique"`
 	CustomerId string
 	Products   []OrderProduct `gorm:"foreignKey:OrderId"`
 	CreatedAt  time.Time
@@ -42,6 +43,7 @@ func (o Order) ToDomain() *domain.Order {
 	}
 	return &domain.Order{
 		Id:         o.ID,
+		Number:     o.Number,
 		CustomerId: o.CustomerId,
 		Products:   products,
 		CreatedAt:  o.CreatedAt,
