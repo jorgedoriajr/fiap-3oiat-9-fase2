@@ -5,6 +5,7 @@ import (
 	"errors"
 	"hamburgueria/internal/modules/payment/domain"
 	"hamburgueria/internal/modules/payment/infra/database/model"
+	"hamburgueria/internal/modules/payment/port/output"
 	"sync"
 
 	"github.com/google/uuid"
@@ -18,7 +19,7 @@ type PaymentStatusPersistanceGateway struct {
 	logger          zerolog.Logger
 }
 
-func (ps *PaymentStatusPersistanceGateway) CreatePaymentStatus(ctx context.Context, paymentStatus domain.PaymentStatus) error {
+func (ps PaymentStatusPersistanceGateway) CreatePaymentStatus(ctx context.Context, paymentStatus domain.PaymentStatus) error {
 	tx := ps.readWriteClient.Create(&model.PaymentStatus{
 		Id:                   paymentStatus.Id,
 		PaymentId:            paymentStatus.PaymentId,
@@ -36,7 +37,7 @@ func (ps *PaymentStatusPersistanceGateway) CreatePaymentStatus(ctx context.Conte
 	return nil
 }
 
-func (ps *PaymentStatusPersistanceGateway) FindPaymentStatus(ctx context.Context, paymentStatusId uuid.UUID) (*domain.PaymentStatus, error) {
+func (ps PaymentStatusPersistanceGateway) FindPaymentStatus(ctx context.Context, paymentStatusId uuid.UUID) (*domain.PaymentStatus, error) {
 
 	var paymentStatus model.PaymentStatus
 
@@ -61,7 +62,7 @@ func (ps *PaymentStatusPersistanceGateway) FindPaymentStatus(ctx context.Context
 }
 
 var (
-	paymentStatusRepositoryInstance PaymentStatusPersistanceGateway
+	paymentStatusRepositoryInstance output.PaymentStatusPersistencePort
 	paymentStatusRepositoryOnce     sync.Once
 )
 
@@ -69,7 +70,7 @@ func GetPaymentStatusPersistenceGateway(
 	readWriteClient *gorm.DB,
 	readOnlyClient *gorm.DB,
 	logger zerolog.Logger,
-) PaymentStatusPersistanceGateway {
+) output.PaymentStatusPersistencePort {
 	paymentStatusRepositoryOnce.Do(func() {
 		paymentStatusRepositoryInstance = PaymentStatusPersistanceGateway{
 			readWriteClient: readWriteClient,

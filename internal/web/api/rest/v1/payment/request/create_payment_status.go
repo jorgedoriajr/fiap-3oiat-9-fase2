@@ -34,8 +34,8 @@ func (c *CreatePaymentStatusRequest) GetPaymentStatus() string {
 func (c CreatePaymentStatusRequest) ToCommand() command.CreatePaymentStatusCommand {
 	return command.CreatePaymentStatusCommand{
 		Id:                uuid.New(),
-		ExternalReference: c.Id,
-		PaymentId:         c.Data.Id,
+		ExternalReference: c.Data.Id,
+		PaymentId:         c.Id,
 		Status:            valueobjects.Status(c.GetPaymentStatus()),
 	}
 }

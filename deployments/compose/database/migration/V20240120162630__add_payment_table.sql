@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS "payment" (
-	id       UUID not null primary key,
-	order_id UUID not null references "order"(id),
-	Data     bytea
+	id         UUID not null primary key,
+	order_id   UUID not null references "order"(id),
+	Data       varchar(255),
+	created_at timestamp
 );
 
 CREATE TABLE IF NOT EXISTS "payment_status" (

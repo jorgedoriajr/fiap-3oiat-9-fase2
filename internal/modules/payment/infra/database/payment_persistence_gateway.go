@@ -5,6 +5,7 @@ import (
 	"errors"
 	"hamburgueria/internal/modules/payment/domain"
 	"hamburgueria/internal/modules/payment/infra/database/model"
+	"hamburgueria/internal/modules/payment/port/output"
 	"sync"
 
 	"github.com/google/uuid"
@@ -18,7 +19,7 @@ type PaymentPersistenceGateway struct {
 	logger          zerolog.Logger
 }
 
-func (p *PaymentPersistenceGateway) Create(ctx context.Context, payment domain.Payment) error {
+func (p PaymentPersistenceGateway) Create(ctx context.Context, payment domain.Payment) error {
 	tx := p.readWriteClient.Create(&model.Payment{
 		Id:      payment.Id,
 		OrderId: payment.OrderId,
@@ -35,7 +36,7 @@ func (p *PaymentPersistenceGateway) Create(ctx context.Context, payment domain.P
 	return nil
 }
 
-func (p *PaymentPersistenceGateway) FindById(ctx context.Context, paymentId uuid.UUID) (*domain.Payment, error) {
+func (p PaymentPersistenceGateway) FindById(ctx context.Context, paymentId uuid.UUID) (*domain.Payment, error) {
 
 	var payment model.Payment
 
@@ -60,7 +61,7 @@ func (p *PaymentPersistenceGateway) FindById(ctx context.Context, paymentId uuid
 }
 
 var (
-	paymentRepositoryInstance PaymentPersistenceGateway
+	paymentRepositoryInstance output.PaymentPersistencePort
 	paymentRepositoryOnce     sync.Once
 )
 
@@ -68,7 +69,7 @@ func GetPaymentPersistenceGateway(
 	readWriteClient *gorm.DB,
 	readOnlyClient *gorm.DB,
 	logger zerolog.Logger,
-) PaymentPersistenceGateway {
+) output.PaymentPersistencePort {
 	paymentRepositoryOnce.Do(func() {
 		paymentRepositoryInstance = PaymentPersistenceGateway{
 			readWriteClient: readWriteClient,
