@@ -81,6 +81,6 @@ func GetOrderResponseFromResult(order result.ListOrderResult) response.ListOrder
 }
 func orderSorted(orders []result.ListOrderResult) {
 	sort.Slice(orders, func(i, j int) bool {
-		return orders[i].GetStatus() < orders[j].GetStatus()
+		return orders[i].GetStatus().Order() < orders[j].GetStatus().Order()
 	})
 }
