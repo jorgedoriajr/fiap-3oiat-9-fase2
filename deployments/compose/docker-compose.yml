@@ -61,7 +61,7 @@ services:
       - "/tmp/docker-entrypoint.sh:/docker-entrypoint-initaws.d/docker-entrypoint.sh"
 
   mercadopago-mock:
-    image: mockoon/cli:1.5.1
+    image: mockoon/cli:latest
     container_name: hamburgueria-mercadopago-mock
     hostname: mercadopago-mock
     ports:

@@ -9,6 +9,6 @@ import (
 type Payment struct {
 	Id        uuid.UUID
 	OrderId   uuid.UUID
-	Data      []byte
+	Data      string
 	CreatedAt time.Time
 }

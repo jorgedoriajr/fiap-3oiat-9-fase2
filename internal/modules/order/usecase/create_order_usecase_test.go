@@ -80,7 +80,7 @@ func TestCreateOrderUseCase(t *testing.T) {
 		})).Return(nil)
 
 		processPaymentUseCaseMock.On("ProcessPayment", mock.Anything, mock.Anything).Return(&result.PaymentCreatedResult{
-			PaymentData: []byte{0x01, 0x02, 0x03},
+			PaymentData: "mocked",
 		}, nil)
 
 		orderCreated, err := createOrderUseCase.AddOrder(context.TODO(), createOrderCommand)

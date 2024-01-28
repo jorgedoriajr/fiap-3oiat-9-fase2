@@ -1,80 +1,92 @@
 {
-    "source": "mockoon:1.15.1",
-    "data": [
+  "uuid": "18fa69dd-a813-4caa-b2e9-37f257374d49",
+  "lastMigration": 32,
+  "name": "MP_mock",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3001,
+  "hostname": "",
+  "folders": [],
+  "routes": [
       {
-        "type": "environment",
-        "item": {
-          "uuid": "",
-          "lastMigration": 1,
-          "name": "MP QRCode",
-          "endpointPrefix": "",
-          "latency": 0,
-          "port": 3000,
-          "routes": [
-            {
-              "uuid": "",
-              "documentation": "",
-              "method": "post",
-              "endpoint": "/instore/orders/qr/seller/collectors/95762750/pos/SUC001POS001/qrs",
-              "responses": [
-                {
-                    "uuid": "",
-                    "body": "{\n  \"qr_data\": \"00020101021243650016COM.MERCADOLIBRE02013063638f1192a-5fd1-4180-a180-8bcae3556bc35204000053039865802BR5925IZABEL AAAA DE MELO6007BARUERI62070503***63040B6D\",\n  \"in_store_order_id\": \"d4e8ca59-3e1d-4c03-b1f6-580e87c654ae\"\n}",
-                    "latency": 0,
-                    "statusCode": 200,
-                    "label": "",
-                    "headers": [
-                      {
-                        "target": "body",
-                        "modifier": "method",
-                        "value": "post",
-                        "isRegex": false
-                      }
-                    ],
-                    "filePath": "",
-                    "sendFileAsBody": false,
-                    "rules": [
-
-                    ],
-                    "rulesOperator": "OR",
-                    "disableTemplating": false,
-                    "fallbackTo404": false
-                }
-              ],
-              "enabled": true,
-              "randomResponse": true,
-              "sequentialResponse": false
-            }
+          "uuid": "4702716e-f5fd-4119-998f-c78b06f2155c",
+          "type": "http",
+          "documentation": "",
+          "method": "post",
+          "endpoint": "instore/orders/qr/seller/collectors/95762750/pos/SUC001POS001/qrs",
+          "responses": [
+              {
+                  "uuid": "cb15c3f2-b6a6-4122-ab9f-67b77a6b7052",
+                  "body": "{\n  \"qr_data\": \"00020101021243650016COM.MERCADOLIBRE02013063638f1192a-5fd1-4180-a180-8bcae3556bc35204000053039865802BR5925IZABEL AAAA DE MELO6007BARUERI62070503***63040B6D\",\n  \"in_store_order_id\": \"d4e8ca59-3e1d-4c03-b1f6-580e87c654ae\"\n}",
+                  "latency": 0,
+                  "statusCode": 200,
+                  "label": "",
+                  "headers": [],
+                  "bodyType": "INLINE",
+                  "filePath": "",
+                  "databucketID": "",
+                  "sendFileAsBody": false,
+                  "rules": [],
+                  "rulesOperator": "OR",
+                  "disableTemplating": false,
+                  "fallbackTo404": false,
+                  "default": true,
+                  "crudKey": "id",
+                  "callbacks": []
+              }
           ],
-          "proxyMode": false,
-          "proxyHost": "",
-          "proxyRemovePrefix": false,
-          "https": false,
-          "cors": true,
-          "headers": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Authorization",
-              "value": "Bearer TEST-637********4932-012********a7f2e43a********c9c7bc09********62750"
-            }
-          ],
-          "proxyReqHeaders": [
-            {
-              "key": "",
-              "value": ""
-            }
-          ],
-          "proxyResHeaders": [
-            {
-              "key": "",
-              "value": ""
-            }
-          ],
-          "hostname": "0.0.0.0"
-        }
+          "responseMode": null
       }
-    ]
-  }
+  ],
+  "rootChildren": [
+      {
+          "type": "route",
+          "uuid": "4702716e-f5fd-4119-998f-c78b06f2155c"
+      }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+      "enabled": false,
+      "type": "CERT",
+      "pfxPath": "",
+      "certPath": "",
+      "keyPath": "",
+      "caPath": "",
+      "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+      {
+          "key": "Content-Type",
+          "value": "application/json"
+      },
+      {
+          "key": "Authorization",
+          "value": "TEST-637********4932-012********a7f2e43a********c9c7bc09********62750"
+      }
+  ],
+  "proxyReqHeaders": [
+      {
+          "key": "",
+          "value": ""
+      }
+  ],
+  "proxyResHeaders": [
+      {
+          "key": "",
+          "value": ""
+      }
+  ],
+  "data": [
+      {
+          "uuid": "008e42be-c590-4496-8103-349cf24aa451",
+          "id": "9wco",
+          "name": "req",
+          "documentation": "",
+          "value": "{\n  \"external_reference\": \"sua_referencia_externa\",\n  \"notification_url\": \"sua_url_de_notificacao\",\n  \"total_amount\": 1000,\n  \"expiration_date\": \"2024-01-27T12:00:00Z\"\n}"
+      }
+  ],
+  "callbacks": []
+}

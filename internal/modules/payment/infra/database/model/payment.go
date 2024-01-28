@@ -12,7 +12,7 @@ import (
 type Payment struct {
 	Id       uuid.UUID `gorm:"primarykey"`
 	OrderId  uuid.UUID
-	Data     []byte
+	Data     string
 	CreateAt time.Time
 }
 

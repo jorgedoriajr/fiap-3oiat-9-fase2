@@ -29,7 +29,7 @@ func TestProcessPaymentUseCase(t *testing.T) {
 
 		payment := result.PaymentProcessed{
 			PaymentId:   uuid.New(),
-			PaymentData: []byte{0x01, 0x02, 0x03},
+			PaymentData: "mocked",
 		}
 
 		createPaymentUseCaseMock.On("CreatePayment", mock.Anything, mock.Anything).Return(&payment, nil)
@@ -89,7 +89,7 @@ func TestProcessPaymentUseCase(t *testing.T) {
 
 		payment := result.PaymentProcessed{
 			PaymentId:   uuid.New(),
-			PaymentData: []byte{0x01, 0x02, 0x03},
+			PaymentData: "mocked",
 		}
 
 		createPaymentUseCaseMock.On("CreatePayment", mock.Anything, mock.Anything).Return(&payment, nil)

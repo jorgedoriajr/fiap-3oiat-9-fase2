@@ -8,7 +8,7 @@ import (
 )
 
 type QrCodePaymentResponse struct {
-	QrData         []byte    `json:"qr_data"`
+	QrData         string    `json:"qr_data"`
 	InStoreOrderId uuid.UUID `json:"in_store_order_id"`
 }
 
