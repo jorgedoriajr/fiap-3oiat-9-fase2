@@ -25,7 +25,7 @@ func (wh *Webhook) RegisterEchoRoutes(e *echo.Echo) {
 
 }
 
-// AddOrder
+// AddPaymentStatus
 // @Summary     Add payment_status
 // @Description Add payment_status
 // @Produce      json

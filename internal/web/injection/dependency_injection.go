@@ -67,9 +67,11 @@ func NewDependencyInjection() DependencyInjection {
 		starter.GetConfigRoot().MercadoPago,
 		logger.Get(),
 	)
-	//findPaymenStatustUseCase := paymentUseCase.GetFindPaymentUseCase(mercadoPagoClient)
+
+	updateOrderUseCase := orderUsecase.GetUpdateOrderUseCase(orderPersistence)
+
 	createPaymentUseCase := paymentUseCase.GetCreatePaymentUseCase(mercadoPagoClient, &paymentPersistance)
-	processPaymentUseCase := orderUsecase.GetProcessPaymentUseCase(orderPersistence, createPaymentUseCase)
+	processPaymentUseCase := orderUsecase.GetProcessPaymentUseCase(updateOrderUseCase, createPaymentUseCase)
 
 	createOrderUseCase := orderUsecase.GetCreateOrderUseCase(
 		productPersistence,

@@ -5,19 +5,15 @@ import (
 	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/order/port/input"
-	"hamburgueria/internal/modules/order/port/output"
 	"hamburgueria/internal/modules/order/usecase/result"
 	paymentInput "hamburgueria/internal/modules/payment/port/input"
 	"hamburgueria/internal/modules/payment/usecase/command"
 	"sync"
-	"time"
-
-	"github.com/google/uuid"
 )
 
 type ProcessPaymentUseCase struct {
-	orderPersistenceGateway output.OrderPersistencePort
-	createPaymentUseCase    paymentInput.CreatePaymentPort
+	updateOrderUseCase   input.UpdateOrderPort
+	createPaymentUseCase paymentInput.CreatePaymentPort
 }
 
 func (p ProcessPaymentUseCase) ProcessPayment(ctx context.Context, order domain.Order) (*result.PaymentCreatedResult, error) {
@@ -27,18 +23,7 @@ func (p ProcessPaymentUseCase) ProcessPayment(ctx context.Context, order domain.
 		return nil, err
 	}
 
-	order.PaymentId = paymentData.PaymentId
-	order.Status = valueobject.PaymentCreated
-	order.UpdatedAt = time.Now()
-	order.History = append(order.History, domain.OrderHistory{
-		Id:        uuid.New(),
-		OrderId:   order.Id,
-		Status:    order.Status,
-		ChangeBy:  "SYSTEM",
-		CreatedAt: order.UpdatedAt,
-	})
-
-	err = p.orderPersistenceGateway.Update(ctx, order)
+	err = p.updateOrderUseCase.Update(ctx, order.Id, valueobject.PaymentCreated, &paymentData.PaymentId)
 	if err != nil {
 		return nil, err
 	}
@@ -51,13 +36,13 @@ var (
 )
 
 func GetProcessPaymentUseCase(
-	orderPersistenceGateway output.OrderPersistencePort,
+	updateOrderUseCase input.UpdateOrderPort,
 	processPaymentUseCase paymentInput.CreatePaymentPort,
 ) input.ProcessPaymentPort {
 	processPaymentUseCaseOnce.Do(func() {
 		processPaymentUseCaseInstance = ProcessPaymentUseCase{
-			orderPersistenceGateway: orderPersistenceGateway,
-			createPaymentUseCase:    processPaymentUseCase,
+			updateOrderUseCase:   updateOrderUseCase,
+			createPaymentUseCase: processPaymentUseCase,
 		}
 	})
 	return processPaymentUseCaseInstance
