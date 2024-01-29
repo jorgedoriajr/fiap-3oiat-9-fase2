@@ -44,6 +44,6 @@ httpClients:
 
 mercadoPago:
   userId: 95762750
-  externalPosId: SUC001POS001
+  externalPosId: 59354425
   bearer: TEST-637003506854932-012323-067ca7f2e43a2c093b61c9c7bc096978-95762750
   callBackUrl: https://meuserver.com

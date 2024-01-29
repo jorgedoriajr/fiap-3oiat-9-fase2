@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS "product_ingredient" (
 
 CREATE TABLE IF NOT EXISTS "order" (
     id              UUID not null primary key default public.uuid_generate_v4(),
+    number          serial,
     customer_id     varchar(14) references "customer"(cpf),
     payment_id      UUID,
     takeAway        boolean not null default false,
