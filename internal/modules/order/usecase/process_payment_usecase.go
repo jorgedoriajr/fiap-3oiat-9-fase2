@@ -18,7 +18,20 @@ type ProcessPaymentUseCase struct {
 
 func (p ProcessPaymentUseCase) ProcessPayment(ctx context.Context, order domain.Order) (*result.PaymentCreatedResult, error) {
 
-	paymentData, err := p.createPaymentUseCase.CreatePayment(ctx, command.CreatePaymentCommand{Amount: order.Amount, OrderId: order.Id})
+	var orderItems []command.OrderItem
+	for _, orderProduct := range order.Products {
+		orderItems = append(orderItems, command.OrderItem{
+			Name:        orderProduct.Product.Name,
+			Amount:      orderProduct.Product.Amount,
+			Quantity:    orderProduct.Quantity,
+			TotalAmount: orderProduct.Amount,
+		})
+	}
+	paymentData, err := p.createPaymentUseCase.CreatePayment(ctx, command.CreatePaymentCommand{
+		Amount:     order.Amount,
+		OrderId:    order.Id,
+		OrderItems: orderItems,
+	})
 	if err != nil {
 		return nil, err
 	}

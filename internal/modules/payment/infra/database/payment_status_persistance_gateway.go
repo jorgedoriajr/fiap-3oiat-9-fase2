@@ -13,13 +13,13 @@ import (
 	"gorm.io/gorm"
 )
 
-type PaymentStatusPersistanceGateway struct {
+type PaymentStatusPersistenceGateway struct {
 	readWriteClient *gorm.DB
 	readOnlyClient  *gorm.DB
 	logger          zerolog.Logger
 }
 
-func (ps PaymentStatusPersistanceGateway) CreatePaymentStatus(ctx context.Context, paymentStatus domain.PaymentStatus) error {
+func (ps PaymentStatusPersistenceGateway) CreatePaymentStatus(ctx context.Context, paymentStatus domain.PaymentStatus) error {
 	tx := ps.readWriteClient.Create(&model.PaymentStatus{
 		Id:                   paymentStatus.Id,
 		PaymentId:            paymentStatus.PaymentId,
@@ -37,7 +37,7 @@ func (ps PaymentStatusPersistanceGateway) CreatePaymentStatus(ctx context.Contex
 	return nil
 }
 
-func (ps PaymentStatusPersistanceGateway) FindPaymentStatus(ctx context.Context, paymentStatusId uuid.UUID) (*domain.PaymentStatus, error) {
+func (ps PaymentStatusPersistenceGateway) FindPaymentStatus(ctx context.Context, paymentStatusId uuid.UUID) (*domain.PaymentStatus, error) {
 
 	var paymentStatus model.PaymentStatus
 
@@ -72,7 +72,7 @@ func GetPaymentStatusPersistenceGateway(
 	logger zerolog.Logger,
 ) output.PaymentStatusPersistencePort {
 	paymentStatusRepositoryOnce.Do(func() {
-		paymentStatusRepositoryInstance = PaymentStatusPersistanceGateway{
+		paymentStatusRepositoryInstance = PaymentStatusPersistenceGateway{
 			readWriteClient: readWriteClient,
 			readOnlyClient:  readOnlyClient,
 			logger:          logger,

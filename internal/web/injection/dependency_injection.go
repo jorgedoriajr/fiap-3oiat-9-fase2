@@ -58,10 +58,10 @@ func NewDependencyInjection() DependencyInjection {
 	orderPersistence := orderDatabase.GetOrderPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
 	updateOrderUseCase := orderUsecase.GetUpdateOrderUseCase(orderPersistence)
 
-	paymentPersistance := paymentDatabase.GetPaymentPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
-	paymentStatusPersistance := paymentDatabase.GetPaymentStatusPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
+	paymentPersistence := paymentDatabase.GetPaymentPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
+	paymentStatusPersistence := paymentDatabase.GetPaymentStatusPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
 
-	createPaymentStatusUseCase := paymentUseCase.GetCreatePaymentStatusUseCase(paymentStatusPersistance, updateOrderUseCase, logger.Get())
+	createPaymentStatusUseCase := paymentUseCase.GetCreatePaymentStatusUseCase(paymentStatusPersistence, updateOrderUseCase, logger.Get())
 
 	mercadoPagoClient := mercadopago.GetCreateMercadoPagoClient(
 		httpclient.GetClient("mercadoPago"),
@@ -69,7 +69,7 @@ func NewDependencyInjection() DependencyInjection {
 		logger.Get(),
 	)
 
-	createPaymentUseCase := paymentUseCase.GetCreatePaymentUseCase(mercadoPagoClient, paymentPersistance)
+	createPaymentUseCase := paymentUseCase.GetCreatePaymentUseCase(mercadoPagoClient, paymentPersistence)
 	processPaymentUseCase := orderUsecase.GetProcessPaymentUseCase(updateOrderUseCase, createPaymentUseCase)
 
 	createOrderUseCase := orderUsecase.GetCreateOrderUseCase(

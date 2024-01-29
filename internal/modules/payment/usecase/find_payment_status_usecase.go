@@ -14,12 +14,12 @@ import (
 )
 
 type FindPaymentStatusUseCase struct {
-	paymentStatusPersistanceGateway output.PaymentStatusPersistencePort
+	paymentStatusPersistenceGateway output.PaymentStatusPersistencePort
 }
 
 func (ps FindPaymentStatusUseCase) ListPaymentStatus(ctx context.Context, paymentStatusId uuid.UUID) (*result.PaymentStatusProcessed, error) {
 
-	paymentStatusData, err := ps.paymentStatusPersistanceGateway.FindPaymentStatus(ctx, paymentStatusId)
+	paymentStatusData, err := ps.paymentStatusPersistenceGateway.FindPaymentStatus(ctx, paymentStatusId)
 	if err != nil {
 		return nil, err
 	}
@@ -31,9 +31,9 @@ var (
 	findPaymentStatusUseCaseOnce sync.Once
 )
 
-func GetFindPaymentStatusUseCase(paymentStatusPersistanceGateway output.PaymentStatusPersistencePort) input.ListPaymentStatusPort {
+func GetFindPaymentStatusUseCase(paymentStatusPersistenceGateway output.PaymentStatusPersistencePort) input.ListPaymentStatusPort {
 	findPaymentStatusUseCaseOnce.Do(func() {
-		findPaymentStatusUseCase = FindPaymentStatusUseCase{paymentStatusPersistanceGateway: paymentStatusPersistanceGateway}
+		findPaymentStatusUseCase = FindPaymentStatusUseCase{paymentStatusPersistenceGateway: paymentStatusPersistenceGateway}
 
 	})
 	return findPaymentStatusUseCase

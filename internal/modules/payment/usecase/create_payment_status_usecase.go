@@ -46,9 +46,9 @@ var (
 	processPaymentStatusUseCaseOnce sync.Once
 )
 
-func GetCreatePaymentStatusUseCase(paymentStatusPersistanceGateway output.PaymentStatusPersistencePort, updateOrderStatus inputOrder.UpdateOrderPort, logger zerolog.Logger) input.CreatePaymentStatusPort {
+func GetCreatePaymentStatusUseCase(paymentStatusPersistenceGateway output.PaymentStatusPersistencePort, updateOrderStatus inputOrder.UpdateOrderPort, logger zerolog.Logger) input.CreatePaymentStatusPort {
 	processPaymentStatusUseCaseOnce.Do(func() {
-		processPaymentStatusUseCase = CreatePaymentStatusUseCase{paymentStatusPersistenceGateway: paymentStatusPersistanceGateway, updateOrderStatus: updateOrderStatus, logger: logger}
+		processPaymentStatusUseCase = CreatePaymentStatusUseCase{paymentStatusPersistenceGateway: paymentStatusPersistenceGateway, updateOrderStatus: updateOrderStatus, logger: logger}
 	})
 	return processPaymentStatusUseCase
 }
