@@ -30,7 +30,7 @@ services:
       retries: 2
     networks:
       - hamburgueria-network
-#
+
   app:
     build:
       context: ../../
@@ -45,6 +45,18 @@ services:
         condition: service_completed_successfully
     environment:
       - DB_HOST=postgres
+    networks:
+      - hamburgueria-network
+
+  mercadopago-mock:
+    image: mockoon/cli:latest
+    container_name: hamburgueria-mercadopago-mock
+    hostname: mercadopago-mock
+    ports:
+      - "3000:3000"
+    command: ["--data", "data", "--port", "3000"]
+    volumes:
+      - ./deployments/compose/local/external-services-mock/mercadopago-payment-api-mock.json:/data
     networks:
       - hamburgueria-network
 

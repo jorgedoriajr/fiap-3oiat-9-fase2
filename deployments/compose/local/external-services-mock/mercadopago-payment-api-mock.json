@@ -1,0 +1,112 @@
+{
+  "uuid": "18fa69dd-a813-4caa-b2e9-37f257374d49",
+  "lastMigration": 32,
+  "name": "MP_mock",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 300,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "4702716e-f5fd-4119-998f-c78b06f2155c",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "instore/orders/qr/seller/collectors/95762750/pos/SUC001POS001/qrs",
+      "responses": [
+        {
+          "uuid": "cb15c3f2-b6a6-4122-ab9f-67b77a6b7052",
+          "body": "{\n  \"qr_data\": \"00020101021243650016COM.MERCADOLIBRE02013063638f1192a-5fd1-4180-a180-8bcae3556bc35204000053039865802BR5925IZABEL AAAA DE MELO6007BARUERI62070503***63040B6D\",\n  \"in_store_order_id\": \"d4e8ca59-3e1d-4c03-b1f6-580e87c654ae\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": [
+            {
+              "uuid": "5f7ff85a-692c-450b-b024-e9f8d681812e",
+              "latency": 0
+            }
+          ]
+        }
+      ],
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "4702716e-f5fd-4119-998f-c78b06f2155c"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "key": "Authorization",
+      "value": "TEST-637********4932-012********a7f2e43a********c9c7bc09********62750"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [
+    {
+      "uuid": "008e42be-c590-4496-8103-349cf24aa451",
+      "id": "9wco",
+      "name": "req",
+      "documentation": "",
+      "value": "{\n  \"external_reference\": \"sua_referencia_externa\",\n  \"notification_url\": \"sua_url_de_notificacao\",\n  \"total_amount\": 1000,\n  \"expiration_date\": \"2024-01-27T12:00:00Z\"\n}"
+    }
+  ],
+  "callbacks": [
+    {
+      "uuid": "5f7ff85a-692c-450b-b024-e9f8d681812e",
+      "id": "kbkv",
+      "uri": "http://localhost:8080/v1/webhook/payments_status",
+      "name": "CallbackPaymentStatus",
+      "documentation": "",
+      "method": "post",
+      "headers": [],
+      "bodyType": "INLINE",
+      "body": "{\n  \"id\": \"d7d0cf27-67fa-4ef9-b2c0-75b9ae90e4b4\",\n  \"live_mode\": true,\n  \"type\": \"payment\",\n  \"date_created\": \"2015-03-25T10:04:58.396-04:00\",\n  \"user_id\": 44444,\n  \"api_version\": \"v1\",\n  \"action\": \"payment.created\",\n  \"data\": {\n    \"id\": \"a40d6058-069e-4a7a-b873-41e3bff827be\"\n  }\n}",
+      "databucketID": "",
+      "filePath": "",
+      "sendFileAsBody": true
+    }
+  ]
+}
