@@ -1,6 +1,7 @@
 package domainevent
 
 import (
+	"context"
 	"errors"
 	"log"
 	"sync"
@@ -25,7 +26,7 @@ func (d *Dispatcher[T]) Dispatch(event Event[T]) <-chan error {
 		wg.Add(1)
 		go func(handler EventHandler[T]) {
 			defer wg.Done()
-			if err := handler.Handle(event); err != nil {
+			if err := handler.Handle(context.Background(), event); err != nil {
 				errChan <- err
 			}
 		}(h.(EventHandler[T]))

@@ -61,6 +61,9 @@ If have problems with permission with the database startup, maybe you will need 
 
 `chmod +x ./deployments/compose/database/setup-postgresql-databases.sh`
 
+Se houver problemas de permissão para leitura do arquivo de configuração do mockoon, de as permissões necessarias:
+`chmod -R 755 ./deployments/compose/local/external-service-mock`
+
 ### Start application with minukube
 
 Primeiramente verifique se você já tem o minikube instalado.
@@ -69,15 +72,13 @@ Passo a passo para instalação conforme sistema operacional: https://minikube.s
 
 Também é necessário ter o kubectl instalado: https://kubernetes.io/docs/tasks/tools/
 
-Após a instalação, rode o seguinte comando para habilitar métricas:
-
-`kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.4.1/components.yaml`
-
-`minikube addons enable metrics-server`
-
 Agora já é possível iniciar o cluster
 
 `minikube start`
+
+Necessário rodar o seguinte comando para habilitar métricas:
+
+`minikube addons enable metrics-server`
 
 Para subir nosso deployment `hamburgueria-app` primeiramente você precisa ter o banco de dados up.
 
@@ -94,6 +95,10 @@ Agora é só rodar o seguinte comando para subir a aplicação:
 Para acessar através da porta 8080, é necessário dar um port forward
 
 `kubectl port-forward service/hamburgueria-app-service 8080:80`
+
+Para funcionar a integração de pagamento, criamos um mock para responder, para subir o mock, execute o seguinte comando:
+
+`docker-compose -f deployments/compose/docker-compose.yml up -d mercadopago-mock`
 
 ### Access
 Application will be available at http://localhost:8080

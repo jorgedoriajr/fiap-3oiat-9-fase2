@@ -3,9 +3,6 @@ package usecase
 import (
 	"context"
 	"errors"
-	"github.com/google/uuid"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	customerDomain "hamburgueria/internal/modules/customer/domain"
 	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
@@ -18,6 +15,10 @@ import (
 	productMocks "hamburgueria/tests/mocks/modules/product/ports/output"
 	"testing"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestCreateOrderUseCase(t *testing.T) {
@@ -26,7 +27,7 @@ func TestCreateOrderUseCase(t *testing.T) {
 		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
 		customerPersistenceMock := customerMocks.NewCustomerPersistencePort(t)
 		productPersistenceMock := productMocks.NewProductPersistencePort(t)
-		processPaymentUseCaseMock := mocks.NewProcessPaymentUseCasePort(t)
+		processPaymentUseCaseMock := mocks.NewProcessPaymentPort(t)
 		createOrderUseCase := CreateOrderUseCase{
 			customerPersistenceGateway: customerPersistenceMock,
 			productPersistenceGateway:  productPersistenceMock,
@@ -78,6 +79,11 @@ func TestCreateOrderUseCase(t *testing.T) {
 				c.Amount == 3000
 		})).Return(nil)
 
+		orderPersistenceMock.On("FindById", mock.Anything, mock.Anything).Return(
+			&domain.Order{Number: 1},
+			nil,
+		)
+
 		processPaymentUseCaseMock.On("ProcessPayment", mock.Anything, mock.Anything).Return(&result.PaymentCreatedResult{
 			PaymentData: "mocked",
 		}, nil)
@@ -86,6 +92,7 @@ func TestCreateOrderUseCase(t *testing.T) {
 
 		assert.Nil(t, err)
 		assert.Equal(t, 3000, orderCreated.Amount)
+		assert.Equal(t, orderCreated.Number, 1)
 		assert.Equal(t, "mocked", orderCreated.PaymentData)
 
 		customerPersistenceMock.AssertExpectations(t)
@@ -105,7 +112,7 @@ func TestCreateOrderUseCase(t *testing.T) {
 		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
 		customerPersistenceMock := customerMocks.NewCustomerPersistencePort(t)
 		productPersistenceMock := productMocks.NewProductPersistencePort(t)
-		processPaymentUseCaseMock := mocks.NewProcessPaymentUseCasePort(t)
+		processPaymentUseCaseMock := mocks.NewProcessPaymentPort(t)
 		createOrderUseCase := CreateOrderUseCase{
 			customerPersistenceGateway: customerPersistenceMock,
 			productPersistenceGateway:  productPersistenceMock,
@@ -148,7 +155,7 @@ func TestCreateOrderUseCase(t *testing.T) {
 		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
 		customerPersistenceMock := customerMocks.NewCustomerPersistencePort(t)
 		productPersistenceMock := productMocks.NewProductPersistencePort(t)
-		processPaymentUseCaseMock := mocks.NewProcessPaymentUseCasePort(t)
+		processPaymentUseCaseMock := mocks.NewProcessPaymentPort(t)
 		createOrderUseCase := CreateOrderUseCase{
 			customerPersistenceGateway: customerPersistenceMock,
 			productPersistenceGateway:  productPersistenceMock,
@@ -201,7 +208,7 @@ func TestCreateOrderUseCase(t *testing.T) {
 		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
 		customerPersistenceMock := customerMocks.NewCustomerPersistencePort(t)
 		productPersistenceMock := productMocks.NewProductPersistencePort(t)
-		processPaymentUseCaseMock := mocks.NewProcessPaymentUseCasePort(t)
+		processPaymentUseCaseMock := mocks.NewProcessPaymentPort(t)
 		createOrderUseCase := CreateOrderUseCase{
 			customerPersistenceGateway: customerPersistenceMock,
 			productPersistenceGateway:  productPersistenceMock,
@@ -259,7 +266,7 @@ func TestCreateOrderUseCase(t *testing.T) {
 		orderPersistenceMock := orderMocks.NewOrderPersistencePort(t)
 		customerPersistenceMock := customerMocks.NewCustomerPersistencePort(t)
 		productPersistenceMock := productMocks.NewProductPersistencePort(t)
-		processPaymentUseCaseMock := mocks.NewProcessPaymentUseCasePort(t)
+		processPaymentUseCaseMock := mocks.NewProcessPaymentPort(t)
 		createOrderUseCase := CreateOrderUseCase{
 			customerPersistenceGateway: customerPersistenceMock,
 			productPersistenceGateway:  productPersistenceMock,
@@ -294,6 +301,11 @@ func TestCreateOrderUseCase(t *testing.T) {
 			return c.Status == valueobject.Created &&
 				c.Amount == 3000
 		})).Return(nil)
+
+		orderPersistenceMock.On("FindById", mock.Anything, mock.Anything).Return(
+			&domain.Order{Number: 1},
+			nil,
+		)
 
 		processPaymentUseCaseMock.On("ProcessPayment", mock.Anything, mock.Anything).Return(nil, errors.New("SOME_ERROR"))
 

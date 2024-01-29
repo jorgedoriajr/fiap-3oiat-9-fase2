@@ -1,7 +1,6 @@
 package product
 
 import (
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"hamburgueria/internal/modules/product/ports/input"
 	"hamburgueria/internal/modules/product/usecase/result"
@@ -26,7 +25,7 @@ func (c *Api) RegisterEchoRoutes(e *echo.Echo) {
 	)
 	group.Add(http.MethodPost, "", c.AddProduct)
 	group.Add(http.MethodGet, "", c.GetProducts)
-	group.Add(http.MethodGet, "/:productId", c.GetProductById)
+	group.Add(http.MethodGet, "/:number", c.GetProductByNumber)
 	group.Add(http.MethodDelete, "/:number", c.InactiveProductByNumber)
 	group.Add(http.MethodPatch, "/:number", c.UpdateProduct)
 
@@ -122,27 +121,34 @@ func (c *Api) UpdateProduct(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, nil)
 }
 
-// GetProductById
-// @Summary     Get Product by id
-// @Description Get Product by id
+// GetProductByNumber
+// @Summary     Get Product by number
+// @Description Get Product by number
 // @Produce      json
-// @Param        id    path      string  true  "id"
+// @Param        number    path      string  true  "number"
 // @Failure      400 {object} v1.ErrorResponse
 // @Failure      401 {object} v1.ErrorResponse
 // @Failure      404 {object} v1.ErrorResponse
 // @Failure      503 {object} v1.ErrorResponse
 // @Success      200 {object} []response.FindProductWithIngredients
-// @Router       /v1/products/{productID} [get]
-func (c *Api) GetProductById(ctx echo.Context) error {
-	id := ctx.Param("productId")
-	if id == "" {
+// @Router       /v1/products/{number} [get]
+func (c *Api) GetProductByNumber(ctx echo.Context) error {
+	numberPathParam := ctx.Param("number")
+	if numberPathParam == "" {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
 			"code":    400,
-			"message": "id cannot be empty",
+			"message": "number cannot be empty",
 		})
 	}
-	productID := uuid.MustParse(id)
-	resultProduct, err := c.FindProductUseCase.FindByID(ctx.Request().Context(), productID)
+	number, err := strconv.Atoi(numberPathParam)
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, map[string]any{
+			"code":    400,
+			"message": "number must be a numeric value",
+		})
+	}
+
+	resultProduct, err := c.FindProductUseCase.FindByNumber(ctx.Request().Context(), number)
 	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]any{
 			"code":    400,

@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	customerOutput "hamburgueria/internal/modules/customer/port/output"
 	"hamburgueria/internal/modules/order/domain"
 	"hamburgueria/internal/modules/order/domain/valueobject"
@@ -15,6 +14,8 @@ import (
 	productOutput "hamburgueria/internal/modules/product/ports/output"
 	"sync"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type CreateOrderUseCase struct {
@@ -83,12 +84,18 @@ func (c CreateOrderUseCase) AddOrder(
 		return nil, err
 	}
 
-	paymentProcessed, err := c.processPaymentUseCase.ProcessPayment(ctx, order)
+	orderFound, err := c.orderPersistenceGateway.FindById(ctx, orderId)
+	if err != nil {
+		return nil, err
+	}
+
+	paymentProcessed, err := c.processPaymentUseCase.ProcessPayment(ctx, *orderFound)
 	if err != nil {
 		return nil, err
 	}
 
 	return &result.CreateOrderResult{
+		Number:      orderFound.Number,
 		Amount:      amount,
 		PaymentData: paymentProcessed.PaymentData,
 	}, err

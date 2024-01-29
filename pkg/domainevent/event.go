@@ -25,3 +25,11 @@ func (e EventModel[T]) GetDateTime() time.Time {
 func (e EventModel[T]) GetPayload() T {
 	return e.Payload
 }
+
+func NewDomainEvent[T any](name string, payload T) Event[T] {
+	return &EventModel[T]{
+		Name:     name,
+		DateTime: time.Now(),
+		Payload:  payload,
+	}
+}
