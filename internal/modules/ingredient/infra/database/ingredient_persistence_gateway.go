@@ -72,7 +72,7 @@ func (c IngredientPersistenceGateway) Create(ctx context.Context, ingredient dom
 			Name:   ingredient.Name,
 			Amount: ingredient.Amount,
 			IngredientType: model.IngredientType{
-				Name: ingredient.Name,
+				Name: ingredient.Type.Name,
 			},
 		}).Error
 	if err != nil {

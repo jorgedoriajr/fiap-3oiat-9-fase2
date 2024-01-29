@@ -64,7 +64,7 @@ If have problems with permission with the database startup, maybe you will need 
 Se houver problemas de permissão para leitura do arquivo de configuração do mockoon, de as permissões necessarias:
 `chmod -R 755 ./deployments/compose/local/external-service-mock`
 
-### Start application with minukube
+### Start application with minikube
 
 Primeiramente verifique se você já tem o minikube instalado.
 
