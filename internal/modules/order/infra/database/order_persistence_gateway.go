@@ -8,8 +8,8 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"hamburgueria/internal/modules/order/domain"
-	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/order/infra/database/model"
+	"hamburgueria/internal/modules/order/port/output"
 	"strconv"
 	"sync"
 )
@@ -90,7 +90,7 @@ func (c OrderPersistenceGateway) FindByStatus(ctx context.Context, status string
 func (c OrderPersistenceGateway) Update(ctx context.Context, order domain.Order) error {
 	orderModel := model.FromDomain(order)
 	err := c.readWriteClient.
-		Session(&gorm.Session{FullSaveAssociations: true}).
+		Session(&gorm.Session{FullSaveAssociations: false}).
 		Save(&orderModel).
 		Error
 	if err != nil {
@@ -99,23 +99,6 @@ func (c OrderPersistenceGateway) Update(ctx context.Context, order domain.Order)
 			Err(err).
 			Str("orderId", order.Id.String()).
 			Msg("Failed to update order")
-		return err
-	}
-	return nil
-}
-
-func (c OrderPersistenceGateway) UpdateStatus(ctx context.Context, orderID uuid.UUID, status valueobject.OrderStatus) error {
-	err := c.readWriteClient.
-		Session(&gorm.Session{FullSaveAssociations: true}).
-		Update("status", status).
-		Where("id = ?", orderID).
-		Error
-	if err != nil {
-		c.logger.Error().
-			Ctx(ctx).
-			Err(err).
-			Str("orderId", orderID.String()).
-			Msg("Failed to update order status by ID: " + orderID.String())
 		return err
 	}
 	return nil
@@ -166,7 +149,7 @@ func (c OrderPersistenceGateway) FindByNumber(ctx context.Context, number int) (
 }
 
 var (
-	orderRepositoryInstance OrderPersistenceGateway
+	orderRepositoryInstance output.OrderPersistencePort
 	orderRepositoryOnce     sync.Once
 )
 
@@ -174,7 +157,7 @@ func GetOrderPersistenceGateway(
 	readWriteClient *gorm.DB,
 	readOnlyClient *gorm.DB,
 	logger zerolog.Logger,
-) OrderPersistenceGateway {
+) output.OrderPersistencePort {
 	orderRepositoryOnce.Do(func() {
 		orderRepositoryInstance = OrderPersistenceGateway{
 			readWriteClient: readWriteClient,

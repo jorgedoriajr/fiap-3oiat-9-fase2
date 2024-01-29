@@ -84,12 +84,12 @@ func (c CreateOrderUseCase) AddOrder(
 		return nil, err
 	}
 
-	paymentProcessed, err := c.processPaymentUseCase.ProcessPayment(ctx, order)
+	orderFound, err := c.orderPersistenceGateway.FindById(ctx, orderId)
 	if err != nil {
 		return nil, err
 	}
 
-	orderFound, err := c.orderPersistenceGateway.FindById(ctx, orderId)
+	paymentProcessed, err := c.processPaymentUseCase.ProcessPayment(ctx, *orderFound)
 	if err != nil {
 		return nil, err
 	}

@@ -56,7 +56,7 @@ services:
       - "3000:3000"
     command: ["--data", "data", "--port", "3000"]
     volumes:
-      - ./deployments/compose/local/external-services-mock/mercadopago-payment-api-mock.json:/data
+      - ./local/external-services-mock/mercadopago-payment-api-mock.json:/data
     networks:
       - hamburgueria-network
 

@@ -77,6 +77,7 @@ func FromDomain(order domain.Order) *Order {
 	}
 	return &Order{
 		ID:         order.Id,
+		Number:     order.Number,
 		CustomerId: order.CustomerId,
 		Products:   orderProducts,
 		CreatedAt:  order.CreatedAt,

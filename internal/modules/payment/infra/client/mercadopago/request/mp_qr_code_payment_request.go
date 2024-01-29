@@ -40,22 +40,15 @@ func MapToMPQrCodePaymentRequest(command command.CreatePaymentCommand, callBackU
 		ExternalReference: command.OrderId.String(),
 		NotificationUrl:   callBackURl,
 		TotalAmount:       command.Amount,
-		ExpirationDate:    setExperionDateTime(),
+		ExpirationDate:    getExpirationDateTime(),
 		Items:             items,
 	}
 
 }
 
-func setExperionDateTime() string {
-	// Obtém a hora atual
-	currentTime := time.Now()
-	// Adiciona 5 minutos ao horário atual
-	newTime := currentTime.Add(5 * time.Minute)
-	// Define o layout desejado para a formatação
+func getExpirationDateTime() string {
+	expiration := time.Now().Add(15 * time.Minute)
 	layout := "2006-01-02T15:04:05.999-07:00"
-	// Formata a nova data conforme o layout especificado
-	formattedTime := newTime.Format(layout)
-	// Imprime a nova data formatada
-	print(formattedTime)
+	formattedTime := expiration.Format(layout)
 	return formattedTime
 }

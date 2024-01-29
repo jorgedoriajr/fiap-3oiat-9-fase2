@@ -50,7 +50,7 @@ spec:
                   name: database-secret-config
                   key: password-read
             - name: MP_HOST
-              value: host.minikube.internal:3000
+              value: http://host.minikube.internal:3000
 
 ---
 
