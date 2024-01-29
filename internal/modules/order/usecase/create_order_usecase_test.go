@@ -302,6 +302,11 @@ func TestCreateOrderUseCase(t *testing.T) {
 				c.Amount == 3000
 		})).Return(nil)
 
+		orderPersistenceMock.On("FindById", mock.Anything, mock.Anything).Return(
+			&domain.Order{Number: 1},
+			nil,
+		)
+
 		processPaymentUseCaseMock.On("ProcessPayment", mock.Anything, mock.Anything).Return(nil, errors.New("SOME_ERROR"))
 
 		orderCreated, err := createOrderUseCase.AddOrder(context.TODO(), createOrderCommand)
