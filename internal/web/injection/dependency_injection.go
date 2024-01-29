@@ -7,6 +7,8 @@ import (
 	create2 "hamburgueria/internal/modules/ingredient/usecase"
 	orderDatabase "hamburgueria/internal/modules/order/infra/database"
 	orderUsecase "hamburgueria/internal/modules/order/usecase"
+	"hamburgueria/internal/modules/payment/infra/client/mercadopago"
+	paymentDatabase "hamburgueria/internal/modules/payment/infra/database"
 	paymentUseCase "hamburgueria/internal/modules/payment/usecase"
 	productDatabase "hamburgueria/internal/modules/product/infra/database"
 	"hamburgueria/internal/modules/product/usecase"
@@ -14,21 +16,25 @@ import (
 	"hamburgueria/internal/web/api/rest/v1/ingredient"
 	"hamburgueria/internal/web/api/rest/v1/ingredienttype"
 	"hamburgueria/internal/web/api/rest/v1/order"
+	"hamburgueria/internal/web/api/rest/v1/payment"
 	"hamburgueria/internal/web/api/rest/v1/product"
 	"hamburgueria/internal/web/api/rest/v1/productcategory"
 	"hamburgueria/internal/web/api/swagger"
+	"hamburgueria/pkg/httpclient"
 	"hamburgueria/pkg/logger"
 	"hamburgueria/pkg/sql"
+	"hamburgueria/pkg/starter"
 )
 
 type DependencyInjection struct {
-	CustomerApi        *customer.Api
-	ProductApi         *product.Api
-	IngredientApi      *ingredient.Api
-	OrderApi           *order.Api
-	IngredientTypeApi  *ingredienttype.Api
-	ProductCategoryApi *productcategory.Api
-	Swagger            *swagger.Swagger
+	CustomerApi           *customer.Api
+	ProductApi            *product.Api
+	IngredientApi         *ingredient.Api
+	OrderApi              *order.Api
+	IngredientTypeApi     *ingredienttype.Api
+	ProductCategoryApi    *productcategory.Api
+	PaymentsStatusWebhook *payment.Webhook
+	Swagger               *swagger.Swagger
 }
 
 func NewDependencyInjection() DependencyInjection {
@@ -50,9 +56,21 @@ func NewDependencyInjection() DependencyInjection {
 	findProductUseCase := usecase.NewFindProductUseCase(productPersistence)
 
 	orderPersistence := orderDatabase.GetOrderPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
+	updateOrderUseCase := orderUsecase.GetUpdateOrderUseCase(orderPersistence)
 
-	createPaymentUseCase := paymentUseCase.GetCreatePaymentUseCase()
-	processPaymentUseCase := orderUsecase.GetProcessPaymentUseCase(orderPersistence, createPaymentUseCase)
+	paymentPersistence := paymentDatabase.GetPaymentPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
+	paymentStatusPersistence := paymentDatabase.GetPaymentStatusPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
+
+	createPaymentStatusUseCase := paymentUseCase.GetCreatePaymentStatusUseCase(paymentStatusPersistence, updateOrderUseCase, logger.Get())
+
+	mercadoPagoClient := mercadopago.GetCreateMercadoPagoClient(
+		httpclient.GetClient("mercadoPago"),
+		starter.GetConfigRoot().MercadoPago,
+		logger.Get(),
+	)
+
+	createPaymentUseCase := paymentUseCase.GetCreatePaymentUseCase(mercadoPagoClient, paymentPersistence)
+	processPaymentUseCase := orderUsecase.GetProcessPaymentUseCase(updateOrderUseCase, createPaymentUseCase)
 
 	createOrderUseCase := orderUsecase.GetCreateOrderUseCase(
 		productPersistence,
@@ -84,6 +102,7 @@ func NewDependencyInjection() DependencyInjection {
 		IngredientTypeApi: &ingredienttype.Api{
 			FindIngredientTypeUseCase: create2.GetIngredientTypeUseCase(ingredientTypePersistence),
 		},
-		Swagger: &swagger.Swagger{},
+		PaymentsStatusWebhook: &payment.Webhook{CreatePaymentStatusUseCase: createPaymentStatusUseCase},
+		Swagger:               &swagger.Swagger{},
 	}
 }

@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
         - name: flyway
-          image: grupo9fiap/hamburgueria-app-flyway:latest
+          image: grupo9fiap/hamburgueria-app-flyway:0.0.1-alpha
           env:
             - name: FLYWAY_URL
               value: jdbc:postgresql://postgres:5432/hamburgueria
@@ -15,11 +15,11 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: database-secret-config
-                  key: username
+                  key: username-migration
             - name: FLYWAY_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: database-secret-config
-                  key: password
+                  key: password-migration
       restartPolicy: Never
   backoffLimit: 1

@@ -91,8 +91,8 @@ metadata:
 type: Opaque
 data:
   dbname: aGFtYnVyZ3Vlcmlh
-  username: aGFtYnVyZ3VlcmlhLWFwcA==
-  password: aGFtYnVyZ3VlcmlhLWFwcA==
+  username-migration: aGFtYnVyZ3VlcmlhLW1pZ3JhdGlvbg==
+  password-migration: aGFtYnVyZ3VlcmlhLW1pZ3JhdGlvbg==
   password-write: aGFtYnVyZ3VlcmlhLWFwcC13cml0ZQ==
   password-read: aGFtYnVyZ3VlcmlhLWFwcC1yZWFk
 ---

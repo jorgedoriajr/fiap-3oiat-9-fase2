@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS "product_ingredient" (
 
 CREATE TABLE IF NOT EXISTS "order" (
     id              UUID not null primary key default public.uuid_generate_v4(),
+    number          serial,
     customer_id     varchar(14) references "customer"(cpf),
     payment_id      UUID,
     takeAway        boolean not null default false,
@@ -96,3 +97,4 @@ ALTER TABLE "order_history" ADD CONSTRAINT fk_order_history_order
 
 CREATE UNIQUE INDEX IF NOT EXISTS product_number_unq_idx ON product(number);
 CREATE UNIQUE INDEX IF NOT EXISTS ingredient_number_unq_idx ON ingredient(number);
+CREATE UNIQUE INDEX IF NOT EXISTS order_number_unq_idx ON "order"(number);

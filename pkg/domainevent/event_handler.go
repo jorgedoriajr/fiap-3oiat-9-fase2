@@ -1,9 +1,12 @@
 package domainevent
 
-import "reflect"
+import (
+	"context"
+	"reflect"
+)
 
 type EventHandler[T any] interface {
-	Handle(event Event[T]) error
+	Handle(ctx context.Context, event Event[T]) error
 }
 
 func GetEventType[T any](handler EventHandler[T]) reflect.Type {

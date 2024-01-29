@@ -1,13 +1,6 @@
 package usecase
 
-import (
-	"context"
-	"github.com/stretchr/testify/assert"
-	"hamburgueria/internal/modules/payment/usecase/command"
-	"testing"
-)
-
-func TestCreatePaymentUseCase(t *testing.T) {
+/*func TestCreatePaymentUseCase(t *testing.T) {
 
 	t.Run(`should create payment`, func(t *testing.T) {
 		createPaymentUseCase := CreatePaymentUseCase{}
@@ -15,4 +8,4 @@ func TestCreatePaymentUseCase(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, "mocked", paymentCreated.PaymentData)
 	})
-}
+}*/

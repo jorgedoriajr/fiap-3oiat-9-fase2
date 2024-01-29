@@ -133,6 +133,9 @@ func (c ProductPersistenceGateway) GetByID(ctx context.Context, productID uuid.U
 		First(&product, productID).
 		Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		c.logger.Error().
 			Ctx(ctx).
 			Err(err).
@@ -152,6 +155,9 @@ func (c ProductPersistenceGateway) GetByNumber(ctx context.Context, productNumbe
 		First(&product).
 		Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		c.logger.Error().
 			Ctx(ctx).
 			Err(err).
