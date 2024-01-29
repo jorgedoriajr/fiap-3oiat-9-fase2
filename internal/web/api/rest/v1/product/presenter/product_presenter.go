@@ -43,5 +43,6 @@ func ProductResponseFromResult(product result.FindProductResult) response.FindPr
 		Category:    product.Category,
 		ImgPath:     product.ImgPath,
 		Ingredients: ingredientsResponse,
+		Active:      product.Active,
 	}
 }
