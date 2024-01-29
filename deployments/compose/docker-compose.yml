@@ -60,18 +60,6 @@ services:
       - "/tmp/docker.sock:/var/run/docker.sock"
       - "/tmp/docker-entrypoint.sh:/docker-entrypoint-initaws.d/docker-entrypoint.sh"
 
-  mercadopago-mock:
-    image: mockoon/cli:latest
-    container_name: hamburgueria-mercadopago-mock
-    hostname: mercadopago-mock
-    ports:
-      - "3000:3000"
-    command: ["--data", "data", "--port", "3000"]
-    volumes:
-      - ./local/external-services-mock/mercadopago-payment-api-mock.json:/data
-    networks:
-      - hamburgueria-network
-
 networks:
   hamburgueria-network:
     driver: bridge
