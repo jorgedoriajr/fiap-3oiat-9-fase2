@@ -96,6 +96,10 @@ Para acessar através da porta 8080, é necessário dar um port forward
 
 `kubectl port-forward service/hamburgueria-app-service 8080:80`
 
+Para funcionar a integração de pagamento, criamos um mock para responder, para subir o mock, execute o seguinte comando:
+
+`docker-compose -f deployments/compose/docker-compose.yml up -d mercadopago-mock`
+
 ### Access
 Application will be available at http://localhost:8080
 
