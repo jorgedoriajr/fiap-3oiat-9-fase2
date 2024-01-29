@@ -66,7 +66,6 @@ func (c IngredientPersistenceGateway) GetByType(ctx context.Context, ingredientT
 
 func (c IngredientPersistenceGateway) Create(ctx context.Context, ingredient domain.Ingredient) error {
 	err := c.readWriteClient.
-		Omit("Type").
 		Create(&model.Ingredient{
 			ID:     ingredient.ID,
 			Number: ingredient.Number,
