@@ -88,6 +88,10 @@ E rodar os scripts para criar as tabelas do banco
 
 `kubectl apply -f deployments/k8s/job-flyway.yml`
 
+Para acessar o banco de dados localmente, basta rodar um port-forwarding
+
+`kubectl port-forward svc/postgres 5432:5432`
+
 Agora é só rodar o seguinte comando para subir a aplicação:
 
 `kubectl apply -f deployments/k8s/application.yml`
