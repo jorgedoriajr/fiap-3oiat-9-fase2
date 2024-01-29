@@ -52,9 +52,10 @@ func setExperionDateTime() string {
 	// Adiciona 5 minutos ao horário atual
 	newTime := currentTime.Add(5 * time.Minute)
 	// Define o layout desejado para a formatação
-	layout := "2006-01-02T15:04:05.999-04:00"
+	layout := "2006-01-02T15:04:05.999-07:00"
 	// Formata a nova data conforme o layout especificado
 	formattedTime := newTime.Format(layout)
 	// Imprime a nova data formatada
+	print(formattedTime)
 	return formattedTime
 }
