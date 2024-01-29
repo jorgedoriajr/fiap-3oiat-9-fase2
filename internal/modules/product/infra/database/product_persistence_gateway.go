@@ -94,6 +94,7 @@ func (c ProductPersistenceGateway) Create(ctx context.Context, product domain.Pr
 			CreatedAt:   product.CreatedAt,
 			UpdatedAt:   product.UpdatedAt,
 			Ingredients: ingredients,
+			Active:      true,
 		}).Error
 	if err != nil {
 		c.logger.Error().
