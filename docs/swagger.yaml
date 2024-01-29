@@ -50,6 +50,30 @@ definitions:
       type:
         type: string
     type: object
+  request.CreatePaymentStatusRequest:
+    properties:
+      action:
+        type: string
+      api_version:
+        type: string
+      data:
+        $ref: '#/definitions/request.DataStatus'
+      date_created:
+        type: string
+      id:
+        type: string
+      live_mode:
+        type: boolean
+      type:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  request.DataStatus:
+    properties:
+      id:
+        type: string
+    type: object
   request.IngredientRequest:
     properties:
       number:
@@ -189,8 +213,8 @@ definitions:
         type: string
       customerId:
         type: string
-      orderId:
-        type: string
+      orderNumber:
+        type: integer
       products:
         items:
           $ref: '#/definitions/response.ListOrderProducts'
@@ -201,6 +225,8 @@ definitions:
   response.OrderResponse:
     properties:
       amount:
+        type: integer
+      number:
         type: integer
       paymentData:
         type: string
@@ -504,6 +530,40 @@ paths:
           schema:
             $ref: '#/definitions/v1.ErrorResponse'
       summary: Get Orders
+  /v1/payments_status:
+    post:
+      description: Add payment_status
+      parameters:
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreatePaymentStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.OrderResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+      summary: Add payment_status
   /v1/product-category:
     get:
       description: Get Product Categories
@@ -631,6 +691,40 @@ paths:
           schema:
             $ref: '#/definitions/v1.ErrorResponse'
       summary: Delete Product by number
+    get:
+      description: Get Product by number
+      parameters:
+      - description: number
+        in: path
+        name: number
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.FindProductWithIngredients'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/v1.ErrorResponse'
+      summary: Get Product by number
     patch:
       description: Update Product
       parameters:
@@ -662,39 +756,4 @@ paths:
           schema:
             $ref: '#/definitions/v1.ErrorResponse'
       summary: Update Product
-  /v1/products/{productID}:
-    get:
-      description: Get Product by id
-      parameters:
-      - description: id
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/response.FindProductWithIngredients'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/v1.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/v1.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/v1.ErrorResponse'
-        "503":
-          description: Service Unavailable
-          schema:
-            $ref: '#/definitions/v1.ErrorResponse'
-      summary: Get Product by id
 swagger: "2.0"
