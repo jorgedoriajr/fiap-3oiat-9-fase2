@@ -8,6 +8,7 @@ type FindProductWithIngredients struct {
 	Category    string                    `json:"category"`
 	ImgPath     string                    `json:"imgPath"`
 	Ingredients []FindProductsIngredients `json:"ingredients"`
+	Active      bool                      `json:"active"`
 }
 
 type FindProductsIngredients struct {
