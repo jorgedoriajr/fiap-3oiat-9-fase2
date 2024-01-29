@@ -72,15 +72,13 @@ Passo a passo para instalação conforme sistema operacional: https://minikube.s
 
 Também é necessário ter o kubectl instalado: https://kubernetes.io/docs/tasks/tools/
 
-Após a instalação, rode o seguinte comando para habilitar métricas:
-
-`kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.4.1/components.yaml`
-
-`minikube addons enable metrics-server`
-
 Agora já é possível iniciar o cluster
 
 `minikube start`
+
+Necessário rodar o seguinte comando para habilitar métricas:
+
+`minikube addons enable metrics-server`
 
 Para subir nosso deployment `hamburgueria-app` primeiramente você precisa ter o banco de dados up.
 

@@ -2,6 +2,7 @@ package httpclient
 
 import (
 	"context"
+	"crypto/tls"
 	"hamburgueria/pkg/httpclient/gohttpbreaker/gohttpbreaker"
 	"net/http"
 
@@ -23,6 +24,7 @@ func NewClient(name string, conf Config) (Client, error) {
 	opts := gohttpbreaker.Options(
 		gohttpbreaker.WithConfig(clientConfig),
 		gohttpbreaker.WithRequesterTokenFromEnv(),
+		gohttpbreaker.WithTLSClientConfig(&tls.Config{InsecureSkipVerify: true}),
 	)
 
 	if len(conf.DefaultHeaders) > 0 {

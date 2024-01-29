@@ -97,3 +97,4 @@ ALTER TABLE "order_history" ADD CONSTRAINT fk_order_history_order
 
 CREATE UNIQUE INDEX IF NOT EXISTS product_number_unq_idx ON product(number);
 CREATE UNIQUE INDEX IF NOT EXISTS ingredient_number_unq_idx ON ingredient(number);
+CREATE UNIQUE INDEX IF NOT EXISTS order_number_unq_idx ON order(number);
