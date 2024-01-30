@@ -79,6 +79,11 @@ func TestCreateOrderUseCase(t *testing.T) {
 				c.Amount == 3000
 		})).Return(nil)
 
+		orderPersistenceMock.On("FindById", mock.Anything, mock.Anything).Return(
+			&domain.Order{Number: 1},
+			nil,
+		)
+
 		processPaymentUseCaseMock.On("ProcessPayment", mock.Anything, mock.Anything).Return(&result.PaymentCreatedResult{
 			PaymentData: "mocked",
 		}, nil)
@@ -87,6 +92,7 @@ func TestCreateOrderUseCase(t *testing.T) {
 
 		assert.Nil(t, err)
 		assert.Equal(t, 3000, orderCreated.Amount)
+		assert.Equal(t, orderCreated.Number, 1)
 		assert.Equal(t, "mocked", orderCreated.PaymentData)
 
 		customerPersistenceMock.AssertExpectations(t)
@@ -295,6 +301,11 @@ func TestCreateOrderUseCase(t *testing.T) {
 			return c.Status == valueobject.Created &&
 				c.Amount == 3000
 		})).Return(nil)
+
+		orderPersistenceMock.On("FindById", mock.Anything, mock.Anything).Return(
+			&domain.Order{Number: 1},
+			nil,
+		)
 
 		processPaymentUseCaseMock.On("ProcessPayment", mock.Anything, mock.Anything).Return(nil, errors.New("SOME_ERROR"))
 

@@ -4,6 +4,7 @@ import (
 	"gorm.io/gorm"
 	"hamburgueria/internal/modules/customer/infra/database"
 	orderDatabase "hamburgueria/internal/modules/order/infra/database"
+	"hamburgueria/internal/modules/order/port/input"
 	"hamburgueria/internal/modules/order/usecase"
 	"hamburgueria/internal/modules/payment/infra/client/mercadopago"
 	paymentDatabase "hamburgueria/internal/modules/payment/infra/database"
@@ -12,42 +13,53 @@ import (
 	"hamburgueria/pkg/httpclient"
 	"hamburgueria/pkg/logger"
 	"hamburgueria/pkg/starter"
+	"sync"
 )
 
 type OrderUseCaseController struct {
-	CreateOrderUseCase usecase.CreateOrderUseCase
-	ListOrderUseCase   usecase.ListOrderUseCase
+	CreateOrderUseCase input.CreateOrderPort
+	ListOrderUseCase   input.ListOrderPort
+	UpdateOrderUseCase input.UpdateOrderPort
 }
 
-func NewOrderUseCaseController(readWriteDB, readOnlyDB *gorm.DB) *OrderUseCaseController {
-	orderPersistence := orderDatabase.GetOrderPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
-	productPersistence := productDatabase.GetProductPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
-	customerPersistence := database.GetCustomerPersistence(readWriteDB, readOnlyDB, logger.Get())
-	updateOrderUseCase := usecase.GetUpdateOrderUseCase(orderPersistence)
+var (
+	orderUseCaseControllerInstance *OrderUseCaseController
+	orderUseCaseControllerOnce     sync.Once
+)
 
-	paymentPersistance := paymentDatabase.GetPaymentPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
+func GetOrderUseCaseController(readWriteDB, readOnlyDB *gorm.DB) *OrderUseCaseController {
+	orderUseCaseControllerOnce.Do(func() {
+		orderPersistence := orderDatabase.GetOrderPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
+		productPersistence := productDatabase.GetProductPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
+		customerPersistence := database.GetCustomerPersistence(readWriteDB, readOnlyDB, logger.Get())
+		updateOrderUseCase := usecase.GetUpdateOrderUseCase(orderPersistence)
 
-	mercadoPagoClient := mercadopago.GetCreateMercadoPagoClient(
-		httpclient.GetClient("mercadoPago"),
-		starter.GetConfigRoot().MercadoPago,
-		logger.Get(),
-	)
+		paymentPersistence := paymentDatabase.GetPaymentPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
 
-	createPaymentUseCase := paymentUseCase.GetCreatePaymentUseCase(mercadoPagoClient, &paymentPersistance)
-	processPaymentUseCase := usecase.GetProcessPaymentUseCase(updateOrderUseCase, createPaymentUseCase)
+		mercadoPagoClient := mercadopago.GetCreateMercadoPagoClient(
+			httpclient.GetClient("mercadoPago"),
+			starter.GetConfigRoot().MercadoPago,
+			logger.Get(),
+		)
 
-	createOrderUseCase := usecase.GetCreateOrderUseCase(
-		productPersistence,
-		orderPersistence,
-		processPaymentUseCase,
-		customerPersistence,
-	)
+		createPaymentUseCase := paymentUseCase.GetCreatePaymentUseCase(mercadoPagoClient, paymentPersistence)
+		processPaymentUseCase := usecase.GetProcessPaymentUseCase(updateOrderUseCase, createPaymentUseCase)
 
-	listOrderUseCase := usecase.GetListOrderUseCase(orderPersistence)
+		createOrderUseCase := usecase.GetCreateOrderUseCase(
+			productPersistence,
+			orderPersistence,
+			processPaymentUseCase,
+			customerPersistence,
+		)
 
-	return &OrderUseCaseController{
-		CreateOrderUseCase: createOrderUseCase,
-		ListOrderUseCase:   listOrderUseCase,
-	}
+		listOrderUseCase := usecase.GetListOrderUseCase(orderPersistence)
 
+		orderUseCaseControllerInstance = &OrderUseCaseController{
+			CreateOrderUseCase: createOrderUseCase,
+			ListOrderUseCase:   listOrderUseCase,
+			UpdateOrderUseCase: updateOrderUseCase,
+		}
+	})
+
+	return orderUseCaseControllerInstance
 }

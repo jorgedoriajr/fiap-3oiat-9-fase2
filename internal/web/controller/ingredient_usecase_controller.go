@@ -6,6 +6,7 @@ import (
 	"hamburgueria/internal/modules/ingredient/ports/input"
 	"hamburgueria/internal/modules/ingredient/usecase"
 	"hamburgueria/pkg/logger"
+	"sync"
 )
 
 type IngredientUseCaseController struct {
@@ -14,13 +15,22 @@ type IngredientUseCaseController struct {
 	FindIngredientUseCase     input.FindIngredientUseCasePort
 }
 
-func NewIngredientUseCaseController(readWriteDB, readOnlyDB *gorm.DB) *IngredientUseCaseController {
-	ingredientTypePersistence := ingredientDatabase.GetIngredientTypePersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
-	ingredientPersistence := ingredientDatabase.GetIngredientPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
+var (
+	ingredientUseCaseControllerInstance *IngredientUseCaseController
+	ingredientUseCaseControllerOnce     sync.Once
+)
 
-	return &IngredientUseCaseController{
-		CreateIngredientUseCase:   usecase.NewCreateIngredientUseCase(ingredientPersistence, ingredientTypePersistence),
-		FindIngredientTypeUseCase: usecase.GetIngredientTypeUseCase(ingredientTypePersistence),
-		FindIngredientUseCase:     usecase.NewFindIngredientUseCase(ingredientPersistence),
-	}
+func GetIngredientUseCaseController(readWriteDB, readOnlyDB *gorm.DB) *IngredientUseCaseController {
+	ingredientUseCaseControllerOnce.Do(func() {
+		ingredientTypePersistence := ingredientDatabase.GetIngredientTypePersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
+		ingredientPersistence := ingredientDatabase.GetIngredientPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
+
+		ingredientUseCaseControllerInstance = &IngredientUseCaseController{
+			CreateIngredientUseCase:   usecase.NewCreateIngredientUseCase(ingredientPersistence, ingredientTypePersistence),
+			FindIngredientTypeUseCase: usecase.GetIngredientTypeUseCase(ingredientTypePersistence),
+			FindIngredientUseCase:     usecase.NewFindIngredientUseCase(ingredientPersistence),
+		}
+	})
+
+	return ingredientUseCaseControllerInstance
 }

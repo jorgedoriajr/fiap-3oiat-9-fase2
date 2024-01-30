@@ -14,7 +14,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"document\": \"21709085606\",\n    \"phone\": \"119999999999\",\n    \"name\": \"Amanda\",\n    \"email\": \"teste@email.com\",\n    \"optInPromotion\": true\n}",
+					"raw": "{\n    \"document\": \"62313658597\",\n    \"phone\": \"119999999999\",\n    \"name\": \"Amanda\",\n    \"email\": \"teste@email.com\",\n    \"optInPromotion\": true\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -22,7 +22,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/v1/customers/",
+					"raw": "http://localhost:8080/v1/customers",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -30,8 +30,7 @@
 					"port": "8080",
 					"path": [
 						"v1",
-						"customers",
-						""
+						"customers"
 					]
 				}
 			},
@@ -97,6 +96,35 @@
 			"response": []
 		},
 		{
+			"name": "[Ingredient] Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Mostarda e Mel\",\n    \"amount\": 500,\n    \"type\": \"Molho\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/ingredients",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"ingredients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "[Ingredient] Find All",
 			"request": {
 				"method": "GET",
@@ -143,21 +171,12 @@
 			"response": []
 		},
 		{
-			"name": "[Ingredient] Create",
+			"name": "[Ingredient] Find by Number",
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"Chimichuri\",\n    \"amount\": 500,\n    \"type\": \"Molho\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:8080/v1/ingredients",
+					"raw": "http://localhost:8080/v1/ingredients?type=Molho",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -166,6 +185,12 @@
 					"path": [
 						"v1",
 						"ingredients"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "Molho"
+						}
 					]
 				}
 			},
@@ -186,6 +211,107 @@
 					"path": [
 						"v1",
 						"product-categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Product] Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Lanche mais legal\",\n    \"description\": \"O melhor lanche do cardápio\",\n    \"category\": \"Lanche\",\n    \"menu\": true,\n    \"imgPath\": \"https://embudasartes.net/wp-content/uploads/2021/01/Captura-de-Tela-2021-01-07-a%CC%80s-01.01.31.png\",\n    \"ingredients\": [\n        {\n            \"number\": 1,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 3,\n            \"quantity\": 2\n        },\n        {\n            \"number\": 7,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 5,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 9,\n            \"quantity\": 1\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Product] Update",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Lanche mais legal\",\n    \"description\": \"O melhor lanche do cardápio\",\n    \"category\": \"Lanche\",\n    \"menu\": true,\n    \"imgPath\": \"https://embudasartes.net/wp-content/uploads/2021/01/Captura-de-Tela-2021-01-07-a%CC%80s-01.01.31.png\",\n    \"ingredients\": [\n        {\n            \"number\": 1,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 3,\n            \"quantity\": 2\n        },\n        {\n            \"number\": 7,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 5,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 9,\n            \"quantity\": 2\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/products/:productNumber",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"products",
+						":productNumber"
+					],
+					"variable": [
+						{
+							"key": "productNumber",
+							"value": "8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Product] Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/products/:number",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"products",
+						":number"
+					],
+					"variable": [
+						{
+							"key": "number",
+							"value": "7"
+						}
 					]
 				}
 			},
@@ -238,111 +364,10 @@
 			"response": []
 		},
 		{
-			"name": "[Product] Find by Id",
+			"name": "[Product] Find by Number",
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/v1/products/:productId",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"v1",
-						"products",
-						":productId"
-					],
-					"variable": [
-						{
-							"key": "productId",
-							"value": "787b1e5d-c5d8-4ed4-9554-ec0e6555c8f1"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "[Product] Create",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"Lanche mais legal\",\n    \"description\": \"O melhor lanche do cardápio\",\n    \"category\": \"Lanche\",\n    \"menu\": true,\n    \"imgPath\": \"https://embudasartes.net/wp-content/uploads/2021/01/Captura-de-Tela-2021-01-07-a%CC%80s-01.01.31.png\",\n    \"ingredients\": [\n        {\n            \"number\": 1,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 3,\n            \"quantity\": 2\n        },\n        {\n            \"number\": 7,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 5,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 9,\n            \"quantity\": 1\n        }\n    ]\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/v1/products",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"v1",
-						"products"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "[Product] Update",
-			"request": {
-				"method": "PATCH",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"Lanche mais legal ainda\",\n    \"description\": \"O melhor lanche do cardápio\",\n    \"category\": \"Lanche\",\n    \"menu\": true,\n    \"imgPath\": \"https://embudasartes.net/wp-content/uploads/2021/01/Captura-de-Tela-2021-01-07-a%CC%80s-01.01.31.png\",\n    \"ingredients\": [\n        {\n            \"number\": 1,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 3,\n            \"quantity\": 2\n        },\n        {\n            \"number\": 7,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 5,\n            \"quantity\": 1\n        },\n        {\n            \"number\": 9,\n            \"quantity\": 2\n        }\n    ]\n}"
-				},
-				"url": {
-					"raw": "http://localhost:8080/v1/products/:productNumber",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"v1",
-						"products",
-						":productNumber"
-					],
-					"variable": [
-						{
-							"key": "productNumber",
-							"value": "3"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "[Product] Delete",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "http://localhost:8080/v1/products/:number",
 					"protocol": "http",
@@ -358,7 +383,7 @@
 					"variable": [
 						{
 							"key": "number",
-							"value": "7"
+							"value": "1"
 						}
 					]
 				}
@@ -409,6 +434,13 @@
 					"path": [
 						"v1",
 						"orders"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "WAITING_PAYMENT",
+							"disabled": true
+						}
 					]
 				}
 			},
@@ -435,6 +467,63 @@
 							"key": "status",
 							"value": "WAITING_PAYMENT"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Order] Find By Number",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/orders/:number",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"orders",
+						":number"
+					],
+					"variable": [
+						{
+							"key": "number",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Payment] Webhook",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": \"3eae1599-a1cc-4cc2-9c61-f8508c3f92d8\",\n  \"live_mode\": true,\n  \"type\": \"payment\",\n  \"date_created\": \"2015-03-25T10:04:58.396-04:00\",\n  \"user_id\": 44444,\n  \"api_version\": \"v1\",\n  \"action\": \"payment.approved\",\n  \"data\": {\n    \"id\": \"72731251-b3ce-4d55-be4b-6683df1c5223\"\n  }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/webhook/payments_status",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"webhook",
+						"payments_status"
 					]
 				}
 			},

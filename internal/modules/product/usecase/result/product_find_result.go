@@ -13,6 +13,7 @@ type FindProductResult struct {
 	Menu        bool
 	ImgPath     string
 	Ingredients []ProductIngredientsResult
+	Active      bool
 }
 
 type ProductIngredientsResult struct {
@@ -39,6 +40,7 @@ func FromProductDomain(product domain.Product) FindProductResult {
 		Menu:        product.Menu,
 		ImgPath:     product.ImgPath,
 		Ingredients: ingredients,
+		Active:      product.Active,
 	}
 }
 

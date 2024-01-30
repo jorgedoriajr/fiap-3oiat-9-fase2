@@ -84,19 +84,25 @@ func (c CreateOrderUseCase) AddOrder(
 		return nil, err
 	}
 
-	paymentProcessed, err := c.processPaymentUseCase.ProcessPayment(ctx, order)
+	orderFound, err := c.orderPersistenceGateway.FindById(ctx, orderId)
+	if err != nil {
+		return nil, err
+	}
+
+	paymentProcessed, err := c.processPaymentUseCase.ProcessPayment(ctx, *orderFound)
 	if err != nil {
 		return nil, err
 	}
 
 	return &result.CreateOrderResult{
+		Number:      orderFound.Number,
 		Amount:      amount,
 		PaymentData: paymentProcessed.PaymentData,
 	}, err
 }
 
 var (
-	createOrderUseCaseInstance CreateOrderUseCase
+	createOrderUseCaseInstance paymentInput.CreateOrderPort
 	createOrderUseCaseOnce     sync.Once
 )
 
@@ -105,7 +111,7 @@ func GetCreateOrderUseCase(
 	orderPersistenceGateway output.OrderPersistencePort,
 	processPaymentUseCase paymentInput.ProcessPaymentPort,
 	customerPersistenceGateway customerOutput.CustomerPersistencePort,
-) CreateOrderUseCase {
+) paymentInput.CreateOrderPort {
 	createOrderUseCaseOnce.Do(func() {
 		createOrderUseCaseInstance = CreateOrderUseCase{
 			productPersistenceGateway:  productPersistenceGateway,

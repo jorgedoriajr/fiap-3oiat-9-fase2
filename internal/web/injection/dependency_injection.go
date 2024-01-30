@@ -1,8 +1,6 @@
 package injection
 
 import (
-	paymentDatabase "hamburgueria/internal/modules/payment/infra/database"
-	paymentUseCase "hamburgueria/internal/modules/payment/usecase"
 	"hamburgueria/internal/web/api/rest/v1/customer"
 	"hamburgueria/internal/web/api/rest/v1/ingredient"
 	"hamburgueria/internal/web/api/rest/v1/ingredienttype"
@@ -12,7 +10,6 @@ import (
 	"hamburgueria/internal/web/api/rest/v1/productcategory"
 	"hamburgueria/internal/web/api/swagger"
 	"hamburgueria/internal/web/controller"
-	"hamburgueria/pkg/logger"
 	"hamburgueria/pkg/sql"
 )
 
@@ -31,13 +28,11 @@ func NewDependencyInjection() DependencyInjection {
 
 	readWriteDB, readOnlyDB := sql.GetClient("readWrite"), sql.GetClient("readOnly")
 
-	paymentStatusPersistence := paymentDatabase.GetPaymentStatusPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
-	createPaymentStatusUseCase := paymentUseCase.GetCreatePaymentStatusUseCase(&paymentStatusPersistence)
-
-	customerUseCaseController := controller.NewCustomerUseCaseController(readWriteDB, readOnlyDB)
-	orderUseCaseController := controller.NewOrderUseCaseController(readWriteDB, readOnlyDB)
-	productUseCaseController := controller.NewProductUseCaseController(readWriteDB, readOnlyDB)
-	ingredientUseCaseController := controller.NewIngredientUseCaseController(readWriteDB, readOnlyDB)
+	customerUseCaseController := controller.GetCustomerUseCaseController(readWriteDB, readOnlyDB)
+	orderUseCaseController := controller.GetOrderUseCaseController(readWriteDB, readOnlyDB)
+	productUseCaseController := controller.GetProductUseCaseController(readWriteDB, readOnlyDB)
+	ingredientUseCaseController := controller.GetIngredientUseCaseController(readWriteDB, readOnlyDB)
+	paymentUseCaseController := controller.GetPaymentUseCaseController(readWriteDB, readOnlyDB)
 
 	return DependencyInjection{
 		CustomerApi: &customer.Api{
@@ -64,7 +59,9 @@ func NewDependencyInjection() DependencyInjection {
 		IngredientTypeApi: &ingredienttype.Api{
 			FindIngredientTypeUseCase: ingredientUseCaseController.FindIngredientTypeUseCase,
 		},
-		PaymentsStatusWebhook: &payment.Webhook{CreatePaymentStatusUseCase: createPaymentStatusUseCase},
-		Swagger:               &swagger.Swagger{},
+		PaymentsStatusWebhook: &payment.Webhook{
+			CreatePaymentStatusUseCase: paymentUseCaseController.CreatePaymentStatus,
+		},
+		Swagger: &swagger.Swagger{},
 	}
 }

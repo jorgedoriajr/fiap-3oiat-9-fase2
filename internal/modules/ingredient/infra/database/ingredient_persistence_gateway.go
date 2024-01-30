@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"errors"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"gorm.io/gorm"
@@ -65,14 +66,13 @@ func (c IngredientPersistenceGateway) GetByType(ctx context.Context, ingredientT
 
 func (c IngredientPersistenceGateway) Create(ctx context.Context, ingredient domain.Ingredient) error {
 	err := c.readWriteClient.
-		Omit("Type").
 		Create(&model.Ingredient{
 			ID:     ingredient.ID,
 			Number: ingredient.Number,
 			Name:   ingredient.Name,
 			Amount: ingredient.Amount,
 			IngredientType: model.IngredientType{
-				Name: ingredient.Name,
+				Name: ingredient.Type.Name,
 			},
 		}).Error
 	if err != nil {
@@ -94,6 +94,9 @@ func (c IngredientPersistenceGateway) GetByID(ctx context.Context, ingredientId 
 		First(&ingredient, ingredientId).
 		Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		c.logger.Error().
 			Ctx(ctx).
 			Err(err).
@@ -113,6 +116,9 @@ func (c IngredientPersistenceGateway) GetByNumber(ctx context.Context, number in
 		Where("number = ?", number).
 		First(&ingredient).Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		c.logger.Error().
 			Ctx(ctx).
 			Err(err).

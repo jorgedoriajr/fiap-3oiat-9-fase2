@@ -25,6 +25,8 @@ func (c ProductPersistenceGateway) GetAll(ctx context.Context) ([]domain.Product
 	tx := c.readOnlyClient.
 		Preload(clause.Associations).
 		Preload("Ingredients.Ingredient.IngredientType").
+		Table("product").
+		Where("product.active = ?", true).
 		Find(&products)
 	if tx.Error != nil {
 		c.logger.Error().
@@ -92,6 +94,7 @@ func (c ProductPersistenceGateway) Create(ctx context.Context, product domain.Pr
 			CreatedAt:   product.CreatedAt,
 			UpdatedAt:   product.UpdatedAt,
 			Ingredients: ingredients,
+			Active:      true,
 		}).Error
 	if err != nil {
 		c.logger.Error().
@@ -107,8 +110,7 @@ func (c ProductPersistenceGateway) Create(ctx context.Context, product domain.Pr
 func (c ProductPersistenceGateway) Update(ctx context.Context, product domain.Product) error {
 	productModel := model.ProductFromDomain(product)
 	err := c.readWriteClient.
-		Session(&gorm.Session{FullSaveAssociations: true}).
-		Omit("Category").
+		Session(&gorm.Session{FullSaveAssociations: false}).
 		Save(&productModel).
 		Error
 
@@ -133,6 +135,9 @@ func (c ProductPersistenceGateway) GetByID(ctx context.Context, productID uuid.U
 		First(&product, productID).
 		Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		c.logger.Error().
 			Ctx(ctx).
 			Err(err).
@@ -152,6 +157,9 @@ func (c ProductPersistenceGateway) GetByNumber(ctx context.Context, productNumbe
 		First(&product).
 		Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		c.logger.Error().
 			Ctx(ctx).
 			Err(err).

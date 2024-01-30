@@ -7,9 +7,8 @@ import (
 	"hamburgueria/internal/modules/product/ports/input"
 	"hamburgueria/internal/modules/product/usecase"
 	"hamburgueria/pkg/logger"
+	"sync"
 )
-
-var ()
 
 type ProductUseCaseController struct {
 	CreateProductUseCase      input.CreateProductUseCasePort
@@ -19,22 +18,31 @@ type ProductUseCaseController struct {
 	UpdateProductUseCase      input.UpdateProductUseCasePort
 }
 
-func NewProductUseCaseController(readWriteDB, readOnlyDB *gorm.DB) *ProductUseCaseController {
-	productPersistence := productDatabase.GetProductPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
-	productCategoryPersistence := productDatabase.GetProductCategoryRepository(readWriteDB, readOnlyDB, logger.Get())
-	ingredientPersistence := ingredientDatabase.GetIngredientPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
+var (
+	productUseCaseControllerInstance *ProductUseCaseController
+	productUseCaseControllerOnce     sync.Once
+)
 
-	findProductCategoryUseCase := usecase.NewGetProductCategoryUseCase(productCategoryPersistence)
-	createProductUseCase := usecase.GetCreateProductUseCase(productPersistence, ingredientPersistence, productCategoryPersistence)
-	deleteProductUseCase := usecase.GetDeleteProductUseCase(productPersistence)
-	updateProductUseCase := usecase.GetUpdateProductUseCase(productPersistence, ingredientPersistence)
-	findProductUseCase := usecase.NewFindProductUseCase(productPersistence)
+func GetProductUseCaseController(readWriteDB, readOnlyDB *gorm.DB) *ProductUseCaseController {
+	productUseCaseControllerOnce.Do(func() {
+		productPersistence := productDatabase.GetProductPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
+		productCategoryPersistence := productDatabase.GetProductCategoryRepository(readWriteDB, readOnlyDB, logger.Get())
+		ingredientPersistence := ingredientDatabase.GetIngredientPersistenceGateway(readWriteDB, readOnlyDB, logger.Get())
 
-	return &ProductUseCaseController{
-		CreateProductUseCase:      createProductUseCase,
-		DeleteProductUseCase:      deleteProductUseCase,
-		GetProductCategoryUseCase: findProductCategoryUseCase,
-		FindProductUseCase:        findProductUseCase,
-		UpdateProductUseCase:      updateProductUseCase,
-	}
+		findProductCategoryUseCase := usecase.NewGetProductCategoryUseCase(productCategoryPersistence)
+		createProductUseCase := usecase.GetCreateProductUseCase(productPersistence, ingredientPersistence, productCategoryPersistence)
+		deleteProductUseCase := usecase.GetDeleteProductUseCase(productPersistence)
+		updateProductUseCase := usecase.GetUpdateProductUseCase(productPersistence, ingredientPersistence)
+		findProductUseCase := usecase.NewFindProductUseCase(productPersistence)
+
+		productUseCaseControllerInstance = &ProductUseCaseController{
+			CreateProductUseCase:      createProductUseCase,
+			DeleteProductUseCase:      deleteProductUseCase,
+			GetProductCategoryUseCase: findProductCategoryUseCase,
+			FindProductUseCase:        findProductUseCase,
+			UpdateProductUseCase:      updateProductUseCase,
+		}
+	})
+
+	return productUseCaseControllerInstance
 }

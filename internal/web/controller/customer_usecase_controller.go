@@ -6,6 +6,7 @@ import (
 	"hamburgueria/internal/modules/customer/port/input"
 	customerUseCase "hamburgueria/internal/modules/customer/usecase"
 	"hamburgueria/pkg/logger"
+	"sync"
 )
 
 type CustomerUseCaseController struct {
@@ -13,12 +14,20 @@ type CustomerUseCaseController struct {
 	GetCustomerUseCase    input.GetCustomerPort
 }
 
-func NewCustomerUseCaseController(readWriteDB, readOnlyDB *gorm.DB) *CustomerUseCaseController {
-	customerPersistence := database.GetCustomerPersistence(readWriteDB, readOnlyDB, logger.Get())
+var (
+	customerUseCaseControllerInstance *CustomerUseCaseController
+	customerUseCaseControllerOnce     sync.Once
+)
 
-	return &CustomerUseCaseController{
-		CreateCustomerUseCase: customerUseCase.GetCreateCustomerUseCase(customerPersistence),
-		GetCustomerUseCase:    customerUseCase.GetGetCustomerUseCase(customerPersistence),
-	}
+func GetCustomerUseCaseController(readWriteDB, readOnlyDB *gorm.DB) *CustomerUseCaseController {
+	customerUseCaseControllerOnce.Do(func() {
+		customerPersistence := database.GetCustomerPersistence(readWriteDB, readOnlyDB, logger.Get())
 
+		customerUseCaseControllerInstance = &CustomerUseCaseController{
+			CreateCustomerUseCase: customerUseCase.GetCreateCustomerUseCase(customerPersistence),
+			GetCustomerUseCase:    customerUseCase.GetGetCustomerUseCase(customerPersistence),
+		}
+	})
+
+	return customerUseCaseControllerInstance
 }

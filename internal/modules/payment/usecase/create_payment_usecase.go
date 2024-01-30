@@ -18,7 +18,7 @@ var (
 
 type CreatePaymentUseCase struct {
 	paymentClientGateway      output.PaymentClient
-	paymentPersistanceGateway output.PaymentPersistencePort
+	paymentPersistenceGateway output.PaymentPersistencePort
 }
 
 func (p CreatePaymentUseCase) CreatePayment(ctx context.Context, command command.CreatePaymentCommand) (*result.PaymentProcessed, error) {
@@ -27,17 +27,17 @@ func (p CreatePaymentUseCase) CreatePayment(ctx context.Context, command command
 		return nil, err
 	}
 
-	errPersistance := p.paymentPersistanceGateway.Create(ctx, paymentData)
-	if errPersistance != nil {
-		return nil, errPersistance
+	errPersistence := p.paymentPersistenceGateway.Create(ctx, paymentData)
+	if errPersistence != nil {
+		return nil, errPersistence
 	}
 
 	return mapperPaymentEntityToPaymentProcessed(&paymentData), nil
 }
 
-func GetCreatePaymentUseCase(paymentClientGateway output.PaymentClient, paymentPersistanceGateway output.PaymentPersistencePort) input.CreatePaymentPort {
+func GetCreatePaymentUseCase(paymentClientGateway output.PaymentClient, paymentPersistenceGateway output.PaymentPersistencePort) input.CreatePaymentPort {
 	processPaymentUseCaseOnce.Do(func() {
-		processPaymentUseCase = CreatePaymentUseCase{paymentClientGateway: paymentClientGateway, paymentPersistanceGateway: paymentPersistanceGateway}
+		processPaymentUseCase = CreatePaymentUseCase{paymentClientGateway: paymentClientGateway, paymentPersistenceGateway: paymentPersistenceGateway}
 
 	})
 	return processPaymentUseCase

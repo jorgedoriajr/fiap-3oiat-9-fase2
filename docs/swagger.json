@@ -406,6 +406,58 @@
                 }
             }
         },
+        "/v1/payments_status": {
+            "post": {
+                "description": "Add payment_status",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Add payment_status",
+                "parameters": [
+                    {
+                        "description": "Request Body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.CreatePaymentStatusRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.OrderResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrorResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/product-category": {
             "get": {
                 "description": "Get Product Categories",
@@ -553,6 +605,57 @@
             }
         },
         "/v1/products/{number}": {
+            "get": {
+                "description": "Get Product by number",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get Product by number",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "number",
+                        "name": "number",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/response.FindProductWithIngredients"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrorResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/v1.ErrorResponse"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "description": "Delete Product by number",
                 "produces": [
@@ -618,59 +721,6 @@
                 "responses": {
                     "200": {
                         "description": "OK"
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/v1.ErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/v1.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/v1.ErrorResponse"
-                        }
-                    },
-                    "503": {
-                        "description": "Service Unavailable",
-                        "schema": {
-                            "$ref": "#/definitions/v1.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/products/{productID}": {
-            "get": {
-                "description": "Get Product by id",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get Product by id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/response.FindProductWithIngredients"
-                            }
-                        }
                     },
                     "400": {
                         "description": "Bad Request",
@@ -776,6 +826,43 @@
                     "type": "integer"
                 },
                 "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.CreatePaymentStatusRequest": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string"
+                },
+                "api_version": {
+                    "type": "string"
+                },
+                "data": {
+                    "$ref": "#/definitions/request.DataStatus"
+                },
+                "date_created": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "live_mode": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "request.DataStatus": {
+            "type": "object",
+            "properties": {
+                "id": {
                     "type": "string"
                 }
             }
@@ -994,8 +1081,8 @@
                 "customerId": {
                     "type": "string"
                 },
-                "orderId": {
-                    "type": "string"
+                "orderNumber": {
+                    "type": "integer"
                 },
                 "products": {
                     "type": "array",
@@ -1012,6 +1099,9 @@
             "type": "object",
             "properties": {
                 "amount": {
+                    "type": "integer"
+                },
+                "number": {
                     "type": "integer"
                 },
                 "paymentData": {

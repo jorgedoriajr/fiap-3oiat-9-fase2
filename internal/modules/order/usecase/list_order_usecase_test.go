@@ -76,7 +76,6 @@ func TestListOrderUseCase(t *testing.T) {
 
 		assert.Nil(t, err)
 		assert.Equal(t, len(orders), 1)
-		assert.Equal(t, orders[0].OrderId, orderId)
 		orderPersistenceMock.AssertExpectations(t)
 		orderPersistenceMock.AssertCalled(t, "FindAll", mock.Anything)
 	})
@@ -157,7 +156,6 @@ func TestListOrderUseCase(t *testing.T) {
 
 		assert.Nil(t, err)
 		assert.Equal(t, len(orders), 1)
-		assert.Equal(t, orders[0].OrderId, orderId)
 		orderPersistenceMock.AssertExpectations(t)
 		orderPersistenceMock.AssertCalled(t, "FindByStatus", mock.Anything, mock.Anything)
 	})

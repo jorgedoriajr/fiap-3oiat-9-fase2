@@ -10,10 +10,10 @@ import (
 )
 
 type Payment struct {
-	Id       uuid.UUID `gorm:"primarykey"`
-	OrderId  uuid.UUID
-	Data     string
-	CreateAt time.Time
+	Id        uuid.UUID `gorm:"primarykey"`
+	OrderId   uuid.UUID
+	Data      string
+	CreatedAt time.Time
 }
 
 func (p Payment) ToDomain() *domain.Payment {
@@ -21,7 +21,7 @@ func (p Payment) ToDomain() *domain.Payment {
 		Id:        p.Id,
 		OrderId:   p.OrderId,
 		Data:      p.Data,
-		CreatedAt: p.CreateAt,
+		CreatedAt: p.CreatedAt,
 	}
 }
 
