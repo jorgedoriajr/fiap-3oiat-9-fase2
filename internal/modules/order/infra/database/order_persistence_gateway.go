@@ -8,7 +8,6 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"hamburgueria/internal/modules/order/domain"
-	"hamburgueria/internal/modules/order/domain/valueobject"
 	"hamburgueria/internal/modules/order/infra/database/model"
 	"hamburgueria/internal/modules/order/port/output"
 	"strconv"
@@ -100,23 +99,6 @@ func (c OrderPersistenceGateway) Update(ctx context.Context, order domain.Order)
 			Err(err).
 			Str("orderId", order.Id.String()).
 			Msg("Failed to update order")
-		return err
-	}
-	return nil
-}
-
-func (c OrderPersistenceGateway) UpdateStatus(ctx context.Context, orderID uuid.UUID, status valueobject.OrderStatus) error {
-	err := c.readWriteClient.
-		Session(&gorm.Session{FullSaveAssociations: true}).
-		Update("status", status).
-		Where("id = ?", orderID).
-		Error
-	if err != nil {
-		c.logger.Error().
-			Ctx(ctx).
-			Err(err).
-			Str("orderId", orderID.String()).
-			Msg("Failed to update order status by ID: " + orderID.String())
 		return err
 	}
 	return nil
