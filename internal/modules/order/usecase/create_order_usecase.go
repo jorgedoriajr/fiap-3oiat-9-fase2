@@ -102,7 +102,7 @@ func (c CreateOrderUseCase) AddOrder(
 }
 
 var (
-	createOrderUseCaseInstance CreateOrderUseCase
+	createOrderUseCaseInstance paymentInput.CreateOrderPort
 	createOrderUseCaseOnce     sync.Once
 )
 
@@ -111,7 +111,7 @@ func GetCreateOrderUseCase(
 	orderPersistenceGateway output.OrderPersistencePort,
 	processPaymentUseCase paymentInput.ProcessPaymentPort,
 	customerPersistenceGateway customerOutput.CustomerPersistencePort,
-) CreateOrderUseCase {
+) paymentInput.CreateOrderPort {
 	createOrderUseCaseOnce.Do(func() {
 		createOrderUseCaseInstance = CreateOrderUseCase{
 			productPersistenceGateway:  productPersistenceGateway,
